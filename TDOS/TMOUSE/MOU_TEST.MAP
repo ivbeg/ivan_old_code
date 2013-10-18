@@ -1,0 +1,220 @@
+
+ Start  Stop   Length Name               Class
+
+ 00000H 000C8H 000C9H TMOUSE_TEST        CODE
+ 000D0H 001C0H 000F1H TString            CODE
+ 001D0H 002C6H 000F7H TKeyb              CODE
+ 002D0H 003F8H 00129H TMouse             CODE
+ 00400H 00D21H 00922H TSystem            CODE
+ 00D30H 01752H 00A23H System             CODE
+ 01760H 01A31H 002D2H DATA               DATA
+ 01A40H 05A3FH 04000H STACK              STACK
+ 05A40H 05A40H 00000H HEAP               HEAP
+
+  Address         Publics by Value
+
+ 0000:0015       @
+ 000D:0000       HexByte
+ 000D:005B       HexWord
+ 000D:009D       HexPtr
+ 000D:00E5       @
+ 001D:0058       @
+ 001D:00C1       GetShiftStates
+ 001D:00C6       GetExtShiftStates
+ 001D:00CD       Get122ShiftStates
+ 001D:00D4       FlushKbdBuffer
+ 001D:00E3       KeyPresent
+ 002D:0000       @
+ 002D:0049       ShowMouseCursor
+ 002D:004F       HideMouseCursor
+ 002D:0065       LeftButtonPressed
+ 002D:006F       RightButtonPressed
+ 002D:007C       MiddleButtonPressed
+ 002D:008A       AnyButtonPressed
+ 002D:011F       GetCopirightString
+ 0040:02B5       @
+ 0040:032F       FillDword
+ 0040:0342       FillWord
+ 0040:0361       FillByte
+ 0040:0387       Fill
+ 0040:03B9       MovePtr
+ 0040:03D7       SwapByte
+ 0040:03EA       SwapWord
+ 0040:03FD       SwapLong
+ 0040:0413       Swap
+ 0040:0447       SearchPtr
+ 0040:048E       ReadMemoryByte
+ 0040:0499       ReadMemoryWord
+ 0040:04A4       ReadMemoryDword
+ 0040:04B3       WriteMemoryByte
+ 0040:04BF       WriteMemoryWord
+ 0040:04CB       WriteMemoryDword
+ 0040:04D9       ReadPort
+ 0040:04E2       WritePort
+ 0040:04EE       ReadIndexPort
+ 0040:04F9       WriteIndexPort
+ 0040:05DD       AbsReadMemoryByte
+ 0040:05F5       AbsReadMemoryWord
+ 0040:060D       AbsReadMemoryDword
+ 0040:0629       AbsWriteMemoryByte
+ 0040:0643       AbsWriteMemoryWord
+ 0040:065D       AbsWriteMemoryDword
+ 0040:0679       CompareBuffersPtr
+ 0040:069E       Delay
+ 0040:06AD       CopyExtendedMemory
+ 0040:06FA       HardwareReboot
+ 0040:0705       WarmReboot
+ 0040:0716       ColdReboot
+ 0176:0002       csa_YesNo
+ 0176:000A       Keyb_Functions
+ 0176:000B       KeyboardType
+ 0176:000C       MouseType
+ 0176:000E       MouseVersion
+ 0176:0010       MousePresent
+ 0176:0012       Cpu_Type
+ 0176:0013       Cpu_Vendor
+ 0176:0014       Cpu_Speed
+ 0176:0016       Cpu_VendorStr
+ 0176:0022       CpuIDValid
+ 0176:0023       BiosType
+ 0176:0024       ExtendedMemorySize
+ 0176:0026       OvrCodeList
+ 0176:0028       OvrHeapSize
+ 0176:002A       OvrDebugPtr
+ 0176:002E       OvrHeapOrg
+ 0176:0030       OvrHeapPtr
+ 0176:0032       OvrHeapEnd
+ 0176:0034       OvrLoadList
+ 0176:0036       OvrDosHandle
+ 0176:0038       OvrEmsHandle
+ 0176:003A       HeapOrg
+ 0176:003E       HeapPtr
+ 0176:0042       HeapEnd
+ 0176:0046       FreeList
+ 0176:004A       FreeZero
+ 0176:004E       HeapError
+ 0176:0052       ExitProc
+ 0176:0056       ExitCode
+ 0176:0058       ErrorAddr
+ 0176:005C       PrefixSeg
+ 0176:005E       StackLimit
+ 0176:0060       InOutRes
+ 0176:0062       RandSeed
+ 0176:0066       SelectorInc
+ 0176:0068       Seg0040
+ 0176:006A       SegA000
+ 0176:006C       SegB000
+ 0176:006E       SegB800
+ 0176:0070       Test8086
+ 0176:0071       Test8087
+ 0176:0072       FileMode
+ 0176:0076       CopirightString
+ 0176:007A       GetKey
+ 0176:007E       SelfAddr
+ 0176:0082       BiosConfigTable
+ 0176:0086       Input
+ 0176:0186       Output
+ 0176:0286       SaveInt00
+ 0176:028A       SaveInt02
+ 0176:028E       SaveInt1B
+ 0176:0292       SaveInt21
+ 0176:0296       SaveInt23
+ 0176:029A       SaveInt24
+ 0176:029E       SaveInt34
+ 0176:02A2       SaveInt35
+ 0176:02A6       SaveInt36
+ 0176:02AA       SaveInt37
+ 0176:02AE       SaveInt38
+ 0176:02B2       SaveInt39
+ 0176:02B6       SaveInt3A
+ 0176:02BA       SaveInt3B
+ 0176:02BE       SaveInt3C
+ 0176:02C2       SaveInt3D
+ 0176:02C6       SaveInt3E
+ 0176:02CA       SaveInt3F
+ 0176:02CE       SaveInt75
+
+Line numbers for TMOUSE_TEST(MOU_TEST.PAS) segment TMOUSE_TEST
+
+    17 0000:0015    18 0000:003D    19 0000:006E    20 0000:007A
+    21 0000:0098    22 0000:00C1
+
+Line numbers for TString(TSTRING.PAS) segment TString
+
+    59 000D:0000    60 000D:000F    61 000D:0057    65 000D:005B
+    66 000D:006A    67 000D:0097    81 000D:009D    82 000D:00AC
+    83 000D:00E1    93 000D:00E5    94 000D:00EF
+
+Line numbers for TKeyb(TKEYB.PAS) segment TKeyb
+
+    91 001D:0000    92 001D:000A    93 001D:000D    94 001D:0010
+    95 001D:0023    96 001D:0036    97 001D:0049    99 001D:0056
+   102 001D:0058   103 001D:0062   104 001D:0065
+
+Line numbers for TKeyb(TKEYB.ASM) segment TKeyb
+
+    46 001D:0067    47 001D:0068    48 001D:0069    49 001D:006A
+    50 001D:006C    51 001D:006E    52 001D:0072    53 001D:0074
+    54 001D:0076    55 001D:007A    56 001D:007C    57 001D:007E
+    58 001D:0081    60 001D:0084    62 001D:0089    63 001D:008C
+    64 001D:008E    65 001D:0092    66 001D:0095    67 001D:0099
+    68 001D:009E    70 001D:00A1    71 001D:00A6    73 001D:00A9
+    75 001D:00AE    76 001D:00AF    77 001D:00B0    78 001D:00B1
+    83 001D:00B2    84 001D:00B4    85 001D:00B6    90 001D:00B7
+    91 001D:00B9    92 001D:00BB    97 001D:00BC    98 001D:00BE
+    99 001D:00C0   104 001D:00C1   105 001D:00C3   106 001D:00C5
+   111 001D:00C6   112 001D:00C8   113 001D:00CA   114 001D:00CC
+   119 001D:00CD   120 001D:00CF   121 001D:00D1   122 001D:00D3
+   128 001D:00D4   129 001D:00D6   130 001D:00D8   131 001D:00DC
+   132 001D:00DE   133 001D:00E0   135 001D:00E2   140 001D:00E3
+   141 001D:00E5   142 001D:00E7   143 001D:00EB   144 001D:00ED
+   145 001D:00EF   146 001D:00F1   148 001D:00F4   150 001D:00F6
+
+Line numbers for TMouse(TMOUSE.PAS) segment TMouse
+
+    87 002D:0000    88 002D:000A    89 002D:000D
+
+Line numbers for TMouse(TMOUSE.ASM) segment TMouse
+
+    57 002D:000F    58 002D:0012    59 002D:0014    60 002D:0016
+    61 002D:001A    62 002D:001F    63 002D:0025    64 002D:0026
+    65 002D:0027    66 002D:002A    67 002D:002C    68 002D:002F
+    69 002D:0032    70 002D:0033    71 002D:0034    73 002D:0037
+    74 002D:003C    75 002D:0042    77 002D:0048    82 002D:0049
+    83 002D:004C    84 002D:004E    89 002D:004F    90 002D:0052
+    91 002D:0054    96 002D:0055    97 002D:0058    98 002D:005A
+    99 002D:005C   104 002D:005D   105 002D:0060   106 002D:0062
+   107 002D:0064   112 002D:0065   113 002D:0068   114 002D:006A
+   115 002D:006C   116 002D:006E   121 002D:006F   122 002D:0072
+   123 002D:0074   124 002D:0076   125 002D:0078   126 002D:007B
+   131 002D:007C   132 002D:007F   133 002D:0081   134 002D:0083
+   135 002D:0086   136 002D:0089   141 002D:008A   142 002D:008D
+   143 002D:008F   144 002D:0091   145 002D:0094   146 002D:0096
+   147 002D:009A   148 002D:009D   151 002D:009E   158 002D:009F
+   159 002D:00A1   160 002D:00A4   161 002D:00A8   162 002D:00AC
+   163 002D:00AE   170 002D:00B1   171 002D:00B3   172 002D:00B6
+   173 002D:00BA   174 002D:00BE   175 002D:00C0   182 002D:00C3
+   183 002D:00C5   184 002D:00C8   185 002D:00CC   186 002D:00D0
+   187 002D:00D2   193 002D:00D5   194 002D:00D7   195 002D:00DA
+   196 002D:00DE   197 002D:00E0   205 002D:00E3   206 002D:00E5
+   207 002D:00E8   208 002D:00EC   209 002D:00F0   210 002D:00F4
+   211 002D:00F6   216 002D:00F9   217 002D:00FC   218 002D:00FE
+   219 002D:0100   224 002D:0101   225 002D:0104   226 002D:0106
+   227 002D:0108   232 002D:0109   233 002D:010C   234 002D:010E
+   235 002D:0110   241 002D:0111   242 002D:0113   243 002D:0116
+   244 002D:011A   245 002D:011C   250 002D:011F   251 002D:0122
+   252 002D:0124   253 002D:0126   254 002D:0128
+
+Line numbers for TSystem(TSYSTEM.PAS) segment TSystem
+
+   258 0040:0000   259 0040:000A   260 0040:0010   265 0040:0019
+   266 0040:0028   267 0040:0059   272 0040:0068   273 0040:0077
+   274 0040:00A8   276 0040:00D1   277 0040:00E0   278 0040:0130
+   279 0040:015D   280 0040:018A   281 0040:01B6   282 0040:01D0
+   283 0040:01D9   284 0040:01EA   285 0040:0216   286 0040:0227
+   287 0040:022E   291 0040:025D   292 0040:0267   293 0040:026A
+   294 0040:026D   295 0040:0270   296 0040:0273   298 0040:027A
+   299 0040:0296   301 0040:029E   302 0040:02A1   303 0040:02A4
+   304 0040:02B3   307 0040:02B5   308 0040:02BF   309 0040:02C2
+
+Program entry point at 0000:0015

@@ -1,0 +1,3 @@
+TASM TXMS.ASM /zi
+TPC -M -GD -V TXMS.PAS -$G+
+TPC -M -GD -V TEST_XMS.PAS -$G+

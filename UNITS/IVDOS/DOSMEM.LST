@@ -1,0 +1,248 @@
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 21:58:3
+                                                             Page     1-1
+
+
+       1				INCLUDE MACRO.INC
+       2 = 0000                      C	False      EQU  0
+       3 = 0001                      C	True       EQU  1
+       4			     C	
+       5			     C	
+       6 = 002F                      C	Multiplex  EQU  2Fh
+       7			     C	
+       8			     C	BooleanAl  Macro Boolean
+       9			     C	           LOCAL AlOk
+      10			     C	            mov al,Boolean
+      11			     C	            cmp al,0
+      12			     C	            je  AlOk
+      13			     C	            mov al,1
+      14			     C	      ALok:
+      15			     C	           endm
+      16			     C	
+      17			     C	EmsCall Macro EmsFunction
+      18			     C	         mov  ah,EmsFunction
+      19			     C	         int  67h
+      20			     C	         mov  EmsError,ah
+      21			     C	        endm
+      22			     C	
+      23			     C	KbdCall Macro KbdFunction
+      24			     C	         mov   ah,KbdFunction
+      25			     C	         int   16h
+      26			     C	        endm
+      27			     C	
+      28			     C	StackFrameBP Macro
+      29			     C	              push bp
+      30			     C	              mov  bp,sp
+      31			     C	             endm
+      32			     C	
+      33			     C	ExitCode Macro Count
+      34			     C	          mov  sp,bp
+      35			     C	          pop  bp
+      36			     C	          ret  Count
+      37			     C	         endm
+      38			     C	
+      39			     C	Zero     Macro reg
+      40			     C	          xor  Reg,Reg
+      41			     C	         endm
+      42				
+      43 0000				DATA  SEGMENT WORD PUBLIC
+      44				      ASSUME  DS:DATA
+      45				
+      46				      EXTRN   Error      : BYTE
+      47				      EXTRN   PrefixSeg  : WORD
+      48				      EXTRN   DosIo      : NEAR
+      49				
+      50 0000				DATA  ENDS
+      51				
+      52 0000				CODE  SEGMENT BYTE PUBLIC
+      53				      ASSUME CS:CODE,DS:DATA
+      54				
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 21:58:3
+                                                             Page     1-2
+
+
+      55				      PUBLIC  AllocateMemory,FreeMemory
+					,ReSizeMemory
+      56				      PUBLIC  SetUmbLinkState,GetUmbLin
+					kState,DosMaxMem
+      57				      PUBLIC  SetAllocStrat,GetAllocStr
+					at
+      58				
+      59 0000				AllocateMemory PROC FAR
+      60 = (WORD PTR [BP+6])		Size           EQU (WORD PTR [BP+6])
+dosmem.asm(20): warning A4016: Reserved word used as symbol: SIZE
+      61				                StackFrameBP
+      62 0000  55                    1	              push bp 
+      63 0001  8B EC                 1	              mov  bp,sp 
+      64 0003  8B 5E 06			                mov       bx,Size
+      65 0006  B4 48			                mov       ah,48h
+      66 0008  E8 0000 E		                Call      DosIo
+      67				                ExitCode 2
+      68 000B  8B E5                 1	          mov  sp,bp 
+      69 000D  5D                    1	          pop  bp 
+      70 000E  CA 0002               1	          ret  2 
+      71 0011				AllocateMemory ENDP
+      72				
+      73				
+      74 0011				FreeMemory PROC FAR
+      75 = (WORD PTR [BP+6])		Segm        EQU (WORD PTR [BP+6])
+      76				             StackFrameBP
+      77 0011  55                    1	              push bp 
+      78 0012  8B EC                 1	              mov  bp,sp 
+      79 0014  8E 46 06			             mov       es,Segm
+      80 0017  B4 49			             mov       ah,49h
+      81 0019  E8 0000 E		             Call      DosIo
+      82				             ExitCode 2
+      83 001C  8B E5                 1	          mov  sp,bp 
+      84 001E  5D                    1	          pop  bp 
+      85 001F  CA 0002               1	          ret  2 
+      86 0022				FreeMemory ENDP
+      87				
+      88				
+      89				
+      90 0022				ReSizeMemory PROC FAR
+      91 = (WORD PTR [BP+8])		Segm        EQU (WORD PTR [BP+8])
+      92 = (WORD PTR [BP+6])		Size        EQU (WORD PTR [BP+6])
+dosmem.asm(42): warning A4016: Reserved word used as symbol: SIZE
+      93				             StackFrameBP
+      94 0022  55                    1	              push bp 
+      95 0023  8B EC                 1	              mov  bp,sp 
+      96 0025  8E 46 08			             mov       es,Segm
+      97 0028  8B 5E 06			             mov       bx,Size
+      98 002B  B4 4A			             mov       ah,4Ah
+      99 002D  E8 0000 E		             Call      DosIo
+     100				             ExitCode 4
+     101 0030  8B E5                 1	          mov  sp,bp 
+     102 0032  5D                    1	          pop  bp 
+     103 0033  CA 0004               1	          ret  4 
+     104 0036				ReSizeMemory ENDP
+     105				
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 21:58:3
+                                                             Page     1-3
+
+
+     106 0036				SetUmbLinkState PROC FAR
+     107 = (BYTE PTR [BP+6])		State           EQU  (BYTE PTR [BP+6])
+     108				                 StackFrameBP
+     109 0036  55                    1	              push bp 
+     110 0037  8B EC                 1	              mov  bp,sp 
+     111 0039  8A 5E 06			                 mov       bl,State
+     112 003C  B8 5803			                 mov       ax,05803h
+     113 003F  E8 0000 E		                 Call      DosIo
+     114				                 ExitCode  2
+     115 0042  8B E5                 1	          mov  sp,bp 
+     116 0044  5D                    1	          pop  bp 
+     117 0045  CA 0002               1	          ret  2 
+     118 0048				SetUmbLinkState ENDP
+     119				
+     120				
+     121 0048				GetUmbLinkState PROC FAR
+     122 0048  B8 5802			                 mov   ax,05802h
+     123 004B  E8 0000 E		                 Call  DosIo
+     124 004E  CB			                 ret
+     125 004F				GetUmbLinkState ENDP
+     126				
+     127				
+     128 004F				DosMaxMem PROC FAR
+     129 004F  B8 FFFF			           mov     ax,0FFFFh
+     130 0052  50			           push    ax
+     131 0053  9A 0000 ---- R		           Call    AllocateMemory
+     132 0058  8B C3			           mov     ax,bx
+     133 005A  CB			           ret
+     134 005B				DosMaxMem ENDP
+     135				
+     136 005B				SetAllocStrat PROC FAR
+     137 = (BYTE PTR [BP+6])		Alloc         EQU  (BYTE PTR [BP+6])
+     138				               StackFrameBP
+     139 005B  55                    1	              push bp 
+     140 005C  8B EC                 1	              mov  bp,sp 
+     141 005E  8A 5E 06			               mov       bl,Alloc
+     142 0061  B8 5801			               mov       ax,5801h
+     143 0064  E8 0000 E		               Call      DosIo
+     144				               ExitCode  2
+     145 0067  8B E5                 1	          mov  sp,bp 
+     146 0069  5D                    1	          pop  bp 
+     147 006A  CA 0002               1	          ret  2 
+     148 006D				SetAllocStrat ENDP
+     149				
+     150				
+     151 006D				GetAllocStrat PROC FAR
+     152 006D  B8 5800			               mov       ax,5800h
+     153 0070  E8 0000 E		               Call      DosIo
+     154 0073  CB			               ret
+     155 0074				GetAllocStrat ENDP
+     156				
+     157 0074				CODE  ENDS
+     158				
+     159				      END
+
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 21:58:3
+                                                             Symbols-1
+
+
+Macros:
+
+		N a m e			Lines
+
+BOOLEANAL  . . . . . . . . . . .  	   5
+EMSCALL  . . . . . . . . . . . .  	   3
+EXITCODE . . . . . . . . . . . .  	   3
+KBDCALL  . . . . . . . . . . . .  	   2
+STACKFRAMEBP . . . . . . . . . .  	   2
+ZERO . . . . . . . . . . . . . .  	   1
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CODE . . . . . . . . . . . . . .  	0074	BYTE	PUBLIC	
+DATA . . . . . . . . . . . . . .  	0000	WORD	PUBLIC	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+ALLOC  . . . . . . . . . . . . .  	TEXT  (BYTE PTR [BP+6])		
+ALLOCATEMEMORY . . . . . . . . .  	F PROC	0000	CODE	Global	Length = 0011
+
+DOSIO  . . . . . . . . . . . . .  	L NEAR	0000	DATA	External
+DOSMAXMEM  . . . . . . . . . . .  	F PROC	004F	CODE	Global	Length = 000C
+
+ERROR  . . . . . . . . . . . . .  	V BYTE	0000	DATA	External
+
+FALSE  . . . . . . . . . . . . .  	NUMBER	0000	
+FREEMEMORY . . . . . . . . . . .  	F PROC	0011	CODE	Global	Length = 0011
+
+GETALLOCSTRAT  . . . . . . . . .  	F PROC	006D	CODE	Global	Length = 0007
+GETUMBLINKSTATE  . . . . . . . .  	F PROC	0048	CODE	Global	Length = 0007
+
+MULTIPLEX  . . . . . . . . . . .  	NUMBER	002F	
+
+PREFIXSEG  . . . . . . . . . . .  	V WORD	0000	DATA	External
+
+RESIZEMEMORY . . . . . . . . . .  	F PROC	0022	CODE	Global	Length = 0014
+
+SEGM . . . . . . . . . . . . . .  	TEXT  (WORD PTR [BP+8])		
+SETALLOCSTRAT  . . . . . . . . .  	F PROC	005B	CODE	Global	Length = 0012
+SETUMBLINKSTATE  . . . . . . . .  	F PROC	0036	CODE	Global	Length = 0012
+SIZE . . . . . . . . . . . . . .  	TEXT  (WORD PTR [BP+6])		
+STATE  . . . . . . . . . . . . .  	TEXT  (BYTE PTR [BP+6])		
+
+TRUE . . . . . . . . . . . . . .  	NUMBER	0001	
+
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  dosmem		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 21:58:3
+                                                             Symbols-2
+
+
+
+    134 Source  Lines
+    159 Total   Lines
+     31 Symbols
+
+  46824 + 383748 Bytes symbol space free
+
+      2 Warning Errors
+      0 Severe  Errors

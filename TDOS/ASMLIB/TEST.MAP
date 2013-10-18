@@ -1,0 +1,237 @@
+
+ Start  Stop   Length Name               Class
+
+ 00000H 0013BH 0013CH PROGRAM            CODE
+ 00140H 001C3H 00084H IvKbd              CODE
+ 001D0H 001F3H 00024H IvSystem           CODE
+ 00200H 00A7AH 0087BH TGraph             CODE
+ 00A80H 0127AH 007FBH TSystem            CODE
+ 01280H 01D9EH 00B1FH System             CODE
+ 01DA0H 02279H 004DAH DATA               DATA
+ 02280H 0627FH 04000H STACK              STACK
+ 06280H 06280H 00000H HEAP               HEAP
+
+  Address         Publics by Value
+
+ 0000:001F       @
+ 0014:0000       @
+ 0014:0019       GetKey
+ 0014:001E       FlushKbdBuff
+ 0014:002B       KeyPresent
+ 0014:0041       SetRate_Delay
+ 0014:0056       WaitForKey
+ 0014:006A       WriteKey
+ 001D:0000       DoNone
+ 001D:0001       @
+ 0020:0000       FastWrite
+ 0020:005D       Attrib
+ 0020:0086       FillBox
+ 0020:00D5       NoneDo
+ 0020:00D8       @
+ 0020:0105       GetVideoMode
+ 0020:010A       GetCurrentVideoPage
+ 0020:0128       SetLogicPage
+ 0020:014E       GetRealPageOffset
+ 0020:017B       GetXY
+ 0020:017F       GetX
+ 0020:0183       GetY
+ 0020:01AF       CursorXY
+ 0020:01BF       CursorOff
+ 0020:01EF       CursorOn
+ 0020:020B       BiosWriteString
+ 0020:0336       SetCursorShape
+ 0020:038C       SetDoubleScan
+ 0020:03A8       SaveVideoState
+ 0020:03BA       RestoreVideoState
+ 0020:03CC       GetStateBufferSize
+ 0020:03DC       GetDCC
+ 0020:03E6       SetDCC
+ 0020:03F8       GetTotalScanLines
+ 0020:0431       SetStartOffset
+ 0020:0449       is_DoubleScan
+ 0020:0488       is_Blink
+ 0020:0499       is_GraphMode
+ 0020:04A2       GetVideoInfo
+ 0020:04B2       SetCGABorder
+ 0020:04C1       SetCGAPalette
+ 0020:04D0       GetOverscanColor
+ 0020:04D8       SetOverscanColor
+ 0020:04E6       SetDACPalette
+ 0020:04FA       GetDACPalette
+ 0020:050E       GreySummDAC
+ 0020:0520       SetEgaPalette
+ 0020:052E       GetEgaPalette
+ 0020:053C       GetEgaReg
+ 0020:054C       SetEgaReg
+ 0020:055E       GetRGB
+ 0020:0575       SetRGB
+ 0020:05A1       SetVideoMode
+ 0020:05BB       SetVideoPage
+ 0020:0619       LineFeed
+ 0020:0684       WriteCharXY
+ 0020:06AA       WriteChar
+ 0020:06BD       WriteStr
+ 0020:06E6       WriteStrXY
+ 0020:070C       ReadChar
+ 0020:0715       ReadAttr
+ 0020:0720       ReadCharXY
+ 0020:0732       ReadAttrXY
+ 0020:0746       FillAttr
+ 0020:0769       FillAttrXY
+ 0020:07A1       WriteAttr
+ 0020:07B7       PlaneWrite
+ 0020:07DB       PlaneWriteXY
+ 0020:0809       ClrScr
+ 0020:0848       InitTGraph
+ 00A8:0000       DoNone
+ 00A8:0293       @
+ 00A8:02C5       FillDword
+ 00A8:02D8       FillWord
+ 00A8:02F7       FillByte
+ 00A8:031D       Fill
+ 00A8:034F       MovePtr
+ 00A8:036D       SwapByte
+ 00A8:0380       SwapWord
+ 00A8:0393       SwapLong
+ 00A8:03A9       Swap
+ 00A8:03DD       SearchPtr
+ 00A8:0424       ReadMemoryByte
+ 00A8:042F       ReadMemoryWord
+ 00A8:043A       ReadMemoryDword
+ 00A8:0449       WriteMemoryByte
+ 00A8:0455       WriteMemoryWord
+ 00A8:0461       WriteMemoryDword
+ 00A8:046F       ReadPort
+ 00A8:0478       WritePort
+ 00A8:0484       ReadIndexPort
+ 00A8:048F       WriteIndexPort
+ 00A8:04BF       AbsReadMemoryByte
+ 00A8:04D7       AbsReadMemoryWord
+ 00A8:04EF       AbsReadMemoryDword
+ 00A8:050B       AbsWriteMemoryByte
+ 00A8:0525       AbsWriteMemoryWord
+ 00A8:053F       AbsWriteMemoryDword
+ 00A8:055B       CompareBuffersPtr
+ 00A8:0580       Delay
+ 00A8:058F       HardwareReboot
+ 00A8:05A5       WarmReboot
+ 00A8:05B6       ColdReboot
+ 01DA:0002       CpuType
+ 01DA:0004       CpuSpeed
+ 01DA:0006       CpuIDValid
+ 01DA:0007       BiosType
+ 01DA:0008       ExtendedMemorySize
+ 01DA:000A       OvrCodeList
+ 01DA:000C       OvrHeapSize
+ 01DA:000E       OvrDebugPtr
+ 01DA:0012       OvrHeapOrg
+ 01DA:0014       OvrHeapPtr
+ 01DA:0016       OvrHeapEnd
+ 01DA:0018       OvrLoadList
+ 01DA:001A       OvrDosHandle
+ 01DA:001C       OvrEmsHandle
+ 01DA:001E       HeapOrg
+ 01DA:0022       HeapPtr
+ 01DA:0026       HeapEnd
+ 01DA:002A       FreeList
+ 01DA:002E       FreeZero
+ 01DA:0032       HeapError
+ 01DA:0036       ExitProc
+ 01DA:003A       ExitCode
+ 01DA:003C       ErrorAddr
+ 01DA:0040       PrefixSeg
+ 01DA:0042       StackLimit
+ 01DA:0044       InOutRes
+ 01DA:0046       RandSeed
+ 01DA:004A       SelectorInc
+ 01DA:004C       Seg0040
+ 01DA:004E       SegA000
+ 01DA:0050       SegB000
+ 01DA:0052       SegB800
+ 01DA:0054       Test8086
+ 01DA:0055       Test8087
+ 01DA:0056       FileMode
+ 01DA:005A       S
+ 01DA:015A       Cbreak_Proc
+ 01DA:015E       PspAddr
+ 01DA:0162       Err
+ 01DA:0164       Error
+ 01DA:0165       EType
+ 01DA:0166       sgbErrorDecode
+ 01DA:0168       UseBios
+ 01DA:016A       CurrentVideoSeg
+ 01DA:016C       PageOffset
+ 01DA:016E       ActiveCounter
+ 01DA:016F       StringCounter
+ 01DA:0170       WindMin
+ 01DA:0172       WindMax
+ 01DA:0174       TextChar
+ 01DA:0175       TextAttr
+ 01DA:0176       ActiveScreenPtr
+ 01DA:017A       VirtualScreenActive
+ 01DA:017B       HideCursor
+ 01DA:017C       VideoBiosType
+ 01DA:017E       WaitProc
+ 01DA:0182       PauseProc
+ 01DA:0286       SelfAddr
+ 01DA:028A       BiosConfigTable
+ 01DA:028E       Input
+ 01DA:038E       Output
+ 01DA:048E       SaveInt00
+ 01DA:0492       SaveInt02
+ 01DA:0496       SaveInt1B
+ 01DA:049A       SaveInt21
+ 01DA:049E       SaveInt23
+ 01DA:04A2       SaveInt24
+ 01DA:04A6       SaveInt34
+ 01DA:04AA       SaveInt35
+ 01DA:04AE       SaveInt36
+ 01DA:04B2       SaveInt37
+ 01DA:04B6       SaveInt38
+ 01DA:04BA       SaveInt39
+ 01DA:04BE       SaveInt3A
+ 01DA:04C2       SaveInt3B
+ 01DA:04C6       SaveInt3C
+ 01DA:04CA       SaveInt3D
+ 01DA:04CE       SaveInt3E
+ 01DA:04D2       SaveInt3F
+ 01DA:04D6       SaveInt75
+
+Line numbers for PROGRAM(TEST.PAS) segment PROGRAM
+
+     6 0000:001F     7 0000:0046     8 0000:004D    10 0000:005B
+    11 0000:007B    13 0000:00A1    14 0000:00B3    15 0000:00CB
+    16 0000:00DD    17 0000:00F5    18 0000:00FE    19 0000:0105
+    20 0000:010E    22 0000:0115    23 0000:0134
+
+Line numbers for IvKbd(IVKBD.PAS) segment IvKbd
+
+    30 0014:0000    31 0014:000A    32 0014:0017
+
+Line numbers for IvSystem(IVSYSTEM.PAS) segment IvSystem
+
+   170 001D:0000   175 001D:0001   176 001D:000B   177 001D:0010
+   178 001D:0015   179 001D:0022
+
+Line numbers for TGraph(TGRAPH.PAS) segment TGraph
+
+   193 0020:0000   194 0020:0026   195 0020:0034   205 0020:0038
+   206 0020:0042   207 0020:0046   208 0020:004F   209 0020:0057
+   210 0020:005B   239 0020:005D   240 0020:006B   241 0020:007F
+   265 0020:0086   266 0020:0094   267 0020:00AA   268 0020:00D1
+   274 0020:00D5   275 0020:00D7   278 0020:00D8   279 0020:00E2
+   280 0020:00E6   281 0020:00F3   282 0020:0100
+
+Line numbers for TSystem(TSYSTEM.PAS) segment TSystem
+
+   224 00A8:0000   269 00A8:0001   270 00A8:000B   271 00A8:0011
+   276 00A8:001A   277 00A8:0029   278 00A8:0058   283 00A8:0065
+   284 00A8:0074   285 00A8:00A3   287 00A8:00CA   288 00A8:00D9
+   289 00A8:0124   290 00A8:014E   291 00A8:0178   292 00A8:01A1
+   293 00A8:01BB   294 00A8:01C3   295 00A8:01D3   296 00A8:01FC
+   297 00A8:020C   298 00A8:0212   302 00A8:023F   303 00A8:0249
+   304 00A8:024C   306 00A8:0253   307 00A8:026E   309 00A8:0276
+   310 00A8:0279   311 00A8:027C   312 00A8:027F   313 00A8:0282
+   314 00A8:0291   317 00A8:0293   318 00A8:029D   319 00A8:02A0
+
+Program entry point at 0000:001F

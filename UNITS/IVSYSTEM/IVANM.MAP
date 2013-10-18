@@ -1,0 +1,80 @@
+
+ Start  Stop   Length Name               Class
+
+ 00000H 00159H 0015AH PROGRAM            CODE
+ 00160H 00B0BH 009ACH System             CODE
+ 00B10H 00DC1H 002B2H DATA               DATA
+ 00DD0H 04DCFH 04000H STACK              STACK
+ 04DD0H 04DD0H 00000H HEAP               HEAP
+
+  Address         Publics by Value
+
+ 0000:000B       @
+ 0000:0092       FILLBYTE
+ 0000:00AF       FillWord
+ 0000:00C4       Swap
+ 0000:00FB       SWAPP
+ 0000:0114       SWAPB
+ 0000:0124       SWAPW
+ 0000:0134       BITOFB
+ 0000:0147       BITOFW
+ 00B1:0002       OvrCodeList
+ 00B1:0004       OvrHeapSize
+ 00B1:0006       OvrDebugPtr
+ 00B1:000A       OvrHeapOrg
+ 00B1:000C       OvrHeapPtr
+ 00B1:000E       OvrHeapEnd
+ 00B1:0010       OvrLoadList
+ 00B1:0012       OvrDosHandle
+ 00B1:0014       OvrEmsHandle
+ 00B1:0016       HeapOrg
+ 00B1:001A       HeapPtr
+ 00B1:001E       HeapEnd
+ 00B1:0022       FreeList
+ 00B1:0026       FreeZero
+ 00B1:002A       HeapError
+ 00B1:002E       ExitProc
+ 00B1:0032       ExitCode
+ 00B1:0034       ErrorAddr
+ 00B1:0038       PrefixSeg
+ 00B1:003A       StackLimit
+ 00B1:003C       InOutRes
+ 00B1:003E       RandSeed
+ 00B1:0042       SelectorInc
+ 00B1:0044       Seg0040
+ 00B1:0046       SegA000
+ 00B1:0048       SegB000
+ 00B1:004A       SegB800
+ 00B1:004C       Test8086
+ 00B1:004D       Test8087
+ 00B1:004E       FileMode
+ 00B1:0052       Ivan
+ 00B1:005C       Ivan1
+ 00B1:0066       Input
+ 00B1:0166       Output
+ 00B1:0266       SaveInt00
+ 00B1:026A       SaveInt02
+ 00B1:026E       SaveInt1B
+ 00B1:0272       SaveInt21
+ 00B1:0276       SaveInt23
+ 00B1:027A       SaveInt24
+ 00B1:027E       SaveInt34
+ 00B1:0282       SaveInt35
+ 00B1:0286       SaveInt36
+ 00B1:028A       SaveInt37
+ 00B1:028E       SaveInt38
+ 00B1:0292       SaveInt39
+ 00B1:0296       SaveInt3A
+ 00B1:029A       SaveInt3B
+ 00B1:029E       SaveInt3C
+ 00B1:02A2       SaveInt3D
+ 00B1:02A6       SaveInt3E
+ 00B1:02AA       SaveInt3F
+ 00B1:02AE       SaveInt75
+
+Line numbers for PROGRAM(IVANM.PAS) segment PROGRAM
+
+     6 0000:000B     7 0000:001A     8 0000:002D     9 0000:0040
+    10 0000:0052    11 0000:006E    13 0000:008A
+
+Program entry point at 0000:000B

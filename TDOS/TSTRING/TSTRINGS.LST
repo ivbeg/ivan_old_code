@@ -1,0 +1,471 @@
+Turbo Assembler	 Version 4.1	    01/25/98 12:59:35	    Page 1
+tstrings.asm
+
+
+
+      1					 include   ASMMACRO.INC
+1     2					 ; ASMMACRO.INC	List of	macroses
+1     3					 ; Started  at	5.05.96
+1     4					 ; Macroses for	assembler oriented on TASM 3.2 and compatible
+1     5					 ; <name> - Capitalized	string (the name of record or constant)
+1     6					 ; <type> - Lowcase string of type of record or	constant
+1     7					 ;
+1     8					 ; Macro record	format:
+1     9					 ;     "macro_"<name>" Macro"<reg8/reg16/reg32/mem8/mem16/mem32>
+1    10					 ;	   <command>	 <operand>,...,<operand>
+1    11					 ;		      "EndM"
+1    12					 ;
+1    13					 ; Constants records format:
+1    14					 ;     <type>_..._<type>_<name>
+1    15					 ;
+1    16
+1    17
+1    18
+1    19					     ; Set DATA	segment	in GS
+1    20					 macro_SetDATA_GS Macro
+1    21					    PUSH      SEG DATA
+1    22					    POP	      GS
+1    23							  EndM
+1    24
+1    25					     ; Move Stack Pointer (SP) in reg16
+1    26					 macro_StackFrame Macro	reg16
+1    27					    MOV	      reg16, SP
+1    28							  EndM
+1    29
+1    30					     ; Saving DS in reg16
+1    31					 macro_SaveDS Macro reg16
+1    32					    MOV	      reg16, DS
+1    33						      EndM
+1    34
+1    35					     ; Restoring from reg16
+1    36					 macro_RestoreDS Macro reg16
+1    37					    MOV	       DS, reg16
+1    38							 EndM
+1    39
+1    40					     ; Saving BP and move BP in	SP
+1    41					 macro_StackFrameBP Macro
+1    42					    PUSH       BP
+1    43					    MOV	       BP, SP
+1    44							    EndM
+1    45
+1    46					     ; Return after "StackFrameBP"
+1    47					 macro_ExitCode	Macro Count
+1    48					    MOV	       SP, BP
+1    49					    POP	       BP
+1    50					    RET	       Count
+1    51							EndM
+1    52
+1    53					     ; Zero reg
+1    54					 macro_Zero Macro reg
+1    55					    XOR	       reg, reg
+1    56						    EndM
+1    57
+Turbo Assembler	 Version 4.1	    01/25/98 12:59:35	    Page 2
+tstrings.asm
+
+
+
+1    58					     ; 486+ Cpu	Identification code
+1    59					 macro_CPUID Macro
+1    60					    DB	       0Fh, 0A2h
+1    61						     EndM
+1    62
+1    63					     ; Input/Outlput delay macros
+1    64					 macro_IODELAY Macro
+1    65					    JMP	       short $+2
+1    66					    JMP	       short $+2
+1    67						       EndM
+1    68
+1    69					     ; Boolean values
+1    70		  =0000			 boolean_False		 EQU  00h
+1    71		  =0001			 boolean_True		 EQU  01h
+1    72
+1    73					     ; CPU types
+1    74		  =0002			 cpu_type_80286		 EQU  02h
+1    75		  =0003			 cpu_type_80386		 EQU  03h
+1    76		  =0004			 cpu_type_80486		 EQU  04h
+1    77		  =0005			 cpu_type_Pentium	 EQU  05h
+1    78		  =0006			 cpu_type_PentiumHigh	 EQU  06h
+1    79
+1    80					     ; Interrupt 15h - Functions
+1    81		  =0086			 int15h_Wait		 EQU  086h
+1    82		  =0087			 int15h_CopyExtMemory	 EQU  087h
+1    83		  =0088			 int15h_GetExtMemorySize EQU  088h
+1    84		  =00C0			 int15h_GetConfigTable	 EQU  0C0h
+1    85
+1    86
+1    87					     ; Functions result	code
+1    88	00000000			 TFunctionResult Struc
+1    89	00000000  01*(0000)		    Function	   DW	  0000h
+1    90	00000002  01*(00)		    Interrupt	   DB	  00h
+1    91	00000003  01*(00000000)		    CalledAddr	   DD	  00000000h
+1    92	00000007  01*(0000)		    Result	   DW	  0000h
+1    93	00000009  01*(00000000)		    ErrorProc	   DD	  00000000h
+1    94	0000000D					 EndS
+1    95
+1    96
+1    97					     ; Format of Bios date record
+1    98	00000000			 TBiosDateFormat Struc
+1    99	00000000  01*(????)		    Day		   DW	  ?
+1   100	00000002  01*(??)		    Filler_1	   DB	  ?
+1   101	00000003  01*(????)		    Month	   DW	  ?
+1   102	00000005  01*(??)		    Filler_2	   DB	  ?
+1   103	00000006  01*(????)		    Year	   DW	  ?
+1   104	00000008					 EndS
+1   105
+1   106	00000000			 TCpuVendor    Struc
+1   107	00000000  01*(0C*(00))		    DB 12 DUP(0)
+1   108	0000000C				       Ends
+    109
+    110
+    111	    0000			 DATA  SEGMENT WORD PUBLIC
+    112					       ASSUME  CS:CODE,DS:DATA
+    113
+    114
+Turbo Assembler	 Version 4.1	    01/25/98 12:59:35	    Page 3
+tstrings.asm
+
+
+
+    115
+    116
+    117
+    118	    0000			 DATA  ENDS
+    119
+    120
+    121	    0000			 CODE  SEGMENT BYTE PUBLIC
+    122					       ASSUME CS:CODE,DS:DATA
+    123
+    124							    .386
+    125
+    126					       PUBLIC  StrLen, StrEnd, StrCopy,	StrMove
+    127					       PUBLIC  StrPas, StrPCopy, StrLower, StrUpper
+    128
+    129
+    130
+    131	    0000			 StrLen	 PROC FAR
+    132		  = (DWORD PTR SS:[BX +	   _String    EQU    (DWORD PTR	SS:[BX+4])
+    133		  +4])
+    134					    macro_StackFrame BX
+1   135	    0000  8B DC			    MOV	      BX, SP
+    136	    0002  36: C4 7F 04		    LES	      DI, _String
+    137	    0006  B9 FFFF		    MOV	      CX, 0FFFFh
+    138					    macro_Zero	AL
+1   139	    0009  32 C0			    XOR	       AL, AL
+    140	    000B  FC			    CLD
+    141	    000C  F2> AE		    REPNE     SCASB
+    142	    000E  B8 FFFE		    MOV	      AX, 0FFFEh
+    143	    0011  2B C1			    SUB	      AX, CX
+    144	    0013  CA 0004		    RET	      4
+    145	    0016			 StrLen	 ENDP
+    146
+    147
+    148	    0016			 StrEnd	 PROC FAR
+    149		  = (DWORD PTR SS:[BX +	   _String    EQU    (DWORD PTR	SS:[BX+4])
+    150		  +4])
+    151					    macro_StackFrameBP
+1   152	    0016  55			    PUSH       BP
+1   153	    0017  8B EC			    MOV	       BP, SP
+    154	    0019  36: C4 7F 04		    LES	      DI, _String
+    155	    001D  B9 FFFF		    MOV	      CX, 0FFFFh
+    156					    macro_Zero	AL
+1   157	    0020  32 C0			    XOR	       AL, AL
+    158	    0022  FC			    CLD
+    159	    0023  F2> AE		    REPNE     SCASB
+    160	    0025  8B C7			    MOV	      AX, DI
+    161	    0027  8C C2			    MOV	      DX, ES
+    162	    0029  48			    DEC	      AX
+    163	    002A  CA 0004		    RET	      4
+    164	    002D			 StrEnd	 ENDP
+    165
+    166
+    167	    002D			 StrCopy  PROC FAR
+    168		  = (DWORD PTR SS:[BX +	   Source     EQU    (DWORD PTR	SS:[BX+8])
+    169		  +8])
+    170		  = (DWORD PTR SS:[BX +	   Dest	      EQU    (DWORD PTR	SS:[BX+4])
+    171		  +4])
+Turbo Assembler	 Version 4.1	    01/25/98 12:59:35	    Page 4
+tstrings.asm
+
+
+
+    172					    macro_StackFrame BX
+1   173	    002D  8B DC			    MOV	      BX, SP
+    174	    002F  1E			    PUSH      DS
+    175	    0030  36: C4 7F 08		    LES	      DI, Source
+    176	    0034  B9 FFFF		    MOV	      CX, 0FFFFh
+    177					    macro_Zero	AL
+1   178	    0037  32 C0			    XOR	       AL, AL
+    179	    0039  FC			    CLD
+    180	    003A  F2> AE		    REPNE     SCASB
+    181	    003C  F7 D1			    NOT	      CX
+    182	    003E  36: C4 7F 08		    LES	      DI, Source
+    183	    0042  36: C5 77 04		    LDS	      SI, Dest
+    184	    0046  8B C7			    MOV	      AX, DI
+    185	    0048  8C C2			    MOV	      DX, ES
+    186	    004A  F3> A4		    REP	      MOVSB
+    187	    004C  1F			    POP	      DS
+    188	    004D  CA 0008		    RET	      8
+    189	    0050			 StrCopy  ENDP
+    190
+    191
+    192	    0050			 StrMove  PROC FAR
+    193		  = (DWORD PTR SS:[BX +	   Source     EQU    (DWORD PTR	SS:[BX+10])
+    194		  +10])
+    195		  = (DWORD PTR SS:[BX +	   Dest	      EQU    (DWORD PTR	SS:[BX+6])
+    196		  +6])
+    197		  = (WORD  PTR SS:[BX +	   Count      EQU    (WORD  PTR	SS:[BX+4])
+    198		  +4])
+    199					    macro_StackFrame BX
+1   200	    0050  8B DC			    MOV	      BX, SP
+    201	    0052  1E			    PUSH      DS
+    202	    0053  36: C4 7F 0A		    LES	      DI, Source
+    203	    0057  36: C5 77 06		    LDS	      SI, Dest
+    204	    005B  8B C7			    MOV	      AX, DI
+    205	    005D  8C C2			    MOV	      DX, ES
+    206	    005F  36: 8B 4F 04		    MOV	      CX, Count
+    207	    0063  FC			    CLD
+    208	    0064  3B F7			    CMP	      SI, DI
+    209	    0066  73 09	90 90		    JAE	      @@StrMove_Repeat
+    210	    006A  FD			    STD
+    211	    006B  03 F1			    ADD	      SI, CX
+    212	    006D  03 F9			    ADD	      DI, CX
+    213	    006F  4E			    DEC	      SI
+    214	    0070  4F			    DEC	      DI
+    215	    0071			 @@StrMove_Repeat:
+    216	    0071  F2> A4		    REPNE     MOVSB
+    217	    0073  FC			    CLD
+    218	    0074  1F			    POP	      DS
+    219	    0075  CA 000A		    RET	      10
+    220	    0078			 StrMove  ENDP
+    221
+    222
+    223	    0078			 StrPCopy  PROC	FAR
+    224		  = (DWORD PTR SS:[BP +	   Source     EQU    (DWORD PTR	SS:[BP+10])
+    225		  +10])
+    226		  = (DWORD PTR SS:[BP +	   Dest	      EQU    (DWORD PTR	SS:[BP+6])
+    227		  +6])
+    228					    macro_StackFrameBP
+Turbo Assembler	 Version 4.1	    01/25/98 12:59:35	    Page 5
+tstrings.asm
+
+
+
+1   229	    0078  55			    PUSH       BP
+1   230	    0079  8B EC			    MOV	       BP, SP
+    231	    007B  1E			    PUSH      DS
+    232	    007C  C5 76	0A		    LDS	      SI, Source
+    233	    007F  C4 7E	06		    LES	      DI, Dest
+    234	    0082  8B DF			    MOV	      BX, DI
+    235	    0084  8C C2			    MOV	      DX, ES
+    236	    0086  AC			    LODSB
+    237	    0087  32 E4			    XOR	      AH, AH
+    238	    0089  91			    XCHG      AX, CX
+    239	    008A  F3> A4		    REP	      MOVSB
+    240					    macro_Zero	AL
+1   241	    008C  32 C0			    XOR	       AL, AL
+    242	    008E  AA			    STOSB
+    243	    008F  93			    XCHG      AX, BX
+    244	    0090  1F			    POP	      DS
+    245					    macro_ExitCode  8
+1   246	    0091  8B E5			    MOV	       SP, BP
+1   247	    0093  5D			    POP	       BP
+1   248	    0094  CA 0008		    RET	       8
+    249	    0097			 StrPCopy  ENDP
+    250
+    251
+    252	    0097			 StrUpper PROC FAR
+    253		  = (DWORD PTR SS:[BX +	   _String    EQU    (DWORD PTR	SS:[BX+4])
+    254		  +4])
+    255					    macro_StackFrameBP
+1   256	    0097  55			    PUSH       BP
+1   257	    0098  8B EC			    MOV	       BP, SP
+    258	    009A  1E			    PUSH      DS
+    259	    009B  FC			    CLD
+    260	    009C  36: C5 77 04		    LDS	      SI, _String
+    261	    00A0  8B DE			    MOV	      BX, SI
+    262	    00A2  8C DA			    MOV	      DX, DS
+    263	    00A4  B9 FFFF		    MOV	      CX, 0FFFFh
+    264	    00A7			 @@StrUpper_Loop:
+    265	    00A7  AC			    LODSB
+    266	    00A8  0A C0			    OR	      AL, AL
+    267	    00AA  74 12	90 90		    JE	      @@StrUpper_End
+    268	    00AE  3C 61			    CMP	      AL, 'a'
+    269	    00B0  72 F5			    JB	      @@StrUpper_Loop
+    270	    00B2  3C 7A			    CMP	      AL, 'z'
+    271	    00B4  77 F1			    JA	      @@StrUpper_Loop
+    272	    00B6  2C 20			    SUB	      AL, 20h
+    273	    00B8  88 44	FF		    MOV	      [SI-1], AL
+    274	    00BB  E2 EA			    LOOP      @@StrUpper_Loop
+    275	    00BD  93			    XCHG      AX, BX
+    276	    00BE			 @@StrUpper_End:
+    277	    00BE  1F			    POP	      DS
+    278					    macro_ExitCode  4
+1   279	    00BF  8B E5			    MOV	       SP, BP
+1   280	    00C1  5D			    POP	       BP
+1   281	    00C2  CA 0004		    RET	       4
+    282	    00C5			 StrUpper ENDP
+    283
+    284
+    285	    00C5			 StrLower  PROC	FAR
+Turbo Assembler	 Version 4.1	    01/25/98 12:59:35	    Page 6
+tstrings.asm
+
+
+
+    286		  = (DWORD PTR SS:[BP +	   _String    EQU    (DWORD PTR	SS:[BP+6])
+    287		  +6])
+    288					    macro_StackFrameBP
+1   289	    00C5  55			    PUSH       BP
+1   290	    00C6  8B EC			    MOV	       BP, SP
+    291	    00C8  1E			    PUSH      DS
+    292	    00C9  FC			    CLD
+    293	    00CA  C5 76	06		    LDS	      SI, _String
+    294	    00CD  8B DE			    MOV	      BX, SI
+    295	    00CF  8C DA			    MOV	      DX, DS
+    296	    00D1  B9 FFFF		    MOV	      CX, 0FFFFh
+    297	    00D4			 @@StrLower_Loop:
+    298	    00D4  AC			    LODSB
+    299	    00D5  0A C0			    OR	      AL, AL
+    300	    00D7  74 12	90 90		    JE	      @@StrLower_End
+    301	    00DB  3C 41			    CMP	      AL, 'A'
+    302	    00DD  72 F5			    JB	      @@StrLower_Loop
+    303	    00DF  3C 5A			    CMP	      AL, 'Z'
+    304	    00E1  77 F1			    JA	      @@StrLower_Loop
+    305	    00E3  04 20			    ADD	      AL, 20h
+    306	    00E5  88 44	FF		    MOV	      [SI-1], AL
+    307	    00E8  E2 EA			    LOOP      @@StrLower_Loop
+    308	    00EA  93			    XCHG      AX, BX
+    309	    00EB			 @@StrLower_End:
+    310	    00EB  1F			    POP	      DS
+    311					    macro_ExitCode  4
+1   312	    00EC  8B E5			    MOV	       SP, BP
+1   313	    00EE  5D			    POP	       BP
+1   314	    00EF  CA 0004		    RET	       4
+    315	    00F2			 StrLower  ENDP
+    316
+    317
+    318	    00F2			 StrPas	 PROC FAR
+    319		  = (DWORD PTR SS:[BX +	   Source     EQU    (DWORD PTR	SS:[BX+8])
+    320		  +8])
+    321		  = (DWORD PTR SS:[BX +	   Dest	      EQU    (DWORD PTR	SS:[BX+4])
+    322		  +4])
+    323					    macro_StackFrame BX
+1   324	    00F2  8B DC			    MOV	      BX, SP
+    325	    00F4  1E			    PUSH      DS
+    326	    00F5  FC			    CLD
+    327	    00F6  36: C4 7F 08		    LES	      DI, Source
+    328	    00FA  B9 FFFF		    MOV	      CX, 0FFFFh
+    329					    macro_Zero AL
+1   330	    00FD  32 C0			    XOR	       AL, AL
+    331	    00FF  F7 D1			    NOT	      CX
+    332	    0101  49			    DEC	      CX
+    333	    0102  36: C5 77 08		    LDS	      SI, Source
+    334	    0106  36: C4 7F 04		    LES	      DI, Dest
+    335	    010A  0A ED			    OR	      CH, CH
+    336	    010C  74 05	90 90		    JZ	      @@StrPas_Check
+    337	    0110  B9 00FF		    MOV	      CX, 0FFh
+    338	    0113			 @@StrPas_Check:
+    339					    macro_Zero CH
+1   340	    0113  32 ED			    XOR	       CH, CH
+    341	    0115  AA			    STOSB
+    342	    0116  F3> A4		    REP	      MOVSB
+Turbo Assembler	 Version 4.1	    01/25/98 12:59:35	    Page 7
+tstrings.asm
+
+
+
+    343	    0118  1F			    POP	      DS
+    344	    0119  CA 0004		    RET	      4
+    345	    011C			 StrPas	 ENDP
+    346
+    347
+    348
+    349
+    350	    011C			 CODE  ENDS
+    351
+    352					       END
+Turbo Assembler	 Version 4.1	    01/25/98 12:59:35	    Page 8
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "01/25/98"
+??FILENAME			  Text	 "tstrings"
+??TIME				  Text	 "12:59:35"
+??VERSION			  Number 040A
+@@STRLOWER_END			  Near	 CODE:00EB
+@@STRLOWER_LOOP			  Near	 CODE:00D4
+@@STRMOVE_REPEAT		  Near	 CODE:0071
+@@STRPAS_CHECK			  Near	 CODE:0113
+@@STRUPPER_END			  Near	 CODE:00BE
+@@STRUPPER_LOOP			  Near	 CODE:00A7
+@CPU				  Text	 0F0FH
+@CURSEG				  Text	 CODE
+@FILENAME			  Text	 TSTRINGS
+@WORDSIZE			  Text	 4
+BOOLEAN_FALSE			  Number 0000
+BOOLEAN_TRUE			  Number 0001
+COUNT				  Text	 (WORD	PTR SS:[BX+4])
+CPU_TYPE_80286			  Number 0002
+CPU_TYPE_80386			  Number 0003
+CPU_TYPE_80486			  Number 0004
+CPU_TYPE_PENTIUM		  Number 0005
+CPU_TYPE_PENTIUMHIGH		  Number 0006
+DEST				  Text	 (DWORD	PTR SS:[BX+4])
+INT15H_COPYEXTMEMORY		  Number 0087
+INT15H_GETCONFIGTABLE		  Number 00C0
+INT15H_GETEXTMEMORYSIZE		  Number 0088
+INT15H_WAIT			  Number 0086
+SOURCE				  Text	 (DWORD	PTR SS:[BX+8])
+STRCOPY				  Far	 CODE:002D
+STREND				  Far	 CODE:0016
+STRLEN				  Far	 CODE:0000
+STRLOWER			  Far	 CODE:00C5
+STRMOVE				  Far	 CODE:0050
+STRPAS				  Far	 CODE:00F2
+STRPCOPY			  Far	 CODE:0078
+STRUPPER			  Far	 CODE:0097
+_STRING				  Text	 (DWORD	PTR SS:[BP+6])
+
+Macro Name
+
+MACRO_CPUID
+MACRO_EXITCODE
+MACRO_IODELAY
+MACRO_RESTOREDS
+MACRO_SAVEDS
+MACRO_SETDATA_GS
+MACRO_STACKFRAME
+MACRO_STACKFRAMEBP
+MACRO_ZERO
+Turbo Assembler	 Version 4.1	    01/25/98 12:59:35	    Page 9
+Symbol Table
+
+
+
+
+Structure Name			  Type	Offset
+
+TBIOSDATEFORMAT
+ DAY				  Word	 0000
+ FILLER_1			  Byte	 0002
+ MONTH				  Word	 0003
+ FILLER_2			  Byte	 0005
+ YEAR				  Word	 0006
+TCPUVENDOR
+TFUNCTIONRESULT
+ FUNCTION			  Word	 0000
+ INTERRUPT			  Byte	 0002
+ CALLEDADDR			  Dword	 0003
+ RESULT				  Word	 0007
+ ERRORPROC			  Dword	 0009
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+CODE				  16  011C Byte	  Public
+DATA				  16  0000 Word	  Public
+

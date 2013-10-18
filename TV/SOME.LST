@@ -1,0 +1,200 @@
+Turbo Assembler	 Version 4.1	    01/09/98 23:42:04	    Page 1
+some.asm
+
+
+
+      1					 INCLUDE    MACRO.INC
+1     2		  =0000			 False	    EQU	 0
+1     3		  =0001			 True	    EQU	 1
+1     4
+1     5					 StackFrame Macro reg16
+1     6						    MOV	  reg16,SP
+1     7						    endm
+1     8
+1     9
+1    10					 SaveDS	    Macro reg16
+1    11						     MOV   reg16,DS
+1    12						    endm
+1    13
+1    14					 RestoreDS  Macro reg16
+1    15						     MOV   DS,reg16
+1    16						    endm
+1    17
+1    18		  =002F			 Multiplex  EQU	 2Fh
+1    19
+1    20					 BooleanAl  Macro Bool
+1    21						    LOCAL AlOk
+1    22						     Zero al
+1    23						     cmp Bool,0
+1    24						     je	 AlOk
+1    25						     mov al,1
+1    26					       ALok:
+1    27						    endm
+1    28
+1    29					 EmsCall Macro EmsFunction
+1    30						  mov  ah,EmsFunction
+1    31						  int  67h
+1    32						  mov  EmsError,ah
+1    33						 endm
+1    34
+1    35					 KbdCall Macro KbdFunction
+1    36						  mov	ah,KbdFunction
+1    37						  int	16h
+1    38						 endm
+1    39
+1    40					 StackFrameBP Macro
+1    41						       push bp
+1    42						       mov  bp,sp
+1    43						      endm
+1    44
+1    45					 ExitCode Macro	Count
+*Warning* MACRO.INC(44)	Reserved word used as symbol: EXITCODE
+1    46						   mov	sp,bp
+1    47						   pop	bp
+1    48						   ret	Count
+1    49						  endm
+1    50
+1    51					 Zero	  Macro	reg
+1    52						   xor	Reg,Reg
+1    53						  endm
+     54
+     55	    0000			 DATA  SEGMENT WORD PUBLIC
+     56					       ASSUME  DS:DATA
+Turbo Assembler	 Version 4.1	    01/09/98 23:42:04	    Page 2
+some.asm
+
+
+
+     57
+     58
+     59	    0000			 DATA  ENDS
+     60
+     61	    0000			 CODE  SEGMENT BYTE PUBLIC
+     62					       ASSUME CS:CODE,DS:DATA
+     63
+     64
+     65					       .386  ;Use 386+ processor
+     66
+     67					       PUBLIC  Get_NDOS_Version, Get_4DOS_Version
+     68					       PUBLIC  Get_DosNavigator_Present
+     69
+     70		  =D44D			 e4DOS_Check  EQU  0D44Dh
+     71		  =44DD			 e4DOS_Sign   EQU  044DDh
+     72		  =E44D			 eNDOS_Check  EQU  0E44Dh
+     73		  =444E			 eDN_Sign     EQU  0444Eh ; 'DN'
+     74		  =9900			 eDN_Check    EQU  09900h
+     75
+     76
+     77	    0000			 Get_NDOS_Version PROC FAR
+     78		  = SS:[DI+4]		 CommInfo	  EQU  SS:[DI+4]
+     79	    0000  B8 E44D				   MOV	      AX, eNDOS_Check
+     80	    0003  EB 04	90				   JMP	      @@Check_For
+     81	    0006			 Get_4DOS_Version PROC FAR
+     82	    0006  B8 D44D				   MOV	      AX, e4DOS_Check
+     83	    0009			 @@Check_For:
+     84	    0009  B7 00					   MOV	      BH, 0
+     85	    000B  CD 2F					   INT	      2Fh
+     86	    000D  3D 44DD				   CMP	      AX, e4DOS_Sign
+     87	    0010  75 02	90 90				   JNE	      @@Dont_4DOS
+     88	    0014			 @@Dont_4DOS:
+     89							   StackFrame DI
+1    90	    0014  8B FC				    MOV	  DI,SP
+     91	    0016  36: C4 7D 04				   LES	      DI, CommInfo
+     92	    001A  66| 33 C0				   XOR	      EAX, EAX
+     93	    001D  66| AB				   STOSD
+     94	    001F  AA					   STOSB
+     95	    0020  B0 00					   MOV	      AL, false
+     96	    0022  EB 11					   JMP	      SHORT @@4DOS_End
+     97	    0024			 @@Is_4DOS:
+     98	    0024  36: C4 7D 04				   LES	      DI, CommInfo
+     99	    0028  26: 89 1D				   MOV	      WORD PTR ES:[DI],	BX
+    100	    002B  26: 89 4D 02				   MOV	      WORD PTR ES:[DI+2], CX
+    101	    002F  26: 88 55 03				   MOV	      BYTE PTR ES:[DI+3], DL
+    102	    0033  B0 01					   MOV	      AL, true
+    103	    0035			 @@4DOS_End:
+    104	    0035  CA 0004				   RET	      4
+    105	    0038			 Get_4DOS_Version ENDP
+    106	    0038			 Get_NDOS_Version ENDP
+    107
+    108
+    109	    0038			 Get_DosNavigator_Present PROC FAR
+    110	    0038  B8 9900					   MOV	AX, eDN_Check
+    111	    003B  CD 2F						   INT	2Fh
+    112	    003D  3D 444E					   CMP	AX, eDN_Sign
+    113	    0040  74 06	90 90					   JE	@@Is_DN
+Turbo Assembler	 Version 4.1	    01/09/98 23:42:04	    Page 3
+some.asm
+
+
+
+    114	    0044  B0 00						   MOV	AL,false
+    115	    0046  EB 02						   JMP	SHORT @@DN_End
+    116	    0048			 @@Is_DN:
+    117	    0048  B0 01						   MOV	AL, true
+    118	    004A			 @@DN_End:
+    119	    004A  CB						   RET
+    120	    004B			 Get_DosNavigator_Present ENDP
+    121
+    122
+    123
+    124	    004B			 CODE  ENDS
+    125
+    126					       END
+Turbo Assembler	 Version 4.1	    01/09/98 23:42:04	    Page 4
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "01/09/98"
+??FILENAME			  Text	 "some	  "
+??TIME				  Text	 "23:42:04"
+??VERSION			  Number 040A
+@@4DOS_END			  Near	 CODE:0035
+@@CHECK_FOR			  Near	 CODE:0009
+@@DN_END			  Near	 CODE:004A
+@@DONT_4DOS			  Near	 CODE:0014
+@@IS_4DOS			  Near	 CODE:0024
+@@IS_DN				  Near	 CODE:0048
+@CPU				  Text	 0F0FH
+@CURSEG				  Text	 CODE
+@FILENAME			  Text	 SOME
+@WORDSIZE			  Text	 4
+COMMINFO			  Text	 SS:[DI+4]
+E4DOS_CHECK			  Number D44D
+E4DOS_SIGN			  Number 44DD
+EDN_CHECK			  Number 9900
+EDN_SIGN			  Number 444E
+ENDOS_CHECK			  Number E44D
+FALSE				  Number 0000
+GET_4DOS_VERSION		  Far	 CODE:0006
+GET_DOSNAVIGATOR_PRESENT	  Far	 CODE:0038
+GET_NDOS_VERSION		  Far	 CODE:0000
+MULTIPLEX			  Number 002F
+TRUE				  Number 0001
+
+Macro Name
+
+BOOLEANAL
+EMSCALL
+EXITCODE
+KBDCALL
+RESTOREDS
+SAVEDS
+STACKFRAME
+STACKFRAMEBP
+ZERO
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+CODE				  16  004B Byte	  Public
+DATA				  16  0000 Word	  Public
+Turbo Assembler	 Version 4.1	    01/09/98 23:42:04	    Page 5
+Error Summary
+
+
+
+*Warning* MACRO.INC(44)	Reserved word used as symbol: EXITCODE
+

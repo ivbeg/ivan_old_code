@@ -1,0 +1,179 @@
+
+ Start  Stop   Length Name               Class
+
+ 00000H 000DBH 000DCH PROGRAM            CODE
+ 000E0H 0014AH 0006BH IvKbd              CODE
+ 00150H 00ACBH 0097CH IvGraph            CODE
+ 00AD0H 00AF2H 00023H IvSystem           CODE
+ 00B00H 01091H 00592H System             CODE
+ 010A0H 01653H 005B4H DATA               DATA
+ 01660H 0565FH 04000H STACK              STACK
+ 05660H 05660H 00000H HEAP               HEAP
+
+  Address         Publics by Value
+
+ 0000:0032       @
+ 000E:0000       GetKey
+ 000E:0005       FlushKbdBuff
+ 000E:0012       KeyPresent
+ 000E:0028       SetRate_Delay
+ 000E:003D       WaitForKey
+ 000E:0051       WriteKey
+ 0015:0000       Attrib
+ 0015:002D       WriteCenter
+ 0015:0084       FillBox
+ 0015:00D5       @
+ 0015:0101       GetX
+ 0015:0105       GetY
+ 0015:010B       CursorForm
+ 0015:0125       CursorOff
+ 0015:0140       CursorOn
+ 0015:015B       GetCurrentPage
+ 0015:0165       GetPageOffset
+ 0015:017E       SetDoubleScan
+ 0015:019C       IsCursorEm
+ 0015:01BA       IsWaitDisplay
+ 0015:01CB       IsVideoSysActive
+ 0015:01DC       IsSaveBuffer
+ 0015:01ED       IsVGABoardActive
+ 0015:01FE       VideoMemSize
+ 0015:0215       IsGreySumm
+ 0015:0226       IsDefPalLoad
+ 0015:0237       GetScanLines
+ 0015:0258       SaveVideoState
+ 0015:026C       RestoreVideoState
+ 0015:0280       GetStateBufferSize
+ 0015:0293       GetDCC
+ 0015:029D       SetDCC
+ 0015:02B1       SetVideoMode
+ 0015:02C1       GetVideoMode
+ 0015:02D7       CursorXY
+ 0015:02E7       SetCurrentPage
+ 0015:02F4       WriteCharTTY
+ 0015:032B       TotalScanLines
+ 0015:035C       SetBlink
+ 0015:037C       SetStartAddress
+ 0015:0394       IsDoubleScan
+ 0015:03CA       IsBlink
+ 0015:03DF       IsGraphMode
+ 0015:03F4       SetScanLines
+ 0015:0406       GetVideoInfo
+ 0015:041A       WaitRetrace
+ 0015:04A6       DisableDefPalLoad
+ 0015:04AE       DisableVideoAddr
+ 0015:04B6       DisableGreySumm
+ 0015:04BE       DisableCursorEm
+ 0015:04C6       DisableVideoRefr
+ 0015:04CE       SetCgaBorder
+ 0015:04E0       SetCgaPalette
+ 0015:04F2       GetOverScanColor
+ 0015:04FA       SetOverScanColor
+ 0015:050A       SetDACPalette
+ 0015:0521       GetDACPalette
+ 0015:0538       GreySummDAC
+ 0015:054C       bWriteString
+ 0015:0592       GetEgaReg
+ 0015:05A5       SetEgaReg
+ 0015:0688       InitIvGraph
+ 0015:06C7       Scroll
+ 0015:0798       WriteChar
+ 0015:07B9       WriteStr
+ 0015:07F6       WriteStrXY
+ 0015:081D       ReadChar
+ 0015:0836       ReadAttr
+ 0015:088F       FillAttr
+ 0015:08B0       FillAttrXY
+ 0015:08E7       WriteAttr
+ 0015:08FD       PlaneWrite
+ 0015:0923       PlaneWriteXY
+ 0015:094C       ClrScr
+ 00AD:0000       @
+ 010A:0002       S1
+ 010A:0102       S2
+ 010A:0202       S3
+ 010A:0302       OvrCodeList
+ 010A:0304       OvrHeapSize
+ 010A:0306       OvrDebugPtr
+ 010A:030A       OvrHeapOrg
+ 010A:030C       OvrHeapPtr
+ 010A:030E       OvrHeapEnd
+ 010A:0310       OvrLoadList
+ 010A:0312       OvrDosHandle
+ 010A:0314       OvrEmsHandle
+ 010A:0316       HeapOrg
+ 010A:031A       HeapPtr
+ 010A:031E       HeapEnd
+ 010A:0322       FreeList
+ 010A:0326       FreeZero
+ 010A:032A       HeapError
+ 010A:032E       ExitProc
+ 010A:0332       ExitCode
+ 010A:0334       ErrorAddr
+ 010A:0338       PrefixSeg
+ 010A:033A       StackLimit
+ 010A:033C       InOutRes
+ 010A:033E       RandSeed
+ 010A:0342       SelectorInc
+ 010A:0344       Seg0040
+ 010A:0346       SegA000
+ 010A:0348       SegB000
+ 010A:034A       SegB800
+ 010A:034C       Test8086
+ 010A:034D       Test8087
+ 010A:034E       FileMode
+ 010A:0350       UsePorts
+ 010A:0351       UseBios
+ 010A:0352       Hide
+ 010A:0353       SetCounter
+ 010A:0354       Counter
+ 010A:0355       TextChar
+ 010A:0356       TextAttr
+ 010A:0358       CurrentVideoSeg
+ 010A:035A       WindMin
+ 010A:035C       WindMax
+ 010A:035E       PspAddr
+ 010A:0362       Err
+ 010A:0364       Error
+ 010A:0365       EType
+ 010A:0366       sgbErrorDecode
+ 010A:0368       Input
+ 010A:0468       Output
+ 010A:0568       SaveInt00
+ 010A:056C       SaveInt02
+ 010A:0570       SaveInt1B
+ 010A:0574       SaveInt21
+ 010A:0578       SaveInt23
+ 010A:057C       SaveInt24
+ 010A:0580       SaveInt34
+ 010A:0584       SaveInt35
+ 010A:0588       SaveInt36
+ 010A:058C       SaveInt37
+ 010A:0590       SaveInt38
+ 010A:0594       SaveInt39
+ 010A:0598       SaveInt3A
+ 010A:059C       SaveInt3B
+ 010A:05A0       SaveInt3C
+ 010A:05A4       SaveInt3D
+ 010A:05A8       SaveInt3E
+ 010A:05AC       SaveInt3F
+ 010A:05B0       SaveInt75
+
+Line numbers for PROGRAM(IVAN2.PAS) segment PROGRAM
+
+     7 0000:0032     8 0000:004B     9 0000:0050    10 0000:0055
+    11 0000:0072    12 0000:0077    13 0000:0093    14 0000:00A6
+    15 0000:00B6    16 0000:00BF    17 0000:00CF    18 0000:00D4
+
+Line numbers for IvGraph(IVGRAPH.PAS) segment IvGraph
+
+   213 0015:0000   214 0015:000E   215 0015:0024   218 0015:002D
+   219 0015:0053   220 0015:005B   221 0015:007E   225 0015:0084
+   226 0015:0092   227 0015:00A8   228 0015:00CF   333 0015:00D5
+   334 0015:00DF   335 0015:00E3
+
+Line numbers for IvSystem(IVSYSTEM.PAS) segment IvSystem
+
+   164 00AD:0000   165 00AD:000A   166 00AD:000F   167 00AD:0014
+   168 00AD:0021
+
+Program entry point at 0000:0032

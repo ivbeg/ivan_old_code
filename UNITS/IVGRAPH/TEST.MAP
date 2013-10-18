@@ -1,0 +1,338 @@
+
+ Start  Stop   Length Name               Class
+
+ 00000H 0117BH 0117CH Test               CODE
+ 01180H 011A4H 00025H TestStrs           CODE
+ 011B0H 011B0H 00000H IvMouse            CODE
+ 011B0H 0121AH 0006BH IvKbd              CODE
+ 01220H 01371H 00152H IVstring           CODE
+ 01380H 01E99H 00B1AH IvGraph            CODE
+ 01EA0H 01EC3H 00024H IvSystem           CODE
+ 01ED0H 0242EH 0055FH Overlay            CODE
+ 02430H 02E60H 00A31H System             CODE
+ 02E70H 05265H 023F6H DATA               DATA
+ 05270H 0926FH 04000H STACK              STACK
+ 09270H 09270H 00000H HEAP               HEAP
+
+  Address         Publics by Value
+
+ 0000:0000       WriteStr
+ 0000:003B       StrLow
+ 0000:011F       UpCase
+ 0000:0170       ReadString
+ 0000:03B5       ReadInfo
+ 0000:0505       Halting
+ 0000:05CF       Ask_YES_or_NO
+ 0000:06C5       InitPart
+ 0000:0794       WriteTestHelp
+ 0000:082B       Persents
+ 0000:08E0       MakeResult
+ 0000:0B42       MakeFormulaTest
+ 0000:0C09       Pause
+ 0000:0C4A       StartTest
+ 0000:0C82       GetBornYear
+ 0000:0CFB       GetBornDay
+ 0000:0D68       GetBornMonth
+ 0000:0DDB       GetComment
+ 0000:0E3A       GetElseName
+ 0000:0ED9       WriteExtInfo
+ 0000:1125       @
+ 0118:0000       GetName
+ 011B:0000       GetKey
+ 011B:0005       FlushKbdBuff
+ 011B:0012       KeyPresent
+ 011B:0028       SetRate_Delay
+ 011B:003D       WaitForKey
+ 011B:0051       WriteKey
+ 0122:0000       Digit
+ 0122:0041       @
+ 0122:004D       PcharSize
+ 0122:0071       AsciizString
+ 0122:0092       AscString
+ 0122:00BE       LowCase
+ 0122:0128       CheckChar
+ 0138:0000       Pause
+ 0138:0024       SetPauseStr
+ 0138:0064       EndL
+ 0138:00A5       FastWrite
+ 0138:00DF       FastWriteLn
+ 0138:0119       WriteCenter
+ 0138:018D       @
+ 0138:01F3       NoneDo
+ 0138:01F6       SetLogicPage
+ 0138:021D       SetRealPage
+ 0138:0256       GetX
+ 0138:025A       GetY
+ 0138:0260       CursorForm
+ 0138:027A       CursorOff
+ 0138:02A7       CursorOn
+ 0138:02B9       GetCurrentPage
+ 0138:02C3       GetPageOffset
+ 0138:02DC       SetDoubleScan
+ 0138:02FA       IsCursorEm
+ 0138:0318       IsWaitDisplay
+ 0138:0329       IsVideoSysActive
+ 0138:033A       IsSaveBuffer
+ 0138:034B       IsVGABoardActive
+ 0138:035C       VideoMemSize
+ 0138:0373       IsGreySumm
+ 0138:0384       IsDefPalLoad
+ 0138:0395       GetScanLines
+ 0138:03B6       SaveVideoState
+ 0138:03CA       RestoreVideoState
+ 0138:03DE       GetStateBufferSize
+ 0138:03F1       GetDCC
+ 0138:03FB       SetDCC
+ 0138:0440       SetVideoPage
+ 0138:0464       SetVideoMode
+ 0138:047E       GetVideoMode
+ 0138:04AE       CursorXY
+ 0138:04BE       WriteCharTTY
+ 0138:04F5       TotalScanLines
+ 0138:0526       SetBlink
+ 0138:0546       SetStartAddress
+ 0138:055E       IsDoubleScan
+ 0138:0594       IsBlink
+ 0138:05A9       IsGraphMode
+ 0138:05BE       SetScanLines
+ 0138:05D0       GetVideoInfo
+ 0138:05E4       WaitRetrace
+ 0138:0670       DisableDefPalLoad
+ 0138:0678       DisableVideoAddr
+ 0138:0680       DisableGreySumm
+ 0138:0688       DisableCursorEm
+ 0138:0690       DisableVideoRefr
+ 0138:0698       SetCgaBorder
+ 0138:06AA       SetCgaPalette
+ 0138:06BC       GetOverScanColor
+ 0138:06C4       SetOverScanColor
+ 0138:06D4       SetDACPalette
+ 0138:06EB       GetDACPalette
+ 0138:0702       GreySummDAC
+ 0138:0716       bWriteString
+ 0138:075C       GetEgaReg
+ 0138:076F       SetEgaReg
+ 0138:082C       InitIvGraph
+ 0138:0856       Scroll
+ 0138:0913       WriteChar
+ 0138:0925       WriteStr
+ 0138:0948       WriteStrXY
+ 0138:096E       ReadChar
+ 0138:0977       ReadAttr
+ 0138:09A8       FillAttr
+ 0138:09C9       FillAttrXY
+ 0138:0A01       WriteAttr
+ 0138:0A17       PlaneWrite
+ 0138:0A3D       PlaneWriteXY
+ 0138:0A6B       ClrScr
+ 0138:0AA0       LineX
+ 0138:0ACC       LineY
+ 01EA:0000       DoNone
+ 01EA:0001       @
+ 01ED:0012       OvrInit
+ 01ED:01A3       OvrSetBuf
+ 01ED:01F2       OvrGetBuf
+ 01ED:01FD       OvrSetRetry
+ 01ED:020E       OvrGetRetry
+ 01ED:0215       OvrClearBuf
+ 02E7:0002       csDoYouWant
+ 02E7:0040       csMonths
+ 02E7:00C4       csComments
+ 02E7:063C       csShortNames
+ 02E7:06BA       csFamilyNames
+ 02E7:07E0       csSure
+ 02E7:080A       csRealSure
+ 02E7:0834       csIdiot
+ 02E7:085E       csIdiot2
+ 02E7:086A       csCount
+ 02E7:0880       csYou
+ 02E7:0890       csResult
+ 02E7:08BA       csTest
+ 02E7:08C0       csFormula
+ 02E7:08E0       csFlegmatik
+ 02E7:08EC       csSangvinik
+ 02E7:08F8       csMelanholik
+ 02E7:0904       csHolerik
+ 02E7:0910       HolerArray
+ 02E7:0E24       SangvArray
+ 02E7:1338       FlegmArray
+ 02E7:184C       MelanArray
+ 02E7:1E16       OvrResult
+ 02E7:1E18       OvrEmsPages
+ 02E7:1E1A       OvrTrapCount
+ 02E7:1E1C       OvrLoadCount
+ 02E7:1E1E       OvrFileMode
+ 02E7:1E26       OvrCodeList
+ 02E7:1E28       OvrHeapSize
+ 02E7:1E2A       OvrDebugPtr
+ 02E7:1E2E       OvrHeapOrg
+ 02E7:1E30       OvrHeapPtr
+ 02E7:1E32       OvrHeapEnd
+ 02E7:1E34       OvrLoadList
+ 02E7:1E36       OvrDosHandle
+ 02E7:1E38       OvrEmsHandle
+ 02E7:1E3A       HeapOrg
+ 02E7:1E3E       HeapPtr
+ 02E7:1E42       HeapEnd
+ 02E7:1E46       FreeList
+ 02E7:1E4A       FreeZero
+ 02E7:1E4E       HeapError
+ 02E7:1E52       ExitProc
+ 02E7:1E56       ExitCode
+ 02E7:1E58       ErrorAddr
+ 02E7:1E5C       PrefixSeg
+ 02E7:1E5E       StackLimit
+ 02E7:1E60       InOutRes
+ 02E7:1E62       RandSeed
+ 02E7:1E66       SelectorInc
+ 02E7:1E68       Seg0040
+ 02E7:1E6A       SegA000
+ 02E7:1E6C       SegB000
+ 02E7:1E6E       SegB800
+ 02E7:1E70       Test8086
+ 02E7:1E71       Test8087
+ 02E7:1E72       FileMode
+ 02E7:1E74       HaltFlag
+ 02E7:1E75       TitulColor
+ 02E7:1E76       Holer
+ 02E7:1E77       Melan
+ 02E7:1E78       Flegm
+ 02E7:1E79       Sangv
+ 02E7:1E7A       Count
+ 02E7:1E7B       ExitCount
+ 02E7:1E7C       Name
+ 02E7:1F7C       FamilyName
+ 02E7:207C       MemberNum
+ 02E7:207E       UsePorts
+ 02E7:207F       UseBios
+ 02E7:2080       Hide
+ 02E7:2081       SetCounter
+ 02E7:2082       Counter
+ 02E7:2083       TextChar
+ 02E7:2084       TextAttr
+ 02E7:2086       CurrentVideoSeg
+ 02E7:2088       PageOffset
+ 02E7:208A       WindMin
+ 02E7:208C       WindMax
+ 02E7:208E       WaitProc
+ 02E7:2092       PauseProc
+ 02E7:2096       ActiveScreenPtr
+ 02E7:209A       VirtualScreenActive
+ 02E7:219C       PspAddr
+ 02E7:21A0       Err
+ 02E7:21A2       Error
+ 02E7:21A3       EType
+ 02E7:21A4       sgbErrorDecode
+ 02E7:21A6       OvrReadBuf
+ 02E7:21AA       Input
+ 02E7:22AA       Output
+ 02E7:23AA       SaveInt00
+ 02E7:23AE       SaveInt02
+ 02E7:23B2       SaveInt1B
+ 02E7:23B6       SaveInt21
+ 02E7:23BA       SaveInt23
+ 02E7:23BE       SaveInt24
+ 02E7:23C2       SaveInt34
+ 02E7:23C6       SaveInt35
+ 02E7:23CA       SaveInt36
+ 02E7:23CE       SaveInt37
+ 02E7:23D2       SaveInt38
+ 02E7:23D6       SaveInt39
+ 02E7:23DA       SaveInt3A
+ 02E7:23DE       SaveInt3B
+ 02E7:23E2       SaveInt3C
+ 02E7:23E6       SaveInt3D
+ 02E7:23EA       SaveInt3E
+ 02E7:23EE       SaveInt3F
+ 02E7:23F2       SaveInt75
+
+Line numbers for Test(TEST.PAS) segment Test
+
+    44 0000:0000    45 0000:0026    46 0000:0035    50 0000:003B
+    51 0000:0061    53 0000:007E    54 0000:00A6    55 0000:00C5
+    56 0000:00F8    57 0000:0105    58 0000:0119    61 0000:011F
+    62 0000:012D    63 0000:0143    64 0000:014E    65 0000:0164
+   105 0000:0170   106 0000:017E   107 0000:0182   108 0000:0186
+   109 0000:018E   110 0000:0196   111 0000:019D   113 0000:01A1
+   114 0000:01A6   115 0000:01B3   116 0000:01BD   117 0000:01EE
+   118 0000:01F3   119 0000:020B   120 0000:0213   121 0000:021C
+   122 0000:021F   123 0000:022F   124 0000:024B   125 0000:0255
+   126 0000:0264   127 0000:0273   130 0000:02B5   131 0000:02B8
+   132 0000:02BC   133 0000:02D0   134 0000:02D7   135 0000:02DA
+   137 0000:02E4   138 0000:0320   139 0000:0323   140 0000:0329
+   141 0000:032B   143 0000:033E   144 0000:0341   146 0000:0347
+   147 0000:035D   148 0000:0380   150 0000:0386   153 0000:0396
+   154 0000:039F   164 0000:03B5   165 0000:03C4   166 0000:03CA
+   167 0000:03CF   168 0000:03FC   169 0000:0429   170 0000:042D
+   171 0000:0432   172 0000:044F   173 0000:046C   174 0000:0477
+   175 0000:0482   177 0000:0486   178 0000:0489   180 0000:04E0
+   181 0000:04E6   183 0000:04EA   184 0000:04F6   185 0000:04FC
+   186 0000:0501   192 0000:0505   193 0000:0514   194 0000:0519
+   195 0000:0527   196 0000:052C   197 0000:0530   198 0000:0537
+   200 0000:053E   201 0000:055B   202 0000:0562   203 0000:0564
+   204 0000:05A0   205 0000:05AC   206 0000:05BB   207 0000:05C0
+   208 0000:05C4   215 0000:05CF   217 0000:05DD   218 0000:05E5
+   219 0000:05EE   220 0000:05F2   221 0000:0606   222 0000:060A
+   223 0000:060D   224 0000:0611   225 0000:0625   226 0000:0629
+   227 0000:062C   228 0000:0630   229 0000:0644   230 0000:0648
+   231 0000:064A   232 0000:064E   233 0000:0662   234 0000:0666
+   235 0000:0668   236 0000:066C   237 0000:0680   238 0000:0684
+   239 0000:0686   240 0000:068A   241 0000:069E   242 0000:06A2
+   245 0000:06A4   246 0000:06A8   247 0000:06AC   248 0000:06AE
+   249 0000:06B2   250 0000:06B6   251 0000:06B8   253 0000:06BB
+   258 0000:06C5   259 0000:06E9   260 0000:06FA   261 0000:0701
+   263 0000:070C   264 0000:0722   265 0000:074E   266 0000:0763
+   267 0000:076A   270 0000:0794   271 0000:07A3   272 0000:07D9
+   273 0000:080F   274 0000:0823   280 0000:082B   281 0000:083A
+   282 0000:0851   283 0000:086D   284 0000:08D2   294 0000:08E0
+   295 0000:08EF   296 0000:0912   297 0000:0917   298 0000:0928
+   299 0000:092D   300 0000:0941   301 0000:0962   302 0000:097B
+   303 0000:09B1   304 0000:09CA   305 0000:0A00   306 0000:0A19
+   307 0000:0A4F   308 0000:0A5C   309 0000:0A72   310 0000:0A79
+   311 0000:0A7E   312 0000:0AA9   313 0000:0AD4   314 0000:0AFF
+   315 0000:0B2A   316 0000:0B31   319 0000:0B42   320 0000:0B50
+   321 0000:0B85   322 0000:0B91   323 0000:0BA2   325 0000:0BC9
+   326 0000:0BD7   327 0000:0BE5   328 0000:0BF3   329 0000:0C01
+   330 0000:0C05   335 0000:0C09   336 0000:0C17   337 0000:0C1D
+   338 0000:0C22   339 0000:0C27   340 0000:0C2D   343 0000:0C4A
+   345 0000:0C58   346 0000:0C6C   347 0000:0C70   348 0000:0C74
+   349 0000:0C78   353 0000:0C82   354 0000:0C91   355 0000:0CB9
+   356 0000:0CF4   359 0000:0CFB   360 0000:0D0A   361 0000:0D32
+   362 0000:0D61   365 0000:0D68   366 0000:0D72   367 0000:0D9A
+   368 0000:0DC7   371 0000:0DDB   372 0000:0DE5   373 0000:0E0D
+   374 0000:0E2D   377 0000:0E3A   378 0000:0E44   379 0000:0E6C
+   380 0000:0E8C   388 0000:0ED9   389 0000:0EE8   390 0000:0EF6
+   391 0000:0EFB   392 0000:0F07   394 0000:0F12   395 0000:0F17
+   396 0000:0F43   398 0000:0F9E   399 0000:0FC8   401 0000:0FF2
+   402 0000:101E   404 0000:1061   405 0000:108D   407 0000:10B7
+   408 0000:10E3   409 0000:110D   410 0000:1111   411 0000:1118
+   414 0000:1125   415 0000:1147   416 0000:115B   417 0000:1166
+   418 0000:116A   419 0000:116E   420 0000:1172
+
+Line numbers for TestStrs(TESTSTRS.PAS) segment TestStrs
+
+   283 0118:0000   284 0118:000A   285 0118:002A
+
+Line numbers for IVstring(IVSTRING.PAS) segment IVstring
+
+   167 0122:0000   168 0122:000F   169 0122:0027   170 0122:003B
+   484 0122:0041   485 0122:004B
+
+Line numbers for IvGraph(IVGRAPH.PAS) segment IvGraph
+
+   246 0138:0000   247 0138:000A   248 0138:000E   249 0138:0017
+   250 0138:001F   251 0138:0022   254 0138:0024   255 0138:004A
+   256 0138:005E   259 0138:0064   260 0138:006E   261 0138:0071
+   262 0138:0078   264 0138:0094   265 0138:0098   266 0138:009D
+   268 0138:009F   269 0138:00A3   284 0138:00A5   285 0138:00CB
+   286 0138:00D9   289 0138:00DF   290 0138:0105   291 0138:010F
+   292 0138:0113   319 0138:0119   320 0138:013F   321 0138:0147
+   322 0138:016A   474 0138:018D   475 0138:0197   476 0138:019B
+   477 0138:01A9   478 0138:01B6   479 0138:01C3   480 0138:01D6
+
+Line numbers for IvSystem(IVSYSTEM.PAS) segment IvSystem
+
+   170 01EA:0000   175 01EA:0001   176 01EA:000B   177 01EA:0010
+   178 01EA:0015   179 01EA:0022
+
+Program entry point at 0000:1125

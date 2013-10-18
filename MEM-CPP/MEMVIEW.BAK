@@ -1,0 +1,56 @@
+
+
+class TMemoryBlock : public TObject
+{
+    TMemoryBlockInfo*   Info;
+
+public:
+    TMemoryBlock(TMemoryBlockInfo*  InitInfo);
+    ~TMemoryBlock();
+
+    void  ReleaseBlock();
+    void  DestroyBlock();
+    void  CreateDescription();
+    char*  GetBlockName();
+    TMemoryBlockInfo*   GetBlockInfo();
+};
+
+class TRomMemoryBlock : public TObject
+{
+    void  ReleaseBlock();
+    void  DestroyBlock();
+};
+
+
+TMemoryBlock::TMemoryBlock(TMemoryBlockInfo*  InitInfo)
+{
+    Info = InitInfo;
+};
+
+TMemoryBlock::~TMemoryBlock()
+{
+    free(Info);
+};
+
+TMemoryBlock::GetBlockInfo()
+{
+
+};
+
+
+
+
+
+
+
+struct TMemoryBlockInfo
+{
+    unsigned long               Address;
+    unsigned long               BlockSize;
+    unsigned intg               BlockType;
+    TMemoryBlockInfo*           Owner;
+    TMemoryBlockInfo*           Slave;
+    TMemoryBlock*         Object;
+};
+
+

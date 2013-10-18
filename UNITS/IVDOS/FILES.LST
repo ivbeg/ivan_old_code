@@ -1,0 +1,631 @@
+Microsoft (R) Macro Assembler Version 5.10                  11/26/95 14:16:5
+                                                             Page     1-1
+
+
+       1				INCLUDE MACRO.INC
+       2 = 0000                      C	False      EQU  0
+       3 = 0001                      C	True       EQU  1
+       4			     C	
+       5			     C	
+       6 = 002F                      C	Multiplex  EQU  2Fh
+       7			     C	
+       8			     C	BooleanAl  Macro Bool
+       9			     C	           LOCAL AlOk
+      10			     C	            Zero al
+      11			     C	            cmp Bool,0
+      12			     C	            je  AlOk
+      13			     C	            mov al,1
+      14			     C	      ALok:
+      15			     C	           endm
+      16			     C	
+      17			     C	EmsCall Macro EmsFunction
+      18			     C	         mov  ah,EmsFunction
+      19			     C	         int  67h
+      20			     C	         mov  EmsError,ah
+      21			     C	        endm
+      22			     C	
+      23			     C	KbdCall Macro KbdFunction
+      24			     C	         mov   ah,KbdFunction
+      25			     C	         int   16h
+      26			     C	        endm
+      27			     C	
+      28			     C	StackFrameBP Macro
+      29			     C	              push bp
+      30			     C	              mov  bp,sp
+      31			     C	             endm
+      32			     C	
+      33			     C	ExitCode Macro Count
+      34			     C	          mov  sp,bp
+      35			     C	          pop  bp
+      36			     C	          ret  Count
+      37			     C	         endm
+      38			     C	
+      39			     C	Zero     Macro reg
+      40			     C	          xor  Reg,Reg
+      41			     C	         endm
+      42				
+      43 0000				DATA  SEGMENT WORD PUBLIC
+      44				      ASSUME  DS:DATA
+      45				
+      46				      EXTRN   Error    : BYTE
+      47				      EXTRN   OpenMode : BYTE
+      48				      EXTRN   DosIO    : NEAR
+      49				      EXTRN   ReWriteF : BYTE
+      50				
+      51 0000				DATA  ENDS
+      52				
+      53 0000				CODE  SEGMENT BYTE PUBLIC
+      54				      ASSUME CS:CODE,DS:DATA
+Microsoft (R) Macro Assembler Version 5.10                  11/26/95 14:16:5
+                                                             Page     1-2
+
+
+      55				
+      56				      PUBLIC OpenFile,CreateFile,Delete
+					File
+      57				      PUBLIC FflushFile,SetHandlesCount
+					,DupHandle
+      58				      PUBLIC ForceDupHandle,RenameFile,
+					CloseFile
+      59				      PUBLIC GetFileAttr,SetFileAttr,Se
+					tFileTimeDate
+      60				      PUBLIC GetFileTime,GetFileDate,Se
+					ekFile
+      61				      PUBLIC WriteFile,WriteFilePtr,Rea
+					dFile,ReadFilePtr
+      62				      PUBLIC InputStatus,OutputStatus,H
+					andleRemote,GetHandleAttr,SetHandleAttr
+      63				      PUBLIC IoWriteBuff,IoWriteBuffPtr
+					,IoReadBuff,IoReadBuffPtr
+      64				
+      65 0000				OpenFile PROC FAR
+      66 = (DWORD PTR [BP+10])		FileName EQU  (DWORD PTR [BP+10])
+      67 = (DWORD PTR [BP+6])		Handle   EQU  (DWORD PTR [BP+6])
+      68				          StackFrameBP
+      69 0000  55                    1	              push bp 
+      70 0001  8B EC                 1	              mov  bp,sp 
+      71 0003  1E			          push      ds
+      72 0004  C5 56 0A			          lds       dx,FileName
+      73 0007  A0 0000 E		          mov       al,OpenMode
+      74 000A  B4 3D			          mov       ah,3Dh
+      75 000C  E8 0000 E		          Call      DosIO
+      76 000F  C4 7E 06			          les       di,Handle
+      77 0012  26: 89 05		          mov       WORD PTR es:[di],ax
+      78 0015  1F			          pop       ds
+      79				          ExitCode  4
+      80 0016  8B E5                 1	          mov  sp,bp 
+      81 0018  5D                    1	          pop  bp 
+      82 0019  CA 0004               1	          ret  4 
+      83 001C				OpenFile ENDP
+      84				
+      85 001C				CreateFile PROC FAR
+      86 = (DWORD PTR [BP+12])		FileName   EQU  (DWORD PTR [BP+12])
+      87 = (WORD  PTR [BP+10])		Attr       EQU  (WORD  PTR [BP+10])
+      88 = (DWORD PTR [BP+6])		Handle     EQU  (DWORD PTR [BP+6])
+      89				            StackFrameBP
+      90 001C  55                    1	              push bp 
+      91 001D  8B EC                 1	              mov  bp,sp 
+      92 001F  1E			            Push      ds
+      93 0020  B4 5B			            mov       ah,05Bh
+      94 0022  80 3E 0000 E 00		            cmp       ReWriteF,0
+      95 0027  74 03			            je        @9
+      96 0029  80 EC 1F			            sub       ah,01Fh
+      97 002C				       @9:
+      98 002C  C5 56 0C			            lds       dx,FileName
+      99 002F  8B 4E 0A			            mov       cx,Attr
+     100 0032  E8 0000 E		            Call      DosIo
+Microsoft (R) Macro Assembler Version 5.10                  11/26/95 14:16:5
+                                                             Page     1-3
+
+
+     101 0035  C4 7E 06			            les       di,Handle
+     102 0038  26: 89 05		            mov       WORD PTR es:[di],
+					ax
+     103 003B  1F			            Pop       ds
+     104				            ExitCode  10
+     105 003C  8B E5                 1	          mov  sp,bp 
+     106 003E  5D                    1	          pop  bp 
+     107 003F  CA 000A               1	          ret  10 
+     108 0042				CreateFile ENDP
+     109				
+     110				
+     111 0042				FFlushFile PROC FAR
+     112 = (WORD PTR [BP+6])		Handle     EQU  (WORD PTR [BP+6])
+     113				            StackFrameBP
+     114 0042  55                    1	              push bp 
+     115 0043  8B EC                 1	              mov  bp,sp 
+     116 0045  8B 5E 06			            mov       bx,Handle
+     117 0048  B4 68			            mov       ah,68h
+     118 004A  E8 0000 E		            Call      DosIo
+     119				            ExitCode  2
+     120 004D  8B E5                 1	          mov  sp,bp 
+     121 004F  5D                    1	          pop  bp 
+     122 0050  CA 0002               1	          ret  2 
+     123 0053				FFlushFile ENDP
+     124				
+     125 0053				SetHandlesCount PROC FAR
+     126 = (WORD PTR [BP+6])		Num             EQU  (WORD PTR [BP+6])
+     127				                 StackFrameBP
+     128 0053  55                    1	              push bp 
+     129 0054  8B EC                 1	              mov  bp,sp 
+     130 0056  8B 5E 06			                 mov       bx,Num
+     131 0059  B4 67			                 mov       ah,67h
+     132 005B  E8 0000 E		                 Call      DosIo
+     133				                 ExitCode  2
+     134 005E  8B E5                 1	          mov  sp,bp 
+     135 0060  5D                    1	          pop  bp 
+     136 0061  CA 0002               1	          ret  2 
+     137 0064				SetHandlesCount ENDP
+     138				
+     139 0064				DupHandle PROC FAR
+     140 0064  B4 45			           mov    ah,45h
+     141 0066  EB 03 90			           jmp    MainBlock
+     142 0069				ForceDupHandle PROC FAR
+     143 = (WORD PTR [BP+8])		Handle1        EQU  (WORD PTR [BP+8])
+     144 = (WORD PTR [BP+6])		Handle2        EQU  (WORD PTR [BP+6])
+     145 0069  B4 46			                 mov       ah,46h
+     146 006B				            MainBlock:
+     147				                 StackFrameBP
+     148 006B  55                    1	              push bp 
+     149 006C  8B EC                 1	              mov  bp,sp 
+     150 006E  8B 5E 08			                 mov       bx,Handle1
+     151 0071  8B 4E 06			                 mov       cx,Handle2
+     152 0074  E8 0000 E		                 Call      DosIo
+     153				                 ExitCode  4
+Microsoft (R) Macro Assembler Version 5.10                  11/26/95 14:16:5
+                                                             Page     1-4
+
+
+     154 0077  8B E5                 1	          mov  sp,bp 
+     155 0079  5D                    1	          pop  bp 
+     156 007A  CA 0004               1	          ret  4 
+     157 007D				ForceDupHandle ENDP
+     158 007D				DupHandle ENDP
+     159				
+     160				
+     161 007D				DeleteFile PROC FAR
+     162 = (DWORD PTR [BP+6])		FileName   EQU  (DWORD PTR [BP+6])
+     163				            StackFrameBP
+     164 007D  55                    1	              push bp 
+     165 007E  8B EC                 1	              mov  bp,sp 
+     166 0080  1E			            push      ds
+     167 0081  B4 41			            mov       ah,41h
+     168 0083  E8 0000 E		            Call      DosIo
+     169				            ExitCode  4
+     170 0086  8B E5                 1	          mov  sp,bp 
+     171 0088  5D                    1	          pop  bp 
+     172 0089  CA 0004               1	          ret  4 
+     173 008C				DeleteFile ENDP
+     174				
+     175				
+     176 008C				CloseFile PROC FAR
+     177 = (WORD PTR [BP+6])		Handle    EQU  (WORD PTR [BP+6])
+     178				           StackFrameBP
+     179 008C  55                    1	              push bp 
+     180 008D  8B EC                 1	              mov  bp,sp 
+     181 008F  8B 5E 06			           mov       bx,Handle
+     182 0092  B4 3E			           mov       ah,3Eh
+     183 0094  E8 0000 E		           Call      DosIo
+     184				           ExitCode  2
+     185 0097  8B E5                 1	          mov  sp,bp 
+     186 0099  5D                    1	          pop  bp 
+     187 009A  CA 0002               1	          ret  2 
+     188 009D				CloseFile ENDP
+     189				
+     190				
+     191 009D				RenameFile PROC FAR
+     192 = (DWORD PTR [BP+10])		Name1      EQU  (DWORD PTR [BP+10])
+     193 = (DWORD PTR [BP+6])		Name2      EQU  (DWORD PTR [BP+6])
+     194				            StackFrameBP
+     195 009D  55                    1	              push bp 
+     196 009E  8B EC                 1	              mov  bp,sp 
+     197 00A0  1E			            push      ds
+     198 00A1  C5 56 0A			            lds       dx,Name1
+     199 00A4  C4 76 06			            les       si,Name2
+     200 00A7  B4 56			            mov       ah,56h
+     201 00A9  E8 0000 E		            Call      DosIo
+     202 00AC  1F			            pop       ds
+     203				            ExitCode  8
+     204 00AD  8B E5                 1	          mov  sp,bp 
+     205 00AF  5D                    1	          pop  bp 
+     206 00B0  CA 0008               1	          ret  8 
+     207 00B3				RenameFile ENDP
+Microsoft (R) Macro Assembler Version 5.10                  11/26/95 14:16:5
+                                                             Page     1-5
+
+
+     208				
+     209				
+     210 00B3				GetFileAttr PROC FAR
+     211 = (DWORD PTR [BP+6])		FileName    EQU  (DWORD PTR [BP+6])
+     212				             StackFrameBP
+     213 00B3  55                    1	              push bp 
+     214 00B4  8B EC                 1	              mov  bp,sp 
+     215 00B6  1E			             push      ds
+     216 00B7  C5 56 06			             lds       dx,FileName
+     217 00BA  B8 4300			             mov       ax,4300h
+     218 00BD  E8 0000 E		             Call      DosIo
+     219 00C0  1F			             pop       ds
+     220				             ExitCode  4
+     221 00C1  8B E5                 1	          mov  sp,bp 
+     222 00C3  5D                    1	          pop  bp 
+     223 00C4  CA 0004               1	          ret  4 
+     224 00C7				GetFileAttr ENDP
+     225				
+     226				
+     227 00C7				SetFileAttr PROC FAR
+     228 = (DWORD PTR [BP+8])		FileName    EQU  (DWORD PTR [BP+8])
+     229 = (WORD  PTR [BP+6])		Attr        EQU  (WORD  PTR [BP+6])
+     230				             StackFrameBP
+     231 00C7  55                    1	              push bp 
+     232 00C8  8B EC                 1	              mov  bp,sp 
+     233 00CA  1E			             push      ds
+     234 00CB  C5 56 08			             lds       dx,FileName
+     235 00CE  8B 4E 06			             mov       cx,Attr
+     236 00D1  B8 4301			             mov       ax,4301h
+     237 00D4  E8 0000 E		             Call      DosIo
+     238 00D7  1F			             pop       ds
+     239				             ExitCode  6
+     240 00D8  8B E5                 1	          mov  sp,bp 
+     241 00DA  5D                    1	          pop  bp 
+     242 00DB  CA 0006               1	          ret  6 
+     243 00DE				SetFileAttr ENDP
+     244				
+     245				
+     246 00DE				SetFileTimeDate PROC FAR
+     247 = (WORD PTR [BP+10])		Handle          EQU  (WORD PTR [BP+10])
+     248 = (WORD PTR [BP+8])		Time            EQU  (WORD PTR [BP+8])
+     249 = (WORD PTR [BP+6])		Date            EQU  (WORD PTR [BP+6])
+     250				                 StackFrameBP
+     251 00DE  55                    1	              push bp 
+     252 00DF  8B EC                 1	              mov  bp,sp 
+     253 00E1  8B 5E 0A			                 mov       bx,Handle
+     254 00E4  8B 4E 08			                 mov       cx,Time
+     255 00E7  8B 56 06			                 mov       dx,Date
+     256 00EA  B8 5701			                 mov       ax,5701h
+     257 00ED  E8 0000 E		                 Call      DosIo
+     258				                 ExitCode  6
+     259 00F0  8B E5                 1	          mov  sp,bp 
+     260 00F2  5D                    1	          pop  bp 
+     261 00F3  CA 0006               1	          ret  6 
+Microsoft (R) Macro Assembler Version 5.10                  11/26/95 14:16:5
+                                                             Page     1-6
+
+
+     262 00F6				SetFileTimeDate ENDP
+     263				
+     264				
+     265 00F6				GetFileDate PROC FAR
+     266 = (WORD PTR [BP+6])		Handle      EQU  (WORD PTR [BP+6])
+     267				             StackFrameBP
+     268 00F6  55                    1	              push bp 
+     269 00F7  8B EC                 1	              mov  bp,sp 
+     270 00F9  8B 5E 06			             mov       bx,Handle
+     271 00FC  B8 5700			             mov       ax,5700h
+     272 00FF  E8 0000 E		             Call      DosIO
+     273 0102  8B C2			             mov       ax,dx
+     274				             ExitCode  2
+     275 0104  8B E5                 1	          mov  sp,bp 
+     276 0106  5D                    1	          pop  bp 
+     277 0107  CA 0002               1	          ret  2 
+     278 010A				GetFileDate ENDP
+     279				
+     280				
+     281 010A				GetFileTime PROC FAR
+     282 = (WORD PTR [BP+6])		Handle      EQU  (WORD PTR [BP+6])
+     283				             StackFrameBP
+     284 010A  55                    1	              push bp 
+     285 010B  8B EC                 1	              mov  bp,sp 
+     286 010D  8B 5E 06			             mov       bx,Handle
+     287 0110  B8 5700			             mov       ax,5700h
+     288 0113  E8 0000 E		             Call      DosIo
+     289 0116  8B C2			             mov       ax,dx
+     290				             ExitCode  2
+     291 0118  8B E5                 1	          mov  sp,bp 
+     292 011A  5D                    1	          pop  bp 
+     293 011B  CA 0002               1	          ret  2 
+     294 011E				GetFileTime ENDP
+     295				
+     296 011E				WriteFilePtr PROC NEAR
+     297 011E				WriteFile    PROC NEAR
+     298 011E  B4 40			              mov ah,40h
+     299 0120  EB 03 90			              jmp Main
+     300 0123				ReadFilePtr  PROC NEAR
+     301 0123				ReadFile     PROC NEAR
+     302 = (WORD  PTR [BP+16])		Handle       EQU  (WORD  PTR [BP+16])
+     303 = (DWORD PTR [BP+12])		Buffer       EQU  (DWORD PTR [BP+12])
+     304 = (WORD  PTR [BP+10])		Count        EQU  (WORD  PTR [BP+10])
+     305 = (DWORD PTR [BP+6])		Result       EQU  (DWORD PTR [BP+6])
+     306 0123  B4 3F			              mov ah,3Fh
+     307 0125				         Main:
+     308				              StackFrameBP
+     309 0125  55                    1	              push bp 
+     310 0126  8B EC                 1	              mov  bp,sp 
+     311 0128  1E			              push      ds
+     312 0129  8B 5E 10			              mov       bx,Handle
+     313 012C  8B 4E 0A			              mov       cx,Count
+     314 012F  C5 56 0C			              lds       dx,Buffer
+     315 0132  E8 0000 E		              Call      DosIO
+Microsoft (R) Macro Assembler Version 5.10                  11/26/95 14:16:5
+                                                             Page     1-7
+
+
+     316 0135  C4 7E 06			              les       di,Result
+     317 0138  26: 89 05		              mov       WORD PTR es:[di
+					],ax
+     318 013B  1F			              pop       ds
+     319				              ExitCode  12
+     320 013C  8B E5                 1	          mov  sp,bp 
+     321 013E  5D                    1	          pop  bp 
+     322 013F  C2 000C               1	          ret  12 
+     323 0142				ReadFile     ENDP
+     324 0142				ReadFilePtr  ENDP
+     325				
+     326 0142				WriteFile    ENDP
+     327 0142				WriteFilePtr ENDP
+     328				
+     329				
+     330 0142				SeekFile PROC FAR
+     331 = (WORD  PTR [BP+10])		Handle   EQU  (WORD  PTR [BP+10])
+     332 = (DWORD PTR [BP+6])		SeekPos  EQU  (DWORD PTR [BP+6])
+     333				          StackFrameBP
+     334 0142  55                    1	              push bp 
+     335 0143  8B EC                 1	              mov  bp,sp 
+     336 0145  8B 5E 0A			          mov       bx,Handle
+     337 0148  C4 56 06			          les       dx,SeekPos
+     338 014B  8C C1			          mov       cx,es
+     339 014D  B4 42			          mov       ah,42h
+     340 014F  E8 0000 E		          Call      DosIo
+     341				          ExitCode  6
+     342 0152  8B E5                 1	          mov  sp,bp 
+     343 0154  5D                    1	          pop  bp 
+     344 0155  CA 0006               1	          ret  6 
+     345 0158				SeekFile ENDP
+     346				
+     347				
+     348 0158				HandleIO PROC NEAR
+     349 = (WORD PTR [BP+8])		Handle   EQU  (WORD PTR [BP+8])
+     350				          StackFrameBP
+     351 0158  55                    1	              push bp 
+     352 0159  8B EC                 1	              mov  bp,sp 
+     353 015B  8B 5E 08			          mov       bx,Handle
+     354 015E  B4 44			          mov       ah,44h
+     355 0160  E8 0000 E		          Call      DosIO
+     356				          ExitCode  0
+     357 0163  8B E5                 1	          mov  sp,bp 
+     358 0165  5D                    1	          pop  bp 
+     359 0166  C3                    1	          ret  0 
+     360 0167				HandleIO ENDP
+     361				
+     362				
+     363 0167				InputStatus PROC FAR
+     364 0167  B0 06			              mov       al,06h
+     365 0169  E8 0158 R		              Call      HandleIo
+     366				              BooleanAl al
+     367 016C  32 C0                 2	          xor  al,al 
+     368 016E  3C 00                 1	            cmp al,0 
+Microsoft (R) Macro Assembler Version 5.10                  11/26/95 14:16:5
+                                                             Page     1-8
+
+
+     369 0170  74 02                 1	            je  ??0000 
+     370 0172  B0 01                 1	            mov al,1 
+     371 0174                        1	      ??0000: 
+     372 0174  CA 0002			              ret       2
+     373 0177				InputStatus ENDP
+     374				
+     375				
+     376 0177				OutputStatus PROC FAR
+     377 0177  B0 07			              mov       al,07h
+     378 0179  E8 0158 R		              Call      HandleIo
+     379				              BooleanAl al
+     380 017C  32 C0                 2	          xor  al,al 
+     381 017E  3C 00                 1	            cmp al,0 
+     382 0180  74 02                 1	            je  ??0001 
+     383 0182  B0 01                 1	            mov al,1 
+     384 0184                        1	      ??0001: 
+     385 0184  CA 0002			              ret       2
+     386 0187				OutputStatus ENDP
+     387				
+     388				
+     389 0187				HandleRemote PROC FAR
+     390 0187  B0 0A			              mov       al,0Ah
+     391 0189  E8 0158 R		              Call      HandleIo
+     392 018C  83 E2 40			              and       dx,01000000b
+     393				              BooleanAL dx
+     394 018F  32 C0                 2	          xor  al,al 
+     395 0191  83 FA 00              1	            cmp dx,0 
+     396 0194  74 02                 1	            je  ??0002 
+     397 0196  B0 01                 1	            mov al,1 
+     398 0198                        1	      ??0002: 
+     399 0198  CA 0002			              ret       2
+     400 019B				HandleRemote ENDP
+     401				
+     402				
+     403 019B				GetHandleAttr PROC FAR
+     404 019B  86 C0			               xchg      al,al
+     405 019D  E8 0158 R		               Call      HandleIo
+     406 01A0  8B C2			               mov       ax,dx
+     407 01A2				GetHandleAttr ENDP
+     408				
+     409 01A2				IoReadBuffPtr  PROC FAR
+     410 01A2				IoReadBuff     PROC FAR
+     411 01A2  B0 02			                mov       al,02h
+     412 01A4  EB 03 90			                jmp       Loc1
+     413 01A7				IoWriteBuffPtr PROC FAR
+     414 01A7				IoWriteBuff    PROC FAR
+     415 = (WORD  PTR [BP+16])		Handle         EQU  (WORD  PTR [BP+16])
+     416 = (DWORD PTR [BP+12])		Buffer         EQU  (DWORD PTR [BP+12])
+     417 = (WORD  PTR [BP+10])		Count          EQU  (WORD  PTR [BP+10])
+     418 = (DWORD PTR [BP+6])		Result         EQU  (DWORD PTR [BP+6])
+     419 01A7  B0 03			                mov       al,03h
+     420 01A9				            Loc1:
+     421				                StackFrameBP
+     422 01A9  55                    1	              push bp 
+Microsoft (R) Macro Assembler Version 5.10                  11/26/95 14:16:5
+                                                             Page     1-9
+
+
+     423 01AA  8B EC                 1	              mov  bp,sp 
+     424 01AC  1E			                push      ds
+     425 01AD  B4 44			                mov       ah,44h
+     426 01AF  8B 5E 10			                mov       bx,Handle
+     427 01B2  C5 56 0C			                lds       dx,Buffer
+     428 01B5  8B 4E 0A			                mov       cx,Count
+     429 01B8  E8 0000 E		                Call      DosIO
+     430 01BB  C4 7E 06			                les       di,Result
+     431 01BE  26: 89 05		                mov       WORD PTR es:[
+					di],ax
+     432 01C1  1F			                pop       ds
+     433				                ExitCode  12
+     434 01C2  8B E5                 1	          mov  sp,bp 
+     435 01C4  5D                    1	          pop  bp 
+     436 01C5  CA 000C               1	          ret  12 
+     437 01C8				IoWriteBuff    ENDP
+     438 01C8				IoWriteBuffPtr ENDP
+     439				
+     440 01C8				IoReadBuff     ENDP
+     441 01C8				IoReadBuffPtr  ENDP
+     442				
+     443				
+     444 01C8				SetHandleAttr PROC FAR
+     445 = (WORD PTR [BP+8])		Handle        EQU  (WORD PTR [BP+8])
+     446 = (WORD PTR [BP+6])		Attr          EQU  (WORD PTR [BP+6])
+     447				               StackFrameBP
+     448 01C8  55                    1	              push bp 
+     449 01C9  8B EC                 1	              mov  bp,sp 
+     450 01CB  B8 4401			               mov       ax,4401h
+     451 01CE  8B 5E 08			               mov       bx,Handle
+     452 01D1  8B 56 06			               mov       dx,Attr
+     453 01D4  E8 0000 E		               Call      DosIO
+     454				               ExitCode  4
+     455 01D7  8B E5                 1	          mov  sp,bp 
+     456 01D9  5D                    1	          pop  bp 
+     457 01DA  CA 0004               1	          ret  4 
+     458 01DD				SetHandleAttr ENDP
+     459				
+     460 01DD				CODE  ENDS
+     461				
+     462				      END
+
+Microsoft (R) Macro Assembler Version 5.10                  11/26/95 14:16:5
+                                                             Symbols-1
+
+
+Macros:
+
+		N a m e			Lines
+
+BOOLEANAL  . . . . . . . . . . .  	   5
+EMSCALL  . . . . . . . . . . . .  	   3
+EXITCODE . . . . . . . . . . . .  	   3
+KBDCALL  . . . . . . . . . . . .  	   2
+STACKFRAMEBP . . . . . . . . . .  	   2
+ZERO . . . . . . . . . . . . . .  	   1
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CODE . . . . . . . . . . . . . .  	01DD	BYTE	PUBLIC	
+DATA . . . . . . . . . . . . . .  	0000	WORD	PUBLIC	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+ATTR . . . . . . . . . . . . . .  	TEXT  (WORD PTR [BP+6])		
+
+BUFFER . . . . . . . . . . . . .  	TEXT  (DWORD PTR [BP+12])		
+
+CLOSEFILE  . . . . . . . . . . .  	F PROC	008C	CODE	Global	Length = 0011
+COUNT  . . . . . . . . . . . . .  	TEXT  (WORD  PTR [BP+10])		
+CREATEFILE . . . . . . . . . . .  	F PROC	001C	CODE	Global	Length = 0026
+
+DATE . . . . . . . . . . . . . .  	TEXT  (WORD PTR [BP+6])		
+DELETEFILE . . . . . . . . . . .  	F PROC	007D	CODE	Global	Length = 000F
+DOSIO  . . . . . . . . . . . . .  	L NEAR	0000	DATA	External
+DUPHANDLE  . . . . . . . . . . .  	F PROC	0064	CODE	Global	Length = 0019
+
+ERROR  . . . . . . . . . . . . .  	V BYTE	0000	DATA	External
+
+FALSE  . . . . . . . . . . . . .  	NUMBER	0000	
+FFLUSHFILE . . . . . . . . . . .  	F PROC	0042	CODE	Global	Length = 0011
+FILENAME . . . . . . . . . . . .  	TEXT  (DWORD PTR [BP+8])		
+FORCEDUPHANDLE . . . . . . . . .  	F PROC	0069	CODE	Global	Length = 0014
+
+GETFILEATTR  . . . . . . . . . .  	F PROC	00B3	CODE	Global	Length = 0014
+GETFILEDATE  . . . . . . . . . .  	F PROC	00F6	CODE	Global	Length = 0014
+GETFILETIME  . . . . . . . . . .  	F PROC	010A	CODE	Global	Length = 0014
+GETHANDLEATTR  . . . . . . . . .  	F PROC	019B	CODE	Global	Length = 0007
+
+HANDLE . . . . . . . . . . . . .  	TEXT  (WORD PTR [BP+8])		
+HANDLE1  . . . . . . . . . . . .  	TEXT  (WORD PTR [BP+8])		
+HANDLE2  . . . . . . . . . . . .  	TEXT  (WORD PTR [BP+6])		
+HANDLEIO . . . . . . . . . . . .  	N PROC	0158	CODE	Length = 000F
+HANDLEREMOTE . . . . . . . . . .  	F PROC	0187	CODE	Global	Length = 0014
+
+INPUTSTATUS  . . . . . . . . . .  	F PROC	0167	CODE	Global	Length = 0010
+Microsoft (R) Macro Assembler Version 5.10                  11/26/95 14:16:5
+                                                             Symbols-2
+
+
+IOREADBUFF . . . . . . . . . . .  	F PROC	01A2	CODE	Global	Length = 0026
+IOREADBUFFPTR  . . . . . . . . .  	F PROC	01A2	CODE	Global	Length = 0026
+IOWRITEBUFF  . . . . . . . . . .  	F PROC	01A7	CODE	Global	Length = 0021
+IOWRITEBUFFPTR . . . . . . . . .  	F PROC	01A7	CODE	Global	Length = 0021
+
+LOC1 . . . . . . . . . . . . . .  	L NEAR	01A9	CODE
+
+MAIN . . . . . . . . . . . . . .  	L NEAR	0125	CODE
+MAINBLOCK  . . . . . . . . . . .  	L NEAR	006B	CODE
+MULTIPLEX  . . . . . . . . . . .  	NUMBER	002F	
+
+NAME1  . . . . . . . . . . . . .  	TEXT  (DWORD PTR [BP+10])		
+NAME2  . . . . . . . . . . . . .  	TEXT  (DWORD PTR [BP+6])		
+NUM  . . . . . . . . . . . . . .  	TEXT  (WORD PTR [BP+6])		
+
+OPENFILE . . . . . . . . . . . .  	F PROC	0000	CODE	Global	Length = 001C
+OPENMODE . . . . . . . . . . . .  	V BYTE	0000	DATA	External
+OUTPUTSTATUS . . . . . . . . . .  	F PROC	0177	CODE	Global	Length = 0010
+
+READFILE . . . . . . . . . . . .  	N PROC	0123	CODE	Global	Length = 001F
+READFILEPTR  . . . . . . . . . .  	N PROC	0123	CODE	Global	Length = 001F
+RENAMEFILE . . . . . . . . . . .  	F PROC	009D	CODE	Global	Length = 0016
+RESULT . . . . . . . . . . . . .  	TEXT  (DWORD PTR [BP+6])		
+REWRITEF . . . . . . . . . . . .  	V BYTE	0000	DATA	External
+
+SEEKFILE . . . . . . . . . . . .  	F PROC	0142	CODE	Global	Length = 0016
+SEEKPOS  . . . . . . . . . . . .  	TEXT  (DWORD PTR [BP+6])		
+SETFILEATTR  . . . . . . . . . .  	F PROC	00C7	CODE	Global	Length = 0017
+SETFILETIMEDATE  . . . . . . . .  	F PROC	00DE	CODE	Global	Length = 0018
+SETHANDLEATTR  . . . . . . . . .  	F PROC	01C8	CODE	Global	Length = 0015
+SETHANDLESCOUNT  . . . . . . . .  	F PROC	0053	CODE	Global	Length = 0011
+
+TIME . . . . . . . . . . . . . .  	TEXT  (WORD PTR [BP+8])		
+TRUE . . . . . . . . . . . . . .  	NUMBER	0001	
+
+WRITEFILE  . . . . . . . . . . .  	N PROC	011E	CODE	Global	Length = 0024
+WRITEFILEPTR . . . . . . . . . .  	N PROC	011E	CODE	Global	Length = 0024
+
+??0000 . . . . . . . . . . . . .  	L NEAR	0174	CODE
+??0001 . . . . . . . . . . . . .  	L NEAR	0184	CODE
+??0002 . . . . . . . . . . . . .  	L NEAR	0198	CODE
+@9 . . . . . . . . . . . . . . .  	L NEAR	002C	CODE
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  files		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+Microsoft (R) Macro Assembler Version 5.10                  11/26/95 14:16:5
+                                                             Symbols-3
+
+
+
+    357 Source  Lines
+    465 Total   Lines
+     70 Symbols
+
+  46582 + 369559 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors

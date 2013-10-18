@@ -1,0 +1,277 @@
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:30:3
+                                                             Page     1-1
+
+
+       1				INCLUDE MACRO.INC
+       2 = 0000                      C	False      EQU  0
+       3 = 0001                      C	True       EQU  1
+       4			     C	
+       5			     C	
+       6 = 002F                      C	Multiplex  EQU  2Fh
+       7			     C	
+       8			     C	BooleanAl  Macro Boolean
+       9			     C	           LOCAL AlOk
+      10			     C	            mov al,Boolean
+      11			     C	            cmp al,0
+      12			     C	            je  AlOk
+      13			     C	            mov al,1
+      14			     C	      ALok:
+      15			     C	           endm
+      16			     C	
+      17			     C	EmsCall Macro EmsFunction
+      18			     C	         mov  ah,EmsFunction
+      19			     C	         int  67h
+      20			     C	         mov  EmsError,ah
+      21			     C	        endm
+      22			     C	
+      23			     C	KbdCall Macro KbdFunction
+      24			     C	         mov   ah,KbdFunction
+      25			     C	         int   16h
+      26			     C	        endm
+      27			     C	
+      28			     C	StackFrameBP Macro
+      29			     C	              push bp
+      30			     C	              mov  bp,sp
+      31			     C	             endm
+      32			     C	
+      33			     C	ExitCode Macro Count
+      34			     C	          mov  sp,bp
+      35			     C	          pop  bp
+      36			     C	          ret  Count
+      37			     C	         endm
+      38			     C	
+      39			     C	Zero     Macro reg
+      40			     C	          xor  Reg,Reg
+      41			     C	         endm
+      42				
+      43 0000				DATA  SEGMENT WORD PUBLIC
+      44				      ASSUME  DS:DATA
+      45				
+      46				      EXTRN   Error   : BYTE
+      47				      EXTRN   DosIo   : NEAR
+      48				
+      49 0000				DATA  ENDS
+      50				
+      51 0000				CODE  SEGMENT BYTE PUBLIC
+      52				      ASSUME CS:CODE,DS:DATA
+      53				
+      54				      PUBLIC GetCurrentDrive,SetCurrent
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:30:3
+                                                             Page     1-2
+
+
+					Drive,GetBootDrive
+      55				      PUBLIC FlushDiskBuff,DisableDrive
+					,EnAbleDrive
+      56				      PUBLIC DosReadSector,DosWriteSect
+					or
+      57				      PUBLIC DiskFree,DiskTotal
+      58				
+      59 0000				GetCurrentDrive PROC FAR
+      60 0000  B4 19			                 mov   ah,19h
+      61 0002  E8 0000 E		                 Call  DosIo
+      62 0005  CB			                 ret
+      63 0006				GetCurrentDrive ENDP
+      64				
+      65				
+      66 0006				SetCurrentDrive PROC FAR
+      67 = (BYTE PTR [BP+6])		Drive           EQU  (BYTE PTR [BP+6])
+      68				                 StackFrameBP
+      69 0006  55                    1	              push bp 
+      70 0007  8B EC                 1	              mov  bp,sp 
+      71 0009  8A 46 06			                 mov     al,Drive
+      72 000C  B4 0E			                 mov     ah,0Eh
+      73 000E  E8 0000 E		                 Call    DosIo
+      74				                 ExitCode 2
+      75 0011  8B E5                 1	          mov  sp,bp 
+      76 0013  5D                    1	          pop  bp 
+      77 0014  CA 0002               1	          ret  2 
+      78 0017				SetCurrentDrive ENDP
+      79				
+      80				
+      81 0017				GetBootDrive PROC FAR
+      82 0017  B8 3305			              mov     ax,3305h
+      83 001A  E8 0000 E		              Call    DosIo
+      84 001D  CB			              ret
+      85 001E				GetBootDrive ENDP
+      86				
+      87				
+      88 001E				FlushDiskBuff PROC FAR
+      89 001E  B4 0D			               mov  ah,0Dh
+      90 0020  E8 0000 E		               Call DosIo
+      91 0023  CB			               ret
+      92 0024				FlushDiskBuff ENDP
+      93				
+      94 0024				EnableDrive  PROC FAR
+      95 0024  B0 07			              mov al,07h
+      96 0026  EB 06 90			              jmp Activate
+      97 0029				DisableDrive PROC FAR
+      98 = (BYTE PTR [BP+6])		Drive           EQU  (BYTE PTR [BP+6])
+      99				                 StackFrameBP
+     100 0029  55                    1	              push bp 
+     101 002A  8B EC                 1	              mov  bp,sp 
+     102 002C  B0 08			                 mov     al,08h
+     103 002E				        Activate:
+     104 002E  8A 56 06			                 mov     dl,Drive
+     105 0031  B4 5F			                 mov     ah,5Fh
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:30:3
+                                                             Page     1-3
+
+
+     106 0033  E8 0000 E		                 Call    DosIo
+     107				                 ExitCode 2
+     108 0036  8B E5                 1	          mov  sp,bp 
+     109 0038  5D                    1	          pop  bp 
+     110 0039  CA 0002               1	          ret  2 
+     111 003C				DisableDrive ENDP
+     112 003C				EnableDrive ENDP
+     113				
+     114 003C				DosReadSector PROC FAR
+     115 = (BYTE  PTR [BP+10])		Drive         EQU (BYTE  PTR [BP+10])
+     116 = (DWORD PTR [BP+6])		ControlPacket EQU (DWORD PTR [BP+6])
+     117				              StackFrameBp
+     118 003C  55                    1	              push bp 
+     119 003D  8B EC                 1	              mov  bp,sp 
+     120 003F  1E			              push    ds
+     121 0040  C5 5E 06			              lds     bx,ControlPacket
+     122 0043  8A 46 0A			              mov     al,Drive
+     123 0046  CD 26			              int     26h
+     124 0048  1F			              pop     ds
+     125				              ExitCode 6
+     126 0049  8B E5                 1	          mov  sp,bp 
+     127 004B  5D                    1	          pop  bp 
+     128 004C  CA 0006               1	          ret  6 
+     129 004F				DosReadSector ENDP
+     130				
+     131				
+     132 004F				DosWriteSector PROC FAR
+     133 = (BYTE  PTR [BP+10])		Drive          EQU (BYTE  PTR [BP+10])
+     134 = (DWORD PTR [BP+6])		ControlPacket  EQU (DWORD PTR [BP+6])
+     135				              StackFrameBP
+     136 004F  55                    1	              push bp 
+     137 0050  8B EC                 1	              mov  bp,sp 
+     138 0052  1E			              push      ds
+     139 0053  C5 5E 06			              lds       bx,ControlPacke
+					t
+     140 0056  8A 46 0A			              mov       al,Drive
+     141 0059  CD 25			              int       25h
+     142 005B  1F			              pop       ds
+     143				              ExitCode  6
+     144 005C  8B E5                 1	          mov  sp,bp 
+     145 005E  5D                    1	          pop  bp 
+     146 005F  CA 0006               1	          ret  6 
+     147 0062				DosWriteSector ENDP
+     148				
+     149				
+     150 0062				DiskFree  PROC NEAR
+     151 = (BYTE PTR [BP+6])		Drive     EQU  (BYTE PTR [BP+6])
+     152				           StackFrameBP
+     153 0062  55                    1	              push bp 
+     154 0063  8B EC                 1	              mov  bp,sp 
+     155 0065  8A 56 06			           mov       dl,Drive
+     156 0068  B4 36			           mov       ah,36h
+     157 006A  E8 0000 E		           Call      DosIo
+     158 006D  F7 E1			           mul       cx
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:30:3
+                                                             Page     1-4
+
+
+     159 006F  F7 E3			           mul       bx
+     160				           ExitCode  2
+     161 0071  8B E5                 1	          mov  sp,bp 
+     162 0073  5D                    1	          pop  bp 
+     163 0074  C2 0002               1	          ret  2 
+     164 0077				DiskFree  ENDP
+     165				
+     166				
+     167 0077				DiskTotal PROC FAR
+     168 = (BYTE PTR [BP+6])		Drive     EQU  (BYTE PTR [BP+6])
+     169				           StackFrameBP
+     170 0077  55                    1	              push bp 
+     171 0078  8B EC                 1	              mov  bp,sp 
+     172 007A  8A 56 06			           mov       dl,Drive
+     173 007D  B4 36			           mov       ah,36h
+     174 007F  E8 0000 E		           Call      DosIo
+     175 0082  8B DA			           mov       bx,dx
+     176 0084  F7 E1			           mul       cx
+     177 0086  F7 E3			           mul       bx
+     178				           ExitCode  2
+     179 0088  8B E5                 1	          mov  sp,bp 
+     180 008A  5D                    1	          pop  bp 
+     181 008B  CA 0002               1	          ret  2 
+     182 008E				DiskTotal ENDP
+     183				
+     184 008E				CODE  ENDS
+     185				
+     186				      END
+
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:30:3
+                                                             Symbols-1
+
+
+Macros:
+
+		N a m e			Lines
+
+BOOLEANAL  . . . . . . . . . . .  	   5
+EMSCALL  . . . . . . . . . . . .  	   3
+EXITCODE . . . . . . . . . . . .  	   3
+KBDCALL  . . . . . . . . . . . .  	   2
+STACKFRAMEBP . . . . . . . . . .  	   2
+ZERO . . . . . . . . . . . . . .  	   1
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CODE . . . . . . . . . . . . . .  	008E	BYTE	PUBLIC	
+DATA . . . . . . . . . . . . . .  	0000	WORD	PUBLIC	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+ACTIVATE . . . . . . . . . . . .  	L NEAR	002E	CODE
+
+CONTROLPACKET  . . . . . . . . .  	TEXT  (DWORD PTR [BP+6])		
+
+DISABLEDRIVE . . . . . . . . . .  	F PROC	0029	CODE	Global	Length = 0013
+DISKFREE . . . . . . . . . . . .  	N PROC	0062	CODE	Global	Length = 0015
+DISKTOTAL  . . . . . . . . . . .  	F PROC	0077	CODE	Global	Length = 0017
+DOSIO  . . . . . . . . . . . . .  	L NEAR	0000	DATA	External
+DOSREADSECTOR  . . . . . . . . .  	F PROC	003C	CODE	Global	Length = 0013
+DOSWRITESECTOR . . . . . . . . .  	F PROC	004F	CODE	Global	Length = 0013
+DRIVE  . . . . . . . . . . . . .  	TEXT  (BYTE PTR [BP+6])		
+
+ENABLEDRIVE  . . . . . . . . . .  	F PROC	0024	CODE	Global	Length = 0018
+ERROR  . . . . . . . . . . . . .  	V BYTE	0000	DATA	External
+
+FALSE  . . . . . . . . . . . . .  	NUMBER	0000	
+FLUSHDISKBUFF  . . . . . . . . .  	F PROC	001E	CODE	Global	Length = 0006
+
+GETBOOTDRIVE . . . . . . . . . .  	F PROC	0017	CODE	Global	Length = 0007
+GETCURRENTDRIVE  . . . . . . . .  	F PROC	0000	CODE	Global	Length = 0006
+
+MULTIPLEX  . . . . . . . . . . .  	NUMBER	002F	
+
+SETCURRENTDRIVE  . . . . . . . .  	F PROC	0006	CODE	Global	Length = 0011
+
+TRUE . . . . . . . . . . . . . .  	NUMBER	0001	
+
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  dosdisk		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:30:3
+                                                             Symbols-2
+
+
+
+    156 Source  Lines
+    186 Total   Lines
+     31 Symbols
+
+  46862 + 293790 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors

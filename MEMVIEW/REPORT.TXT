@@ -1,0 +1,57 @@
+Memory Viewer Utility Version 1.12 Copyright (c) 1995 Ivan Begtin
+
+Memory Info.
+------------
+Total Conventional Memory: 655360 bytes
+Free  Conventional Memory: 488432 bytes
+
+Global MCB List. First MCB at 021A:0000
+
+Segm:Offs   Name     Owner   Size     Type of Block   Parent 
+---------   ----     -----   ----     -------------   ------ 
+021A:0000   SD       0008    9072   System Data     IO.SYS   
+021B:0000   HIMEM    021C    1152   Device Driver   DOS Data 
+0264:0000   EMM386   0265    4304   Device Driver   DOS Data 
+0372:0000   DBLBUFF  0373    2432   Device Driver   DOS Data 
+040B:0000   DBLSPACE 040C    32     Device Driver   DOS Data 
+040E:0000   f[รฐด€ว 040F    544    System Driver   DOS Data 
+0431:0000   None     0432    512    BUFFERS         DOS Data 
+0452:0000   SC       0008    64     System Code     IO.SYS   
+0457:0000   WIN      0630    544    Environment     None     
+047A:0000   vmm32    06AF    32     vmm32 Data      None     
+047D:0000   KEYB     047E    6928   TSR Program     COMMAND  
+062F:0000   WIN      0630    2016   Unknown         No PSP   
+06AE:0000   vmm32    06AF    1296   TSR Program     WIN      
+0700:0000   COMMAND  0727    592    COMMAND Data    None     
+0726:0000   COMMAND  0727    5520   TSR Program     COMMAND  
+0880:0000   COMMAND  0727    1600   Environment     None     
+08E5:0000   DN       090C    592    Environment     None     
+090B:0000   DN       090C    976    TSR Program     COMMAND  
+0949:0000   MEMVIEW  096F    576    Environment     None     
+096E:0000   MEMVIEW  096F    128256 This Program    COMMAND  
+28BF:0000   None     0000    488432 Free Memory     None     
+
+{ ** Unknown UMB Manager ** }
+UMB Memory Control Blocks
+--- ------ ------- ------
+9FFF:0000   SC       0008    71104  System Code     IO.SYS   
+B15C:0000   vmm32    06AF    64     vmm32 Data      None     
+B161:0000   COMMAND  EBB1    1568   Environment     None     
+B1C4:0000   vmm32    06AF    912    vmm32 Data      None     
+B1FE:0000   SC       0008    90144  System Code     IO.SYS   
+C801:0000   SD       0008    146144 System Data     IO.SYS   
+C802:0000   DRVSPACE C803    110080 Device Driver   DOS Data 
+E2E3:0000   DISPLAY  E2E4    8288   Device Driver   DOS Data 
+E4EA:0000   IFSHLP   E4EB    2848   Device Driver   DOS Data 
+E59D:0000   SETVER   E59E    816    Device Driver   DOS Data 
+E5D1:0000   None     E5D2    400    System Driver   DOS Data 
+E5EB:0000   None     E5EC    2672   FILES           DOS Data 
+E693:0000   None     E694    256    FCB Table       DOS Data 
+E6A4:0000   None     E6A5    15968  BUFFERS         DOS Data 
+EA8B:0000   None     EA8C    1584   Current Dirs    DOS Data 
+EAEF:0000   None     EAF0    3072   STACKS          DOS Data 
+EBB0:0000   COMMAND  EBB1    8608   TSR Program     COMMAND  
+EDCB:0000   vmm32    06AF    9024   vmm32 Data      None     
+-------------------------------------------------------------
+Total Mcb`s Num: 39
+

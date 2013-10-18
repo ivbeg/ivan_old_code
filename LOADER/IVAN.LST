@@ -1,0 +1,55 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+	TITLE	testmem.c
+; [000E]	; Compiler:	TC86 Borland Turbo C++ 2.0
+; [002F]; Dependent file: 	testmem.c
+; [0043]; Dependent file: 	H:\BC\INCLUDE\dos.h
+; [0061]; End of dependency list	
+; [0067]; Compiler: 'C' using small model with underscores on	
+	.386p					; Enable USE32/USE16 usage
+	.387					; Enable floating point also
+_TEXT	SEGMENT	BYTE PUBLIC USE16 'CODE'
+_TEXT	ENDS
+_DATA	SEGMENT	WORD PUBLIC USE16 'DATA'
+_DATA	ENDS
+_BSS	SEGMENT	WORD PUBLIC USE16 'BSS'
+_BSS	ENDS
+DGROUP	GROUP	_DATA, _BSS
+; [0126]; Source file testmem.c	21:32:14 on Dec 13, 1995
+
+	EXTRN		_int86:NEAR
+	PUBLIC		_TestMem		; Located at 1:0000h Type = 1
+
+_TEXT	SEGMENT
+	assume	cs: _TEXT
+
+
+_TestMem:
+	push	bp
+	mov	bp,sp
+	sub	sp,+010h
+	mov	byte ptr [bp-00Fh],48h
+	mov	word ptr [bp-00Eh],0FFFFh
+	lea	ax,[bp-010h]
+	push	ax
+	lea	ax,[bp-010h]
+	push	ax
+	mov	ax,0021h
+	push	ax
+	call	_int86
+	add	sp,+006h
+	mov	ax,[bp-010h]
+	cmp	ax,[bp+004h]
+	jbe	$L1
+	mov	ax,0001h
+	jmp	short $L2
+	jmp	short $L2
+$L1:	xor	ax,ax
+	jmp	short $L2
+$L2:	mov	sp,bp
+	pop	bp
+	ret
+
+_TEXT	ENDS
+	END

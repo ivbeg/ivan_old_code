@@ -1,0 +1,326 @@
+
+ Start  Stop   Length Name               Class
+
+ 00000H 00765H 00766H DevLst             CODE
+ 00770H 00770H 00000H Strings            CODE
+ 00770H 007F3H 00084H IvKbd              CODE
+ 00800H 00E27H 00628H NewDos             CODE
+ 00E30H 0110CH 002DDH IVstring           CODE
+ 01110H 01317H 00208H IvSystem           CODE
+ 01320H 01C42H 00923H TSystem            CODE
+ 01C50H 029BDH 00D6EH System             CODE
+ 029C0H 035E1H 00C22H DATA               DATA
+ 035F0H 075EFH 04000H STACK              STACK
+ 075F0H 075F0H 00000H HEAP               HEAP
+
+  Address         Publics by Value
+
+ 0000:0000       CharArrayToString
+ 0000:007A       PutInStr
+ 0000:0110       CheckForCharDevice
+ 0000:0133       GetCharDeviceType
+ 0000:01A1       GetBlockDeviceType
+ 0000:021B       GetBlockDeviceDrives
+ 0000:0307       InitDevList
+ 0000:03AB       OutputDeviceList
+ 0000:05E7       CreateDeviceList
+ 0000:06D0       WriteCopyright
+ 0000:070D       @
+ 0077:0000       @
+ 0077:0019       GetKey
+ 0077:001E       FlushKbdBuff
+ 0077:002B       KeyPresent
+ 0077:0041       SetRate_Delay
+ 0077:0056       WaitForKey
+ 0077:006A       WriteKey
+ 0080:0000       @
+ 0080:0090       DosReadChar
+ 0080:00A5       DosReadAuxChar
+ 0080:00AB       DosWriteChar
+ 0080:00AF       DosWritePrnChar
+ 0080:00B3       DosWriteAuxChar
+ 0080:00C1       GetStdInStatus
+ 0080:00C9       DosBufferedInput
+ 0080:00D9       DosWriteString
+ 0080:00EA       DiskReset
+ 0080:00F0       SelectDrive
+ 0080:00FE       GetDefaultDrive
+ 0080:0104       SetDiskTransferArea
+ 0080:0114       GetDefDriveInfo
+ 0080:0133       GetDriveInfo
+ 0080:0156       GetDefDriveDPT
+ 0080:0162       SetInterruptVector
+ 0080:0176       GetSystemDate
+ 0080:018B       SetSystemDate
+ 0080:01A0       GetSystemTime
+ 0080:01B5       SetSystemTime
+ 0080:01CA       SetVerifyFlag
+ 0080:01D8       GetDiskTransferArea
+ 0080:01ED       StayTSR
+ 0080:0207       GetDriveDPT
+ 0080:021B       GetExtBreakCheck
+ 0080:0223       SetExtBreakCheck
+ 0080:022F       GetBootDrive
+ 0080:0248       GetInterruptVector
+ 0080:025A       GetFreeDiskSpace
+ 0080:027B       GetSwitchar
+ 0080:0284       SetSwitchar
+ 0080:0293       CreateDirectory
+ 0080:0297       RemoveDirectory
+ 0080:029B       ChangeDirectory
+ 0080:02AB       CreateFile
+ 0080:02C4       OpenFile
+ 0080:02DC       CloseFile
+ 0080:02E8       ReadFile
+ 0080:02EE       WriteFile
+ 0080:030D       DeleteFile
+ 0080:031D       SeekFile
+ 0080:0331       GetFileAttribute
+ 0080:0342       SetFileAttribute
+ 0080:0357       DuplicateHandle
+ 0080:0365       ForceDuplicateHandle
+ 0080:0377       GetCurrentDirectory
+ 0080:038B       AllocateMemory
+ 0080:0399       ReleaseMemory
+ 0080:03A9       ReallocateMemory
+ 0080:03BD       GetExitCode
+ 0080:03C5       SetPSP_Address
+ 0080:03D3       GetPSP_Address
+ 0080:03EE       ConvertBPBtoDPB
+ 0080:0402       GetVerifyFlag
+ 0080:0408       CreateChild_PSP
+ 0080:041A       RenameFile
+ 0080:042E       GetFileDate
+ 0080:043F       GetFileTime
+ 0080:0450       SetFileTimeDate
+ 0080:0467       GetAllocationStrategy
+ 0080:046E       SetAllocationStrategy
+ 0080:047D       GetUMB_LinkState
+ 0080:0484       SetUMB_LinkState
+ 0080:0493       CreateNewFile
+ 0080:0497       CreateTempFile
+ 0080:04B0       UnLockFile
+ 0080:04B5       LockFile
+ 0080:04D4       DisableDrive
+ 0080:04D9       EnableDrive
+ 0080:04E6       GetTrueName
+ 0080:04F8       GetCurrentPSP
+ 0080:0500       CapitalizeChar
+ 0080:0511       CapitalizeString
+ 0080:0526       CapitalizePChar
+ 0080:0534       SetHandlesCount
+ 0080:0543       CommitFile
+ 0080:0547       FflushFile
+ 0080:056C       GetFreeHMAddr
+ 0080:0576       HMAMemAvail
+ 0080:057E       AllocateHMA
+ 0080:05B4       GetEnvCount
+ 0080:05E1       EnvPChar
+ 00E3:0000       PcharToStr
+ 00E3:0075       Digit
+ 00E3:00B6       HexB
+ 00E3:00F3       HexW
+ 00E3:0139       HexPtr
+ 00E3:0187       CharRep
+ 00E3:01CC       @
+ 00E3:01D8       PcharSize
+ 00E3:01FC       AsciizString
+ 00E3:021D       AscString
+ 00E3:0249       LowCase
+ 00E3:02B3       CheckChar
+ 0111:0000       FillByteVar
+ 0111:001E       DoNone
+ 0111:001F       @
+ 0111:0042       FastMove
+ 0111:0052       MovePtr
+ 0111:006C       SearchPtr
+ 0111:00B7       FastFill
+ 0111:00D3       FillByte
+ 0111:00E9       FillWord
+ 0111:010C       FillDWord
+ 0111:0123       Fill
+ 0111:015A       Swap
+ 0111:0194       SwapP
+ 0111:01AF       SwapB
+ 0111:01C9       SwapW
+ 0111:01E2       BitofB
+ 0111:01F5       BitofW
+ 0132:0000       DoNone
+ 0132:02B6       @
+ 0132:0330       FillDword
+ 0132:0343       FillWord
+ 0132:0362       FillByte
+ 0132:0388       Fill
+ 0132:03BA       MovePtr
+ 0132:03D8       SwapByte
+ 0132:03EB       SwapWord
+ 0132:03FE       SwapLong
+ 0132:0414       Swap
+ 0132:0448       SearchPtr
+ 0132:048F       ReadMemoryByte
+ 0132:049A       ReadMemoryWord
+ 0132:04A5       ReadMemoryDword
+ 0132:04B4       WriteMemoryByte
+ 0132:04C0       WriteMemoryWord
+ 0132:04CC       WriteMemoryDword
+ 0132:04DA       ReadPort
+ 0132:04E3       WritePort
+ 0132:04EF       ReadIndexPort
+ 0132:04FA       WriteIndexPort
+ 0132:05DE       AbsReadMemoryByte
+ 0132:05F6       AbsReadMemoryWord
+ 0132:060E       AbsReadMemoryDword
+ 0132:062A       AbsWriteMemoryByte
+ 0132:0644       AbsWriteMemoryWord
+ 0132:065E       AbsWriteMemoryDword
+ 0132:067A       CompareBuffersPtr
+ 0132:069F       Delay
+ 0132:06AE       CopyExtendedMemory
+ 0132:06FB       HardwareReboot
+ 0132:0706       WarmReboot
+ 0132:0717       ColdReboot
+ 029C:0002       gcaCharDeviceNames
+ 029C:01FA       gcaCharDeviceDesc
+ 029C:0826       gcaBlockDeviceNames
+ 029C:0850       gcaBlockDeviceDesc
+ 029C:0938       Cpu_Type
+ 029C:0939       Cpu_Vendor
+ 029C:093A       Cpu_Speed
+ 029C:093C       Cpu_VendorStr
+ 029C:0948       CpuIDValid
+ 029C:0949       BiosType
+ 029C:094A       ExtendedMemorySize
+ 029C:094C       OvrCodeList
+ 029C:094E       OvrHeapSize
+ 029C:0950       OvrDebugPtr
+ 029C:0954       OvrHeapOrg
+ 029C:0956       OvrHeapPtr
+ 029C:0958       OvrHeapEnd
+ 029C:095A       OvrLoadList
+ 029C:095C       OvrDosHandle
+ 029C:095E       OvrEmsHandle
+ 029C:0960       HeapOrg
+ 029C:0964       HeapPtr
+ 029C:0968       HeapEnd
+ 029C:096C       FreeList
+ 029C:0970       FreeZero
+ 029C:0974       HeapError
+ 029C:0978       ExitProc
+ 029C:097C       ExitCode
+ 029C:097E       ErrorAddr
+ 029C:0982       PrefixSeg
+ 029C:0984       StackLimit
+ 029C:0986       InOutRes
+ 029C:0988       RandSeed
+ 029C:098C       SelectorInc
+ 029C:098E       Seg0040
+ 029C:0990       SegA000
+ 029C:0992       SegB000
+ 029C:0994       SegB800
+ 029C:0996       Test8086
+ 029C:0997       Test8087
+ 029C:0998       FileMode
+ 029C:099C       CurrentDevice
+ 029C:09A0       DevCount
+ 029C:09A2       DevicePointers
+ 029C:09A6       Cbreak_Proc
+ 029C:09AA       DosVersion
+ 029C:09AC       DosResult
+ 029C:09B8       SysVars
+ 029C:09BC       IndosFlagPtr
+ 029C:09C0       FileOpenMode
+ 029C:09C1       DosFlags
+ 029C:09C2       PspAddr
+ 029C:09C6       Err
+ 029C:09C8       Error
+ 029C:09C9       EType
+ 029C:09CA       sgbErrorDecode
+ 029C:09CC       SelfAddr
+ 029C:09D0       BiosConfigTable
+ 029C:09D4       Input
+ 029C:0AD4       Output
+ 029C:0BD4       SaveInt00
+ 029C:0BD8       SaveInt02
+ 029C:0BDC       SaveInt1B
+ 029C:0BE0       SaveInt21
+ 029C:0BE4       SaveInt23
+ 029C:0BE8       SaveInt24
+ 029C:0BEC       SaveInt34
+ 029C:0BF0       SaveInt35
+ 029C:0BF4       SaveInt36
+ 029C:0BF8       SaveInt37
+ 029C:0BFC       SaveInt38
+ 029C:0C00       SaveInt39
+ 029C:0C04       SaveInt3A
+ 029C:0C08       SaveInt3B
+ 029C:0C0C       SaveInt3C
+ 029C:0C10       SaveInt3D
+ 029C:0C14       SaveInt3E
+ 029C:0C18       SaveInt3F
+ 029C:0C1C       SaveInt75
+
+Line numbers for DevLst(DEVLST.PAS) segment DevLst
+
+    71 0000:0000    72 0000:0025    74 0000:0029    75 0000:002C
+    76 0000:0047    77 0000:006D    78 0000:0076    84 0000:007A
+    85 0000:0095    87 0000:00AF    88 0000:00D3    89 0000:0102
+    90 0000:010C    94 0000:0110    95 0000:0114    96 0000:0128
+    97 0000:012C   104 0000:0133   105 0000:0137   106 0000:013C
+   108 0000:0140   109 0000:0143   110 0000:017D   111 0000:0189
+   112 0000:0194   113 0000:019A   120 0000:01A1   121 0000:01A5
+   122 0000:01AA   124 0000:01AE   125 0000:01B1   126 0000:01E9
+   127 0000:01F5   128 0000:0200   129 0000:0206   137 0000:021B
+   138 0000:021F   139 0000:0231   140 0000:0235   142 0000:0239
+   143 0000:023C   144 0000:0255   145 0000:0266   146 0000:0272
+   147 0000:02D5   148 0000:0303   152 0000:0307   153 0000:030A
+   154 0000:030F   155 0000:031E   156 0000:032F   173 0000:03AB
+   174 0000:03AF   175 0000:03CA   176 0000:03E5   177 0000:0401
+   179 0000:041C   180 0000:0439   181 0000:045B   182 0000:047D
+   183 0000:049F   184 0000:04C1   186 0000:04CE   187 0000:04F2
+   188 0000:0519   189 0000:0548   190 0000:0571   193 0000:0573
+   194 0000:0593   196 0000:05BC   197 0000:05D8   198 0000:05E5
+   203 0000:05E7   205 0000:05EB   206 0000:05EF   207 0000:0610
+   209 0000:0628   210 0000:0637   211 0000:0648   212 0000:0662
+   214 0000:0677   215 0000:0689   216 0000:0693   219 0000:06D0
+   220 0000:06D3   221 0000:06EE   222 0000:06FD   224 0000:070D
+   225 0000:072E   226 0000:0731   227 0000:0734   228 0000:0737
+   229 0000:073A   230 0000:0755   231 0000:075E
+
+Line numbers for IvKbd(IVKBD.PAS) segment IvKbd
+
+    30 0077:0000    31 0077:000A    32 0077:0017
+
+Line numbers for NewDos(NEWDOS.PAS) segment NewDos
+
+   227 0080:0000   228 0080:000A   229 0080:000D   230 0080:001A
+
+Line numbers for IVstring(IVSTRING.PAS) segment IVstring
+
+   126 00E3:0000   127 00E3:000E   128 00E3:002E   129 00E3:0043
+   130 00E3:0066   131 00E3:006F   167 00E3:0075   168 00E3:0084
+   169 00E3:009C   170 00E3:00B0   294 00E3:00B6   295 00E3:00C0
+   296 00E3:00D7   297 00E3:00EB   298 00E3:00EF   301 00E3:00F3
+   302 00E3:0102   303 00E3:0131   306 00E3:0139   307 00E3:0148
+   308 00E3:0181   443 00E3:0187   444 00E3:0196   445 00E3:019D
+   446 00E3:01B2   447 00E3:01C6   484 00E3:01CC   485 00E3:01D6
+
+Line numbers for IvSystem(IVSYSTEM.PAS) segment IvSystem
+
+   100 0111:0000   101 0111:000A   102 0111:001A   170 0111:001E
+   175 0111:001F   176 0111:0029   177 0111:002E   178 0111:0033
+   179 0111:0040
+
+Line numbers for TSystem(TSYSTEM.PAS) segment TSystem
+
+   213 0132:0000   258 0132:0001   259 0132:000B   260 0132:0011
+   265 0132:001A   266 0132:0029   267 0132:005A   272 0132:0069
+   273 0132:0078   274 0132:00A9   276 0132:00D2   277 0132:00E1
+   278 0132:0131   279 0132:015E   280 0132:018B   281 0132:01B7
+   282 0132:01D1   283 0132:01DA   284 0132:01EB   285 0132:0217
+   286 0132:0228   287 0132:022F   291 0132:025E   292 0132:0268
+   293 0132:026B   294 0132:026E   295 0132:0271   296 0132:0274
+   298 0132:027B   299 0132:0297   301 0132:029F   302 0132:02A2
+   303 0132:02A5   304 0132:02B4   307 0132:02B6   308 0132:02C0
+   309 0132:02C3
+
+Program entry point at 0000:070D

@@ -1,0 +1,105 @@
+
+ Start  Stop   Length Name               Class
+
+ 00000H 00037H 00038H PROGRAM            CODE
+ 00040H 001E4H 001A5H IvMouse            CODE
+ 001F0H 00212H 00023H IvSystem           CODE
+ 00220H 007B1H 00592H System             CODE
+ 007C0H 00A65H 002A6H DATA               DATA
+ 00A70H 04A6FH 04000H STACK              STACK
+ 04A70H 04A70H 00000H HEAP               HEAP
+
+  Address         Publics by Value
+
+ 0000:0000       @
+ 0004:0000       ShowMouse
+ 0004:0006       HideMouse
+ 0004:000C       SetLimitY
+ 0004:0020       SetLimitX
+ 0004:0034       GetMouseX
+ 0004:003C       GetMouseY
+ 0004:0044       GetMouseStatus
+ 0004:0062       MouseXY
+ 0004:0076       LightPenEmulation
+ 0004:0089       CentralButton
+ 0004:0097       LeftButton
+ 0004:00A1       RightButton
+ 0004:00AD       GetButtonPressed
+ 0004:00D0       GetButtonRelease
+ 0004:00F3       DisableCursorDisplay
+ 0004:010D       SetDoubleSpeedThreshold
+ 0004:011E       SetTextHardCursor
+ 0004:0135       SetTextSoftCursor
+ 0004:014C       SetGraphCursor
+ 0004:0163       SetSensitivity
+ 0004:0177       GetMotionCount
+ 0004:0191       SetUserMaskCall
+ 001F:0000       @
+ 007C:0002       OvrCodeList
+ 007C:0004       OvrHeapSize
+ 007C:0006       OvrDebugPtr
+ 007C:000A       OvrHeapOrg
+ 007C:000C       OvrHeapPtr
+ 007C:000E       OvrHeapEnd
+ 007C:0010       OvrLoadList
+ 007C:0012       OvrDosHandle
+ 007C:0014       OvrEmsHandle
+ 007C:0016       HeapOrg
+ 007C:001A       HeapPtr
+ 007C:001E       HeapEnd
+ 007C:0022       FreeList
+ 007C:0026       FreeZero
+ 007C:002A       HeapError
+ 007C:002E       ExitProc
+ 007C:0032       ExitCode
+ 007C:0034       ErrorAddr
+ 007C:0038       PrefixSeg
+ 007C:003A       StackLimit
+ 007C:003C       InOutRes
+ 007C:003E       RandSeed
+ 007C:0042       SelectorInc
+ 007C:0044       Seg0040
+ 007C:0046       SegA000
+ 007C:0048       SegB000
+ 007C:004A       SegB800
+ 007C:004C       Test8086
+ 007C:004D       Test8087
+ 007C:004E       FileMode
+ 007C:0050       PspAddr
+ 007C:0054       Err
+ 007C:0056       Error
+ 007C:0057       EType
+ 007C:0058       sgbErrorDecode
+ 007C:005A       Input
+ 007C:015A       Output
+ 007C:025A       SaveInt00
+ 007C:025E       SaveInt02
+ 007C:0262       SaveInt1B
+ 007C:0266       SaveInt21
+ 007C:026A       SaveInt23
+ 007C:026E       SaveInt24
+ 007C:0272       SaveInt34
+ 007C:0276       SaveInt35
+ 007C:027A       SaveInt36
+ 007C:027E       SaveInt37
+ 007C:0282       SaveInt38
+ 007C:0286       SaveInt39
+ 007C:028A       SaveInt3A
+ 007C:028E       SaveInt3B
+ 007C:0292       SaveInt3C
+ 007C:0296       SaveInt3D
+ 007C:029A       SaveInt3E
+ 007C:029E       SaveInt3F
+ 007C:02A2       SaveInt75
+
+Line numbers for PROGRAM(IVAN.PAS) segment PROGRAM
+
+     3 0000:0000     4 0000:0014     6 0000:0019     7 0000:002B
+     8 0000:0030
+
+Line numbers for IvSystem(IVSYSTEM.PAS) segment IvSystem
+
+   230 001F:0000   231 001F:000A   232 001F:000F   233 001F:0014
+   234 001F:0021
+
+Program entry point at 0000:0000

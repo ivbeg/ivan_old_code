@@ -1,0 +1,79 @@
+
+ Start  Stop   Length Name               Class
+
+ 00000H 0008FH 00090H PROGRAM            CODE
+ 00090H 00621H 00592H System             CODE
+ 00630H 008CDH 0029EH DATA               DATA
+ 008D0H 048CFH 04000H STACK              STACK
+ 048D0H 048D0H 00000H HEAP               HEAP
+
+  Address         Publics by Value
+
+ 0000:0000       @
+ 0000:001E       DOSWRITESTR
+ 0000:003F       DosWriteChar
+ 0000:0047       DOSREADCHAR
+ 0000:005D       DOSWRITEPRNCHAR
+ 0000:0065       DOSWRITEAUXCHAR
+ 0000:006D       DOSREADAUXCHAR
+ 0000:0073       DOSBUFFINPUT
+ 0000:0084       DosIo
+ 0000:008A       DOSERROR
+ 0063:0002       OvrCodeList
+ 0063:0004       OvrHeapSize
+ 0063:0006       OvrDebugPtr
+ 0063:000A       OvrHeapOrg
+ 0063:000C       OvrHeapPtr
+ 0063:000E       OvrHeapEnd
+ 0063:0010       OvrLoadList
+ 0063:0012       OvrDosHandle
+ 0063:0014       OvrEmsHandle
+ 0063:0016       HeapOrg
+ 0063:001A       HeapPtr
+ 0063:001E       HeapEnd
+ 0063:0022       FreeList
+ 0063:0026       FreeZero
+ 0063:002A       HeapError
+ 0063:002E       ExitProc
+ 0063:0032       ExitCode
+ 0063:0034       ErrorAddr
+ 0063:0038       PrefixSeg
+ 0063:003A       StackLimit
+ 0063:003C       InOutRes
+ 0063:003E       RandSeed
+ 0063:0042       SelectorInc
+ 0063:0044       Seg0040
+ 0063:0046       SegA000
+ 0063:0048       SegB000
+ 0063:004A       SegB800
+ 0063:004C       Test8086
+ 0063:004D       Test8087
+ 0063:004E       FileMode
+ 0063:0050       Error
+ 0063:0052       Input
+ 0063:0152       Output
+ 0063:0252       SaveInt00
+ 0063:0256       SaveInt02
+ 0063:025A       SaveInt1B
+ 0063:025E       SaveInt21
+ 0063:0262       SaveInt23
+ 0063:0266       SaveInt24
+ 0063:026A       SaveInt34
+ 0063:026E       SaveInt35
+ 0063:0272       SaveInt36
+ 0063:0276       SaveInt37
+ 0063:027A       SaveInt38
+ 0063:027E       SaveInt39
+ 0063:0282       SaveInt3A
+ 0063:0286       SaveInt3B
+ 0063:028A       SaveInt3C
+ 0063:028E       SaveInt3D
+ 0063:0292       SaveInt3E
+ 0063:0296       SaveInt3F
+ 0063:029A       SaveInt75
+
+Line numbers for PROGRAM(IVAN.PAS) segment PROGRAM
+
+     8 0000:0000     9 0000:000F    10 0000:0016
+
+Program entry point at 0000:0000

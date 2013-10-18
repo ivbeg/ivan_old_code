@@ -1,0 +1,9 @@
+History:
+
+Time      Version    Comment
+--------  -------    -----------------------------------------------------------------
+04.09.95   0.00      First idea.Debug version.
+05.11.95   1.00      First release. Support only MCBlist and don't check Params.
+07.11.95   1.10      Added TSR ProgramsList and low Check params (Options : /T /U /M).
+28.11.95   1.12      Now Params Checks well and Added options : /D /P /A /H.
+

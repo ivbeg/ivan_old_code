@@ -1,0 +1,81 @@
+
+ Start  Stop   Length Name               Class
+
+ 00000H 003DEH 003DFH PROGRAM            CODE
+ 003E0H 00C80H 008A1H System             CODE
+ 00C90H 00FA5H 00316H DATA               DATA
+ 00FB0H 04FAFH 04000H STACK              STACK
+ 04FB0H 04FB0H 00000H HEAP               HEAP
+
+  Address         Publics by Value
+
+ 0000:0000       @
+ 0000:027B       _GetRegistratingStatus
+ 0000:029B       _SetRegistrate
+ 00C9:0002       Module1
+ 00C9:000E       Module2
+ 00C9:001A       Module3
+ 00C9:0026       Module4
+ 00C9:0032       Module5
+ 00C9:003E       Module6
+ 00C9:004A       Module7
+ 00C9:0056       Module8
+ 00C9:0062       Module9
+ 00C9:006E       Module10
+ 00C9:007A       OvrCodeList
+ 00C9:007C       OvrHeapSize
+ 00C9:007E       OvrDebugPtr
+ 00C9:0082       OvrHeapOrg
+ 00C9:0084       OvrHeapPtr
+ 00C9:0086       OvrHeapEnd
+ 00C9:0088       OvrLoadList
+ 00C9:008A       OvrDosHandle
+ 00C9:008C       OvrEmsHandle
+ 00C9:008E       HeapOrg
+ 00C9:0092       HeapPtr
+ 00C9:0096       HeapEnd
+ 00C9:009A       FreeList
+ 00C9:009E       FreeZero
+ 00C9:00A2       HeapError
+ 00C9:00A6       ExitProc
+ 00C9:00AA       ExitCode
+ 00C9:00AC       ErrorAddr
+ 00C9:00B0       PrefixSeg
+ 00C9:00B2       StackLimit
+ 00C9:00B4       InOutRes
+ 00C9:00B6       RandSeed
+ 00C9:00BA       SelectorInc
+ 00C9:00BC       Seg0040
+ 00C9:00BE       SegA000
+ 00C9:00C0       SegB000
+ 00C9:00C2       SegB800
+ 00C9:00C4       Test8086
+ 00C9:00C5       Test8087
+ 00C9:00C6       FileMode
+ 00C9:00CA       Input
+ 00C9:01CA       Output
+ 00C9:02CA       SaveInt00
+ 00C9:02CE       SaveInt02
+ 00C9:02D2       SaveInt1B
+ 00C9:02D6       SaveInt21
+ 00C9:02DA       SaveInt23
+ 00C9:02DE       SaveInt24
+ 00C9:02E2       SaveInt34
+ 00C9:02E6       SaveInt35
+ 00C9:02EA       SaveInt36
+ 00C9:02EE       SaveInt37
+ 00C9:02F2       SaveInt38
+ 00C9:02F6       SaveInt39
+ 00C9:02FA       SaveInt3A
+ 00C9:02FE       SaveInt3B
+ 00C9:0302       SaveInt3C
+ 00C9:0306       SaveInt3D
+ 00C9:030A       SaveInt3E
+ 00C9:030E       SaveInt3F
+ 00C9:0312       SaveInt75
+
+Line numbers for PROGRAM(LA.PAS) segment PROGRAM
+
+    22 0000:0000    24 0000:000F    27 0000:0030
+
+Program entry point at 0000:0000

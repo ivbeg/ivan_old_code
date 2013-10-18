@@ -1,0 +1,501 @@
+
+ Start  Stop   Length Name               Class
+
+ 00000H 013BBH 013BCH PROGRAM            CODE
+ 013C0H 015AFH 001F0H IvMouse            CODE
+ 015B0H 01633H 00084H IvKbd              CODE
+ 01640H 02159H 00B1AH IvGraph            CODE
+ 02160H 022F9H 0019AH IvDos              CODE
+ 02300H 0241DH 0011EH IVstring           CODE
+ 02420H 02627H 00208H IvSystem           CODE
+ 02630H 02DE9H 007BAH IvXMS              CODE
+ 02DF0H 035EAH 007FBH TSystem            CODE
+ 035F0H 04486H 00E97H System             CODE
+ 04490H 04977H 004E8H DATA               DATA
+ 04980H 0897FH 04000H STACK              STACK
+ 08980H 08980H 00000H HEAP               HEAP
+
+  Address         Publics by Value
+
+ 0000:0002       WordToBCDStr
+ 0000:005A       ByteToBCDStr
+ 0000:00B4       TheWait
+ 0000:00FC       PutInStr
+ 0000:0530       Create_Output_XMS_Table
+ 0000:05C7       OutputEmsTable
+ 0000:088C       QEMM_InfoOutput
+ 0000:0DC3       @
+ 013C:0000       @
+ 013C:0010       ShowMouse
+ 013C:0016       HideMouse
+ 013C:001C       SetLimitY
+ 013C:002E       SetLimitX
+ 013C:0040       GetMouseX
+ 013C:0048       GetMouseY
+ 013C:0050       GetMouseStatus
+ 013C:006F       MouseXY
+ 013C:0081       LightPenEmulation
+ 013C:0092       CentralButton
+ 013C:00A5       LeftButton
+ 013C:00B4       RightButton
+ 013C:00C5       GetButtonPressed
+ 013C:00E8       GetButtonRelease
+ 013C:010B       DisableCursorDisplay
+ 013C:0125       SetDoubleSpeedThreshold
+ 013C:0133       SetTextHardCursor
+ 013C:014A       SetTextSoftCursor
+ 013C:0161       SetGraphCursor
+ 013C:0178       SetSensitivity
+ 013C:018C       GetMotionCount
+ 013C:01A6       SetUserMaskCall
+ 013C:01BA       SetUserMouseHandler
+ 013C:01DA       InitMouse
+ 015B:0000       @
+ 015B:0019       GetKey
+ 015B:001E       FlushKbdBuff
+ 015B:002B       KeyPresent
+ 015B:0041       SetRate_Delay
+ 015B:0056       WaitForKey
+ 015B:006A       WriteKey
+ 0164:0000       Pause
+ 0164:0024       SetPauseStr
+ 0164:0064       EndL
+ 0164:00A5       FastWrite
+ 0164:00DF       FastWriteLn
+ 0164:0119       WriteCenter
+ 0164:018D       @
+ 0164:01F3       NoneDo
+ 0164:01F6       SetLogicPage
+ 0164:021D       SetRealPage
+ 0164:0256       GetX
+ 0164:025A       GetY
+ 0164:0260       CursorForm
+ 0164:027A       CursorOff
+ 0164:02A7       CursorOn
+ 0164:02B9       GetCurrentPage
+ 0164:02C3       GetPageOffset
+ 0164:02DC       SetDoubleScan
+ 0164:02FA       IsCursorEm
+ 0164:0318       IsWaitDisplay
+ 0164:0329       IsVideoSysActive
+ 0164:033A       IsSaveBuffer
+ 0164:034B       IsVGABoardActive
+ 0164:035C       VideoMemSize
+ 0164:0373       IsGreySumm
+ 0164:0384       IsDefPalLoad
+ 0164:0395       GetScanLines
+ 0164:03B6       SaveVideoState
+ 0164:03CA       RestoreVideoState
+ 0164:03DE       GetStateBufferSize
+ 0164:03F1       GetDCC
+ 0164:03FB       SetDCC
+ 0164:0440       SetVideoPage
+ 0164:0464       SetVideoMode
+ 0164:047E       GetVideoMode
+ 0164:04AE       CursorXY
+ 0164:04BE       WriteCharTTY
+ 0164:04F5       TotalScanLines
+ 0164:0526       SetBlink
+ 0164:0546       SetStartAddress
+ 0164:055E       IsDoubleScan
+ 0164:0594       IsBlink
+ 0164:05A9       IsGraphMode
+ 0164:05BE       SetScanLines
+ 0164:05D0       GetVideoInfo
+ 0164:05E4       WaitRetrace
+ 0164:0670       DisableDefPalLoad
+ 0164:0678       DisableVideoAddr
+ 0164:0680       DisableGreySumm
+ 0164:0688       DisableCursorEm
+ 0164:0690       DisableVideoRefr
+ 0164:0698       SetCgaBorder
+ 0164:06AA       SetCgaPalette
+ 0164:06BC       GetOverScanColor
+ 0164:06C4       SetOverScanColor
+ 0164:06D4       SetDACPalette
+ 0164:06EB       GetDACPalette
+ 0164:0702       GreySummDAC
+ 0164:0716       bWriteString
+ 0164:075C       GetEgaReg
+ 0164:076F       SetEgaReg
+ 0164:082C       InitIvGraph
+ 0164:0856       Scroll
+ 0164:0913       WriteChar
+ 0164:0925       WriteStr
+ 0164:0948       WriteStrXY
+ 0164:096E       ReadChar
+ 0164:0977       ReadAttr
+ 0164:09A8       FillAttr
+ 0164:09C9       FillAttrXY
+ 0164:0A01       WriteAttr
+ 0164:0A17       PlaneWrite
+ 0164:0A3D       PlaneWriteXY
+ 0164:0A6B       ClrScr
+ 0164:0AA0       LineX
+ 0164:0ACC       LineY
+ 0216:0000       FreeHMAAddr
+ 0216:000A       HMAMemAvail
+ 0216:0012       DosVarsTab
+ 0216:005A       @
+ 0216:0088       GetTime
+ 0216:00A0       SetTime
+ 0216:00BA       GetDate
+ 0216:00D2       SetDate
+ 0216:00EC       SetSwitchChar
+ 0216:00FE       GetSwitchChar
+ 0216:0107       GetDosVersion
+ 0216:0112       GetVerifyFlag
+ 0216:0118       SetVerifyFlag
+ 0216:0129       SetDtaAddr
+ 0216:013C       GetDtaAddr
+ 0216:0146       SetBreakFlag
+ 0216:0158       GetBreakFlag
+ 0216:0161       GetIntVector
+ 0216:0176       SetIntVector
+ 0216:018C       CheckKbd
+ 0230:0000       Digit
+ 0230:0041       HexB
+ 0230:007E       HexW
+ 0230:00C4       HexPtr
+ 0230:0112       @
+ 0242:0000       FillByteVar
+ 0242:001E       DoNone
+ 0242:001F       @
+ 0242:0042       FastMove
+ 0242:0052       MovePtr
+ 0242:006C       SearchPtr
+ 0242:00B7       FastFill
+ 0242:00D3       FillByte
+ 0242:00E9       FillWord
+ 0242:010C       FillDWord
+ 0242:0123       Fill
+ 0242:015A       Swap
+ 0242:0194       SwapP
+ 0242:01AF       SwapB
+ 0242:01C9       SwapW
+ 0242:01E2       BitofB
+ 0242:01F5       BitofW
+ 0263:0000       @
+ 0263:0106       ReleaseHMA
+ 0263:010C       AllocateHMA
+ 0263:011D       GlobalEnableA20
+ 0263:0123       GlobalDisableA20
+ 0263:0129       LocalEnableA20
+ 0263:012F       LocalDisableA20
+ 0263:0135       QueryA20
+ 0263:013B       GetFreeXMS
+ 0263:0143       GetMaxFreeBlock
+ 0263:0149       AllocateEMB
+ 0263:015C       ReleaseEMB
+ 0263:016D       ReallocateEMB
+ 0263:0181       LockEMB
+ 0263:0194       UnLockEMB
+ 0263:01A5       GetEMBSize
+ 0263:01B8       GetEMBLockCount
+ 0263:01CB       GetEMBFreeHandles
+ 0263:01DE       AllocateUMB
+ 0263:01F1       ReleaseUMB
+ 0263:0202       ReallocateUMB
+ 0263:0216       UMBMaxAvail
+ 0263:024B       MoveEMBUsers
+ 0263:03FE       AvailEMSPages
+ 0263:0406       ActiveEMSHAndles
+ 0263:040E       AllocateEMS
+ 0263:0421       ReleaseEMS
+ 0263:0434       MapEMSPages
+ 0263:044B       SaveMappingContext
+ 0263:0453       RestoreMappingContext
+ 0263:0461       GetEMS_HandlePages
+ 0263:0472       GetEMSHandlesTable
+ 0263:048E       ReallocateEMS
+ 0263:04A2       GetEMS_HandleAttr
+ 0263:04B5       SetEMS_HandleAttr
+ 0263:04CB       GetEMS_HandleName
+ 0263:04E1       SetEMS_HandleName
+ 0263:04F4       FindEMS_Handle
+ 0263:0553       MoveEMSUsers
+ 0263:059E       WarmBootPrepare
+ 0263:05A4       GetFreeRawPages
+ 0263:05AE       AllocateRAWPages
+ 0263:05C3       MapUnmapPages
+ 0263:0631       QEMM_GetState
+ 0263:0637       QEMM_SetState
+ 0263:0648       QEMM_GetVersion
+ 0263:064E       EMM386_GetState
+ 0263:0656       EMM386_SetState
+ 0263:0667       EMM386_GetWeitekSupport
+ 0263:066F       EMM386_SetWeitekSupport
+ 0263:0682       EMM386_PrintCopyright
+ 0263:0688       EMM386_PrintReport
+ 0263:068E       QEMM_GetHiramChain
+ 0263:06AC       QEMM_GetManifestPresent
+ 0263:06E0       QEMM_UntrappedIORead
+ 0263:06EF       QEMM_UntrappedIOWrite
+ 0263:0702       QEMM_UntrappedIOReadIndexed
+ 0263:0717       QEMM_UntrappedIOWriteIndexed
+ 0263:0732       QEMM_GetIOCallback
+ 0263:073D       QEMM_SetIOCallback
+ 0263:074C       QEMM_GetPortTrap
+ 0263:075B       QEMM_SetPortTrap
+ 0263:076A       QEMM_ClearPortTrap
+ 0263:0779       QEMM_GetStealthCount
+ 0263:0782       QEMM_GetInfo
+ 0263:079F       QEMM_GetMemoryStatistics
+ 0263:07AF       QEMM_GetStealthList
+ 02DF:0000       DoNone
+ 02DF:0293       @
+ 02DF:02C5       FillDword
+ 02DF:02D8       FillWord
+ 02DF:02F7       FillByte
+ 02DF:031D       Fill
+ 02DF:034F       MovePtr
+ 02DF:036D       SwapByte
+ 02DF:0380       SwapWord
+ 02DF:0393       SwapLong
+ 02DF:03A9       Swap
+ 02DF:03DD       SearchPtr
+ 02DF:0424       ReadMemoryByte
+ 02DF:042F       ReadMemoryWord
+ 02DF:043A       ReadMemoryDword
+ 02DF:0449       WriteMemoryByte
+ 02DF:0455       WriteMemoryWord
+ 02DF:0461       WriteMemoryDword
+ 02DF:046F       ReadPort
+ 02DF:0478       WritePort
+ 02DF:0484       ReadIndexPort
+ 02DF:048F       WriteIndexPort
+ 02DF:04BF       AbsReadMemoryByte
+ 02DF:04D7       AbsReadMemoryWord
+ 02DF:04EF       AbsReadMemoryDword
+ 02DF:050B       AbsWriteMemoryByte
+ 02DF:0525       AbsWriteMemoryWord
+ 02DF:053F       AbsWriteMemoryDword
+ 02DF:055B       CompareBuffersPtr
+ 02DF:0580       Delay
+ 02DF:058F       HardwareReboot
+ 02DF:05A5       WarmReboot
+ 02DF:05B6       ColdReboot
+ 0449:0002       Bytes
+ 0449:000A       Kb
+ 0449:000E       OnOff
+ 0449:0016       YesNo
+ 0449:001E       DrvType
+ 0449:005E       csaDmaOperationType
+ 0449:009C       NotRes
+ 0449:00A6       Resident
+ 0449:00C0       CpuType
+ 0449:00C2       CpuSpeed
+ 0449:00C4       CpuIDValid
+ 0449:00C5       BiosType
+ 0449:00C6       ExtendedMemorySize
+ 0449:00C8       OvrCodeList
+ 0449:00C8       ExecBlock
+ 0449:00CA       OvrHeapSize
+ 0449:00CC       OvrDebugPtr
+ 0449:00D0       OvrHeapOrg
+ 0449:00D2       OvrHeapPtr
+ 0449:00D4       OvrHeapEnd
+ 0449:00D6       OvrLoadList
+ 0449:00D8       OvrDosHandle
+ 0449:00DA       OvrEmsHandle
+ 0449:00DC       HeapOrg
+ 0449:00E0       HeapPtr
+ 0449:00E4       HeapEnd
+ 0449:00E8       FreeList
+ 0449:00EC       FreeZero
+ 0449:00F0       HeapError
+ 0449:00F4       ExitProc
+ 0449:00F8       ExitCode
+ 0449:00FA       ErrorAddr
+ 0449:00FE       PrefixSeg
+ 0449:0100       StackLimit
+ 0449:0102       InOutRes
+ 0449:0104       RandSeed
+ 0449:0108       SelectorInc
+ 0449:010A       Seg0040
+ 0449:010C       SegA000
+ 0449:010E       SegB000
+ 0449:0110       SegB800
+ 0449:0112       Test8086
+ 0449:0113       Test8087
+ 0449:0114       FileMode
+ 0449:0118       XMS_FreeHandles
+ 0449:011A       MousePresent
+ 0449:011C       MouseType
+ 0449:011E       MouseVersion
+ 0449:0120       Cbreak_Proc
+ 0449:0124       UsePorts
+ 0449:0125       UseBios
+ 0449:0126       Hide
+ 0449:0127       SetCounter
+ 0449:0128       Counter
+ 0449:0129       TextChar
+ 0449:012A       TextAttr
+ 0449:012C       CurrentVideoSeg
+ 0449:012E       PageOffset
+ 0449:0130       WindMin
+ 0449:0132       WindMax
+ 0449:0134       WaitProc
+ 0449:0138       PauseProc
+ 0449:013C       ActiveScreenPtr
+ 0449:0140       VirtualScreenActive
+ 0449:0242       SysVars
+ 0449:0246       DosVer
+ 0449:0248       DosResult
+ 0449:0249       OpenMode
+ 0449:024A       ReWriteF
+ 0449:024C       PspAddr
+ 0449:0250       Err
+ 0449:0252       Error
+ 0449:0253       EType
+ 0449:0254       sgbErrorDecode
+ 0449:0256       XMSError
+ 0449:0258       XMSResult
+ 0449:025A       XMSPresent
+ 0449:025C       XMSHandlesTable
+ 0449:0260       XMSVersion
+ 0449:0262       XMSRevision
+ 0449:0264       HMAPresent
+ 0449:0266       XMM_Driver
+ 0449:026A       LastXMSFunction
+ 0449:026C       XMSErrorProc
+ 0449:0270       EMSError
+ 0449:0272       EMSPresent
+ 0449:0273       EMMVersion
+ 0449:0274       PageFrame
+ 0449:0276       TotalRAWPages
+ 0449:0278       TotalEMSPages
+ 0449:027A       TotalEMSHandles
+ 0449:027C       EMSDriverType
+ 0449:027E       EMM_Driver
+ 0449:0282       EMSExchange
+ 0449:0283       LastEMSFunction
+ 0449:0284       EMSErrorProc
+ 0449:0288       EMSHardwareInfo
+ 0449:0292       SelfAddr
+ 0449:0296       BiosConfigTable
+ 0449:029A       Input
+ 0449:039A       Output
+ 0449:049A       SaveInt00
+ 0449:049E       SaveInt02
+ 0449:04A2       SaveInt1B
+ 0449:04A6       SaveInt21
+ 0449:04AA       SaveInt23
+ 0449:04AE       SaveInt24
+ 0449:04B2       SaveInt34
+ 0449:04B6       SaveInt35
+ 0449:04BA       SaveInt36
+ 0449:04BE       SaveInt37
+ 0449:04C2       SaveInt38
+ 0449:04C6       SaveInt39
+ 0449:04CA       SaveInt3A
+ 0449:04CE       SaveInt3B
+ 0449:04D2       SaveInt3C
+ 0449:04D6       SaveInt3D
+ 0449:04DA       SaveInt3E
+ 0449:04DE       SaveInt3F
+ 0449:04E2       SaveInt75
+
+Line numbers for PROGRAM(XMS.PAS) segment PROGRAM
+
+    38 0000:0002    39 0000:0011    40 0000:0054    43 0000:005A
+    44 0000:0069    45 0000:00B0    48 0000:00B4    49 0000:00C2
+    50 0000:00EF    51 0000:00F7    55 0000:00FC    56 0000:0130
+    58 0000:014A    59 0000:016C    60 0000:019A    61 0000:01A4
+    62 0000:01B7    77 0000:01BB    78 0000:01C9    79 0000:01D1
+    81 0000:01DB    82 0000:01E6    84 0000:01ED    85 0000:01F4
+    87 0000:0205    88 0000:020B    89 0000:0215    90 0000:022B
+    95 0000:022F    96 0000:023D    97 0000:024B    99 0000:0252
+   100 0000:025A   101 0000:0266   102 0000:0268   103 0000:0270
+   111 0000:0313   112 0000:0322   113 0000:033B   114 0000:0369
+   115 0000:0373   116 0000:037D   117 0000:0394   119 0000:03B0
+   120 0000:03B4   121 0000:03C2   122 0000:03F2   123 0000:042D
+   124 0000:0477   125 0000:04B9   126 0000:04F9   127 0000:0503
+   128 0000:050E   131 0000:0530   132 0000:053E   133 0000:0548
+   134 0000:0551   135 0000:0555   145 0000:05C7   146 0000:05D6
+   147 0000:05E4   148 0000:05FD   149 0000:0607   150 0000:0611
+   151 0000:061E   153 0000:0636   154 0000:063A   155 0000:0648
+   156 0000:0684   157 0000:06C0   158 0000:0710   159 0000:072B
+   160 0000:072F   161 0000:0754   162 0000:0775   163 0000:077F
+   164 0000:078A   165 0000:0798   173 0000:088C   174 0000:089B
+   175 0000:08A5   177 0000:08B0   178 0000:08DD   179 0000:090E
+   180 0000:0937   181 0000:0962   182 0000:099C   183 0000:09C8
+   184 0000:09F6   185 0000:09FB   186 0000:0A05   188 0000:0A1F
+   191 0000:0A98   192 0000:0AA9   193 0000:0ABA   194 0000:0ACB
+   196 0000:0AD5   197 0000:0AE0   198 0000:0AE5   202 0000:0AEF
+   203 0000:0B03   205 0000:0DC3   206 0000:0DFF   207 0000:0E0C
+   208 0000:0E11   209 0000:0E1B   210 0000:0E44   211 0000:0E4E
+   212 0000:0E77   213 0000:0EA4   214 0000:0ECB   215 0000:0EF2
+   216 0000:0F1D   217 0000:0F55   218 0000:0F8D   219 0000:0FC5
+   220 0000:0FCE   222 0000:0FDB   223 0000:1008   224 0000:1039
+   226 0000:106A   227 0000:10A2   228 0000:10CE   230 0000:10D3
+   231 0000:10D6   233 0000:10DB   235 0000:10E0   236 0000:1109
+   237 0000:1113   238 0000:113A   239 0000:1163   240 0000:11A3
+   241 0000:11E5   242 0000:1211   243 0000:123F   244 0000:126B
+   245 0000:1299   246 0000:12D2   247 0000:12EA   248 0000:1316
+   249 0000:1342   250 0000:136A   251 0000:136D   255 0000:1371
+   256 0000:1373   259 0000:137A   260 0000:13A7   261 0000:13AC
+   262 0000:13AF   264 0000:13B4
+
+Line numbers for IvMouse(IVMOUSE.PAS) segment IvMouse
+
+    69 013C:0000    70 013C:000A    71 013C:000E
+
+Line numbers for IvKbd(IVKBD.PAS) segment IvKbd
+
+    30 015B:0000    31 015B:000A    32 015B:0017
+
+Line numbers for IvGraph(IVGRAPH.PAS) segment IvGraph
+
+   246 0164:0000   247 0164:000A   248 0164:000E   249 0164:0017
+   250 0164:001F   251 0164:0022   254 0164:0024   255 0164:004A
+   256 0164:005E   259 0164:0064   260 0164:006E   261 0164:0071
+   262 0164:0078   264 0164:0094   265 0164:0098   266 0164:009D
+   268 0164:009F   269 0164:00A3   284 0164:00A5   285 0164:00CB
+   286 0164:00D9   289 0164:00DF   290 0164:0105   291 0164:010F
+   292 0164:0113   319 0164:0119   320 0164:013F   321 0164:0147
+   322 0164:016A   474 0164:018D   475 0164:0197   476 0164:019B
+   477 0164:01A9   478 0164:01B6   479 0164:01C3   480 0164:01D6
+
+Line numbers for IvDos(IVDOS.PAS) segment IvDos
+
+   190 0216:0000   191 0216:0003   192 0216:0005   193 0216:0007
+   194 0216:0009   199 0216:000A   200 0216:000D   201 0216:000F
+   202 0216:0011   291 0216:0012   293 0216:0020   294 0216:0022
+   295 0216:0024   296 0216:0027   298 0216:002A   299 0216:0039
+   302 0216:0043   303 0216:004D   304 0216:0058   426 0216:005A
+   427 0216:0064   428 0216:0069   429 0216:006E   430 0216:0072
+   431 0216:0075
+
+Line numbers for IVstring(IVSTRING.PAS) segment IVstring
+
+   167 0230:0000   168 0230:000F   169 0230:0027   170 0230:003B
+   294 0230:0041   295 0230:004B   296 0230:0062   297 0230:0076
+   298 0230:007A   301 0230:007E   302 0230:008D   303 0230:00BC
+   306 0230:00C4   307 0230:00D3   308 0230:010C   484 0230:0112
+   485 0230:011C
+
+Line numbers for IvSystem(IVSYSTEM.PAS) segment IvSystem
+
+   100 0242:0000   101 0242:000A   102 0242:001A   170 0242:001E
+   175 0242:001F   176 0242:0029   177 0242:002E   178 0242:0033
+   179 0242:0040
+
+Line numbers for IvXMS(IVXMS.PAS) segment IvXMS
+
+   321 0263:0000   322 0263:000A   323 0263:000D   324 0263:0010
+   325 0263:0018   326 0263:0025   327 0263:0032
+
+Line numbers for TSystem(TSYSTEM.PAS) segment TSystem
+
+   208 02DF:0000   253 02DF:0001   254 02DF:000B   255 02DF:0011
+   260 02DF:001A   261 02DF:0029   262 02DF:0058   267 02DF:0065
+   268 02DF:0074   269 02DF:00A3   271 02DF:00CA   272 02DF:00D9
+   273 02DF:0124   274 02DF:014E   275 02DF:0178   276 02DF:01A1
+   277 02DF:01BB   278 02DF:01C3   279 02DF:01D3   280 02DF:01FC
+   281 02DF:020C   282 02DF:0212   286 02DF:023F   287 02DF:0249
+   288 02DF:024C   289 02DF:024F   290 02DF:0252   292 02DF:0259
+   293 02DF:0274   295 02DF:027C   296 02DF:027F   297 02DF:0282
+   298 02DF:0291   301 02DF:0293   302 02DF:029D   303 02DF:02A0
+
+Program entry point at 0000:0DC3

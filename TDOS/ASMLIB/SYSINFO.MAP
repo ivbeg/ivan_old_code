@@ -1,0 +1,125 @@
+
+ Start  Stop   Length Name               Class
+
+ 00000H 001C9H 001CAH PROGRAM            CODE
+ 001D0H 00A1AH 0084BH TSystem            CODE
+ 00A20H 015DAH 00BBBH System             CODE
+ 015E0H 0194DH 0036EH DATA               DATA
+ 01950H 0594FH 04000H STACK              STACK
+ 05950H 05950H 00000H HEAP               HEAP
+
+  Address         Publics by Value
+
+ 0000:007B       @
+ 001D:0292       @
+ 001D:02C4       FillDword
+ 001D:02DA       FillWord
+ 001D:02FD       FillByte
+ 001D:0326       Fill
+ 001D:035D       MovePtr
+ 001D:037E       SwapByte
+ 001D:0393       SwapWord
+ 001D:03A8       SwapLong
+ 001D:03C0       Swap
+ 001D:03F7       SearchPtr
+ 001D:0442       ReadMemoryByte
+ 001D:044E       ReadMemoryWord
+ 001D:045A       ReadMemoryDword
+ 001D:046A       WriteMemoryByte
+ 001D:0478       WriteMemoryWord
+ 001D:0486       WriteMemoryDword
+ 001D:0496       ReadPort
+ 001D:04A0       WritePort
+ 001D:04AE       ReadIndexPort
+ 001D:04BA       WriteIndexPort
+ 001D:04ED       AbsReadMemoryByte
+ 001D:0507       AbsReadMemoryWord
+ 001D:0521       AbsReadMemoryDword
+ 001D:053F       AbsWriteMemoryByte
+ 001D:055C       AbsWriteMemoryWord
+ 001D:0579       AbsWriteMemoryDword
+ 001D:0598       CompareBuffersPtr
+ 001D:05C0       Delay
+ 001D:05D1       HardwareReboot
+ 001D:05E7       WarmReboot
+ 001D:05F8       ColdReboot
+ 015E:0002       csCpuTypes
+ 015E:003E       csBiosTypes
+ 015E:00AA       CpuType
+ 015E:00AC       CpuSpeed
+ 015E:00AE       CpuIDValid
+ 015E:00AF       BiosType
+ 015E:00B0       ExtendedMemorySize
+ 015E:00B2       CpuVendor
+ 015E:00BE       OvrCodeList
+ 015E:00C0       OvrHeapSize
+ 015E:00C2       OvrDebugPtr
+ 015E:00C6       OvrHeapOrg
+ 015E:00C8       OvrHeapPtr
+ 015E:00CA       OvrHeapEnd
+ 015E:00CC       OvrLoadList
+ 015E:00CE       OvrDosHandle
+ 015E:00D0       OvrEmsHandle
+ 015E:00D2       HeapOrg
+ 015E:00D6       HeapPtr
+ 015E:00DA       HeapEnd
+ 015E:00DE       FreeList
+ 015E:00E2       FreeZero
+ 015E:00E6       HeapError
+ 015E:00EA       ExitProc
+ 015E:00EE       ExitCode
+ 015E:00F0       ErrorAddr
+ 015E:00F4       PrefixSeg
+ 015E:00F6       StackLimit
+ 015E:00F8       InOutRes
+ 015E:00FA       RandSeed
+ 015E:00FE       SelectorInc
+ 015E:0100       Seg0040
+ 015E:0102       SegA000
+ 015E:0104       SegB000
+ 015E:0106       SegB800
+ 015E:0108       Test8086
+ 015E:0109       Test8087
+ 015E:010A       FileMode
+ 015E:011A       SelfAddr
+ 015E:011E       BiosConfigTable
+ 015E:0122       Input
+ 015E:0222       Output
+ 015E:0322       SaveInt00
+ 015E:0326       SaveInt02
+ 015E:032A       SaveInt1B
+ 015E:032E       SaveInt21
+ 015E:0332       SaveInt23
+ 015E:0336       SaveInt24
+ 015E:033A       SaveInt34
+ 015E:033E       SaveInt35
+ 015E:0342       SaveInt36
+ 015E:0346       SaveInt37
+ 015E:034A       SaveInt38
+ 015E:034E       SaveInt39
+ 015E:0352       SaveInt3A
+ 015E:0356       SaveInt3B
+ 015E:035A       SaveInt3C
+ 015E:035E       SaveInt3D
+ 015E:0362       SaveInt3E
+ 015E:0366       SaveInt3F
+ 015E:036A       SaveInt75
+
+Line numbers for PROGRAM(SYSINFO.PAS) segment PROGRAM
+
+    42 0000:007B    43 0000:008F    44 0000:00C3    45 0000:00F7
+    46 0000:012C    51 0000:0152    52 0000:018D    53 0000:01C2
+
+Line numbers for TSystem(TSYSTEM.PAS) segment TSystem
+
+   273 001D:0000   274 001D:000A   275 001D:0010   280 001D:0019
+   281 001D:0028   282 001D:0057   287 001D:0064   288 001D:0073
+   289 001D:00A2   291 001D:00C9   292 001D:00D8   293 001D:0123
+   294 001D:014D   295 001D:0177   296 001D:01A0   297 001D:01BA
+   298 001D:01C2   299 001D:01D2   300 001D:01FB   301 001D:020B
+   302 001D:0211   306 001D:023E   307 001D:0248   308 001D:024B
+   310 001D:0252   311 001D:026D   313 001D:0275   314 001D:0278
+   315 001D:027B   316 001D:027E   317 001D:0281   318 001D:0290
+   321 001D:0292   322 001D:029C   323 001D:029F
+
+Program entry point at 0000:007B

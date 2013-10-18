@@ -1,0 +1,159 @@
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:40:3
+                                                             Page     1-1
+
+
+       1				INCLUDE MACRO.INC
+       2 = 0000                      C	False      EQU  0
+       3 = 0001                      C	True       EQU  1
+       4			     C	
+       5			     C	
+       6 = 002F                      C	Multiplex  EQU  2Fh
+       7			     C	
+       8			     C	BooleanAl  Macro Boolean
+       9			     C	           LOCAL AlOk
+      10			     C	            mov al,Boolean
+      11			     C	            cmp al,0
+      12			     C	            je  AlOk
+      13			     C	            mov al,1
+      14			     C	      ALok:
+      15			     C	           endm
+      16			     C	
+      17			     C	EmsCall Macro EmsFunction
+      18			     C	         mov  ah,EmsFunction
+      19			     C	         int  67h
+      20			     C	         mov  EmsError,ah
+      21			     C	        endm
+      22			     C	
+      23			     C	KbdCall Macro KbdFunction
+      24			     C	         mov   ah,KbdFunction
+      25			     C	         int   16h
+      26			     C	        endm
+      27			     C	
+      28			     C	StackFrameBP Macro
+      29			     C	              push bp
+      30			     C	              mov  bp,sp
+      31			     C	             endm
+      32			     C	
+      33			     C	ExitCode Macro Count
+      34			     C	          mov  sp,bp
+      35			     C	          pop  bp
+      36			     C	          ret  Count
+      37			     C	         endm
+      38			     C	
+      39			     C	Zero     Macro reg
+      40			     C	          xor  Reg,Reg
+      41			     C	         endm
+      42				
+      43 0000				DATA  SEGMENT WORD PUBLIC
+      44				      ASSUME  DS:DATA
+      45				
+      46				      EXTRN   Error     : BYTE
+      47				      EXTRN   OldSS     : WORD
+      48				      EXTRN   OldSP     : WORD
+      49				      EXTRN   PrefixSeg : WORD
+      50				      EXTRN   ExecBlock : DWORD
+      51				      EXTRN   DosIO     : NEAR
+      52				
+      53 0000				DATA  ENDS
+      54				
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:40:3
+                                                             Page     1-2
+
+
+      55 0000				CODE  SEGMENT BYTE PUBLIC
+      56				      ASSUME CS:CODE,DS:DATA
+      57				
+      58				      PUBLIC Keep,GetExitCode
+      59				
+      60 0000				Keep  PROC FAR
+      61 = (BYTE PTR [BP+6])		ECode EQU (BYTE PTR [BP+6])
+      62				       StackFrameBP
+      63 0000  55                    1	              push bp 
+      64 0001  8B EC                 1	              mov  bp,sp 
+      65 0003  A1 0000 E		       mov  ax,PrefixSeg
+      66 0006  8E C0			       mov  es,ax
+      67 0008  26: 8B 16 0002		       mov  dx,Word Ptr es:2
+      68 000D  2B D0			       sub  dx,ax
+      69 000F  8A 46 06			       mov  al,Ecode
+      70 0012  B4 31			       mov  ah,31h
+      71 0014  E8 0000 E		       Call DosIo
+      72				       ExitCode 2
+      73 0017  8B E5                 1	          mov  sp,bp 
+      74 0019  5D                    1	          pop  bp 
+      75 001A  CA 0002               1	          ret  2 
+      76 001D				Keep  ENDP
+      77				
+      78 001D				GetExitCode PROC FAR
+      79 001D  B4 4D			             mov  ah,4Dh
+      80 001F  E8 0000 E		             Call DosIo
+      81 0022  CB			             ret
+      82 0023				GetExitCode ENDP
+      83				
+      84 0023				CODE  ENDS
+      85				
+      86				      END
+
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:40:3
+                                                             Symbols-1
+
+
+Macros:
+
+		N a m e			Lines
+
+BOOLEANAL  . . . . . . . . . . .  	   5
+EMSCALL  . . . . . . . . . . . .  	   3
+EXITCODE . . . . . . . . . . . .  	   3
+KBDCALL  . . . . . . . . . . . .  	   2
+STACKFRAMEBP . . . . . . . . . .  	   2
+ZERO . . . . . . . . . . . . . .  	   1
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CODE . . . . . . . . . . . . . .  	0023	BYTE	PUBLIC	
+DATA . . . . . . . . . . . . . .  	0000	WORD	PUBLIC	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+DOSIO  . . . . . . . . . . . . .  	L NEAR	0000	DATA	External
+
+ECODE  . . . . . . . . . . . . .  	TEXT  (BYTE PTR [BP+6])		
+ERROR  . . . . . . . . . . . . .  	V BYTE	0000	DATA	External
+EXECBLOCK  . . . . . . . . . . .  	V DWORD	0000	DATA	External
+
+FALSE  . . . . . . . . . . . . .  	NUMBER	0000	
+
+GETEXITCODE  . . . . . . . . . .  	F PROC	001D	CODE	Global	Length = 0006
+
+KEEP . . . . . . . . . . . . . .  	F PROC	0000	CODE	Global	Length = 001D
+
+MULTIPLEX  . . . . . . . . . . .  	NUMBER	002F	
+
+OLDSP  . . . . . . . . . . . . .  	V WORD	0000	DATA	External
+OLDSS  . . . . . . . . . . . . .  	V WORD	0000	DATA	External
+
+PREFIXSEG  . . . . . . . . . . .  	V WORD	0000	DATA	External
+
+TRUE . . . . . . . . . . . . . .  	NUMBER	0001	
+
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  process		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:40:3
+                                                             Symbols-2
+
+
+
+     81 Source  Lines
+     86 Total   Lines
+     25 Symbols
+
+  46886 + 299911 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors

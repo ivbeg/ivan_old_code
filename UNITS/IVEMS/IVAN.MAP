@@ -1,0 +1,110 @@
+
+ Start  Stop   Length Name               Class
+
+ 00000H 00114H 00115H PROGRAM            CODE
+ 00120H 001A0H 00081H IVstring           CODE
+ 001B0H 001B0H 00000H IvKbd              CODE
+ 001B0H 00263H 000B4H NewIvEms           CODE
+ 00270H 00292H 00023H IvSystem           CODE
+ 002A0H 00DBEH 00B1FH System             CODE
+ 00DC0H 0107DH 002BEH DATA               DATA
+ 01080H 0507FH 04000H STACK              STACK
+ 05080H 05080H 00000H HEAP               HEAP
+
+  Address         Publics by Value
+
+ 0000:0000       @
+ 0012:0000       HexB
+ 0012:003D       HexW
+ 001B:0000       EmsResult
+ 001B:000A       EmsVersion
+ 001B:0013       PageFrame
+ 001B:001E       TotalEmsPages
+ 001B:0029       AvailEmsPages
+ 001B:0034       ActiveHandles
+ 001B:003F       TotalHandles
+ 001B:004C       SetHandleAttr
+ 001B:0065       SetHandleName
+ 001B:0080       GetHandleName
+ 001B:009E       GetHandlePages
+ 0027:0000       @
+ 00DC:0012       OvrCodeList
+ 00DC:0014       OvrHeapSize
+ 00DC:0016       OvrDebugPtr
+ 00DC:001A       OvrHeapOrg
+ 00DC:001C       OvrHeapPtr
+ 00DC:001E       OvrHeapEnd
+ 00DC:0020       OvrLoadList
+ 00DC:0022       OvrDosHandle
+ 00DC:0024       OvrEmsHandle
+ 00DC:0026       HeapOrg
+ 00DC:002A       HeapPtr
+ 00DC:002E       HeapEnd
+ 00DC:0032       FreeList
+ 00DC:0036       FreeZero
+ 00DC:003A       HeapError
+ 00DC:003E       ExitProc
+ 00DC:0042       ExitCode
+ 00DC:0044       ErrorAddr
+ 00DC:0048       PrefixSeg
+ 00DC:004A       StackLimit
+ 00DC:004C       InOutRes
+ 00DC:004E       RandSeed
+ 00DC:0052       SelectorInc
+ 00DC:0054       Seg0040
+ 00DC:0056       SegA000
+ 00DC:0058       SegB000
+ 00DC:005A       SegB800
+ 00DC:005C       Test8086
+ 00DC:005D       Test8087
+ 00DC:005E       FileMode
+ 00DC:0062       C
+ 00DC:0064       W
+ 00DC:0066       EMSError
+ 00DC:0066       EmsIsErr
+ 00DC:0067       isEMM
+ 00DC:0068       PspAddr
+ 00DC:006C       Err
+ 00DC:006E       Error
+ 00DC:006F       EType
+ 00DC:0070       sgbErrorDecode
+ 00DC:0072       Input
+ 00DC:0172       Output
+ 00DC:0272       SaveInt00
+ 00DC:0276       SaveInt02
+ 00DC:027A       SaveInt1B
+ 00DC:027E       SaveInt21
+ 00DC:0282       SaveInt23
+ 00DC:0286       SaveInt24
+ 00DC:028A       SaveInt34
+ 00DC:028E       SaveInt35
+ 00DC:0292       SaveInt36
+ 00DC:0296       SaveInt37
+ 00DC:029A       SaveInt38
+ 00DC:029E       SaveInt39
+ 00DC:02A2       SaveInt3A
+ 00DC:02A6       SaveInt3B
+ 00DC:02AA       SaveInt3C
+ 00DC:02AE       SaveInt3D
+ 00DC:02B2       SaveInt3E
+ 00DC:02B6       SaveInt3F
+ 00DC:02BA       SaveInt75
+
+Line numbers for PROGRAM(IVAN.PAS) segment PROGRAM
+
+     4 0000:0000     5 0000:0019     6 0000:0039     7 0000:0059
+     8 0000:0079     9 0000:0099    10 0000:00C1    11 0000:00C6
+    13 0000:00D4    14 0000:00F2    15 0000:00F6    16 0000:0104
+    17 0000:010B
+
+Line numbers for IVstring(IVSTRING.PAS) segment IVstring
+
+   304 0012:0000   305 0012:000A   306 0012:0021   307 0012:0035
+   308 0012:0039   311 0012:003D   312 0012:004C   313 0012:007B
+
+Line numbers for IvSystem(IVSYSTEM.PAS) segment IvSystem
+
+   230 0027:0000   231 0027:000A   232 0027:000F   233 0027:0014
+   234 0027:0021
+
+Program entry point at 0000:0000

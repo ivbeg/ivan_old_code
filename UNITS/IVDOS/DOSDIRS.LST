@@ -1,0 +1,176 @@
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:32:0
+                                                             Page     1-1
+
+
+       1				INCLUDE MACRO.INC
+       2 = 0000                      C	False      EQU  0
+       3 = 0001                      C	True       EQU  1
+       4			     C	
+       5			     C	
+       6 = 002F                      C	Multiplex  EQU  2Fh
+       7			     C	
+       8			     C	BooleanAl  Macro Boolean
+       9			     C	           LOCAL AlOk
+      10			     C	            mov al,Boolean
+      11			     C	            cmp al,0
+      12			     C	            je  AlOk
+      13			     C	            mov al,1
+      14			     C	      ALok:
+      15			     C	           endm
+      16			     C	
+      17			     C	EmsCall Macro EmsFunction
+      18			     C	         mov  ah,EmsFunction
+      19			     C	         int  67h
+      20			     C	         mov  EmsError,ah
+      21			     C	        endm
+      22			     C	
+      23			     C	KbdCall Macro KbdFunction
+      24			     C	         mov   ah,KbdFunction
+      25			     C	         int   16h
+      26			     C	        endm
+      27			     C	
+      28			     C	StackFrameBP Macro
+      29			     C	              push bp
+      30			     C	              mov  bp,sp
+      31			     C	             endm
+      32			     C	
+      33			     C	ExitCode Macro Count
+      34			     C	          mov  sp,bp
+      35			     C	          pop  bp
+      36			     C	          ret  Count
+      37			     C	         endm
+      38			     C	
+      39			     C	Zero     Macro reg
+      40			     C	          xor  Reg,Reg
+      41			     C	         endm
+      42				
+      43 0000				DATA  SEGMENT WORD PUBLIC
+      44				      ASSUME  DS:DATA
+      45				
+      46				      EXTRN   Error   : BYTE
+      47				      EXTRN   DosIo   : NEAR
+      48				
+      49 0000				DATA  ENDS
+      50				
+      51 0000				CODE  SEGMENT BYTE PUBLIC
+      52				      ASSUME CS:CODE,DS:DATA
+      53				
+      54				      PUBLIC MakeDir,RemDir,ChangeDir
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:32:0
+                                                             Page     1-2
+
+
+      55				
+      56 = (DWORD PTR [BP+6])		Directory  EQU  (DWORD PTR [BP+6])
+      57				
+      58 0000				DirControl PROC NEAR
+      59 0000  1E			            push      ds
+      60 0001  C5 56 06			            lds       dx,Directory
+      61 0004  E8 0000 E		            Call      DosIo
+      62 0007  1F			            Pop       ds
+      63 0008  C3			            retn
+      64 0009				DirControl ENDP
+      65				
+      66 0009				MakeDir    PROC FAR
+      67				            StackFrameBP
+      68 0009  55                    1	              push bp 
+      69 000A  8B EC                 1	              mov  bp,sp 
+      70 000C  B4 39			            mov       ah,39h
+      71 000E  E8 0000 R		            Call      DirControl
+      72				            ExitCode   4
+      73 0011  8B E5                 1	          mov  sp,bp 
+      74 0013  5D                    1	          pop  bp 
+      75 0014  CA 0004               1	          ret  4 
+      76 0017				MakeDir    ENDP
+      77				
+      78				
+      79 0017				ChangeDir  PROC FAR
+      80				            StackFrameBP
+      81 0017  55                    1	              push bp 
+      82 0018  8B EC                 1	              mov  bp,sp 
+      83 001A  B4 3B			            mov       ah,3Bh
+      84 001C  E8 0000 R		            Call      DirControl
+      85				            ExitCode   4
+      86 001F  8B E5                 1	          mov  sp,bp 
+      87 0021  5D                    1	          pop  bp 
+      88 0022  CA 0004               1	          ret  4 
+      89 0025				ChangeDir  ENDP
+      90				
+      91				
+      92 0025				RemDir     PROC FAR
+      93				            StackFrameBP
+      94 0025  55                    1	              push bp 
+      95 0026  8B EC                 1	              mov  bp,sp 
+      96 0028  B4 3A			            mov       ah,3Ah
+      97 002A  E8 0000 R		            Call      DirControl
+      98				            ExitCode   4
+      99 002D  8B E5                 1	          mov  sp,bp 
+     100 002F  5D                    1	          pop  bp 
+     101 0030  CA 0004               1	          ret  4 
+     102 0033				RemDir     ENDP
+     103				
+     104				
+     105 0033				CODE  ENDS
+     106				
+     107				      END
+
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:32:0
+                                                             Symbols-1
+
+
+Macros:
+
+		N a m e			Lines
+
+BOOLEANAL  . . . . . . . . . . .  	   5
+EMSCALL  . . . . . . . . . . . .  	   3
+EXITCODE . . . . . . . . . . . .  	   3
+KBDCALL  . . . . . . . . . . . .  	   2
+STACKFRAMEBP . . . . . . . . . .  	   2
+ZERO . . . . . . . . . . . . . .  	   1
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CODE . . . . . . . . . . . . . .  	0033	BYTE	PUBLIC	
+DATA . . . . . . . . . . . . . .  	0000	WORD	PUBLIC	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+CHANGEDIR  . . . . . . . . . . .  	F PROC	0017	CODE	Global	Length = 000E
+
+DIRCONTROL . . . . . . . . . . .  	N PROC	0000	CODE	Length = 0009
+DIRECTORY  . . . . . . . . . . .  	TEXT  (DWORD PTR [BP+6])		
+DOSIO  . . . . . . . . . . . . .  	L NEAR	0000	DATA	External
+
+ERROR  . . . . . . . . . . . . .  	V BYTE	0000	DATA	External
+
+FALSE  . . . . . . . . . . . . .  	NUMBER	0000	
+
+MAKEDIR  . . . . . . . . . . . .  	F PROC	0009	CODE	Global	Length = 000E
+MULTIPLEX  . . . . . . . . . . .  	NUMBER	002F	
+
+REMDIR . . . . . . . . . . . . .  	F PROC	0025	CODE	Global	Length = 000E
+
+TRUE . . . . . . . . . . . . . .  	NUMBER	0001	
+
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  dosdirs		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:32:0
+                                                             Symbols-2
+
+
+
+     92 Source  Lines
+    107 Total   Lines
+     23 Symbols
+
+  46886 + 299911 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors

@@ -1,0 +1,127 @@
+
+ Start  Stop   Length Name               Class
+
+ 00000H 00061H 00062H CD_DiskToHTML      CODE
+ 00070H 00991H 00922H TSystem            CODE
+ 009A0H 01370H 009D1H System             CODE
+ 01380H 01645H 002C6H DATA               DATA
+ 01650H 0564FH 04000H STACK              STACK
+ 05650H 05650H 00000H HEAP               HEAP
+
+  Address         Publics by Value
+
+ 0000:0000       Is_MSCDEX_Installed
+ 0000:0020       @
+ 0007:02B5       @
+ 0007:032F       FillDword
+ 0007:0342       FillWord
+ 0007:0361       FillByte
+ 0007:0387       Fill
+ 0007:03B9       MovePtr
+ 0007:03D7       SwapByte
+ 0007:03EA       SwapWord
+ 0007:03FD       SwapLong
+ 0007:0413       Swap
+ 0007:0447       SearchPtr
+ 0007:048E       ReadMemoryByte
+ 0007:0499       ReadMemoryWord
+ 0007:04A4       ReadMemoryDword
+ 0007:04B3       WriteMemoryByte
+ 0007:04BF       WriteMemoryWord
+ 0007:04CB       WriteMemoryDword
+ 0007:04D9       ReadPort
+ 0007:04E2       WritePort
+ 0007:04EE       ReadIndexPort
+ 0007:04F9       WriteIndexPort
+ 0007:05DD       AbsReadMemoryByte
+ 0007:05F5       AbsReadMemoryWord
+ 0007:060D       AbsReadMemoryDword
+ 0007:0629       AbsWriteMemoryByte
+ 0007:0643       AbsWriteMemoryWord
+ 0007:065D       AbsWriteMemoryDword
+ 0007:0679       CompareBuffersPtr
+ 0007:069E       Delay
+ 0007:06AD       CopyExtendedMemory
+ 0007:06FA       HardwareReboot
+ 0007:0705       WarmReboot
+ 0007:0716       ColdReboot
+ 0138:0002       Cpu_Type
+ 0138:0003       Cpu_Vendor
+ 0138:0004       Cpu_Speed
+ 0138:0006       Cpu_VendorStr
+ 0138:0012       CpuIDValid
+ 0138:0013       BiosType
+ 0138:0014       ExtendedMemorySize
+ 0138:0016       OvrCodeList
+ 0138:0018       OvrHeapSize
+ 0138:001A       OvrDebugPtr
+ 0138:001E       OvrHeapOrg
+ 0138:0020       OvrHeapPtr
+ 0138:0022       OvrHeapEnd
+ 0138:0024       OvrLoadList
+ 0138:0026       OvrDosHandle
+ 0138:0028       OvrEmsHandle
+ 0138:002A       HeapOrg
+ 0138:002E       HeapPtr
+ 0138:0032       HeapEnd
+ 0138:0036       FreeList
+ 0138:003A       FreeZero
+ 0138:003E       HeapError
+ 0138:0042       ExitProc
+ 0138:0046       ExitCode
+ 0138:0048       ErrorAddr
+ 0138:004C       PrefixSeg
+ 0138:004E       StackLimit
+ 0138:0050       InOutRes
+ 0138:0052       RandSeed
+ 0138:0056       SelectorInc
+ 0138:0058       Seg0040
+ 0138:005A       SegA000
+ 0138:005C       SegB000
+ 0138:005E       SegB800
+ 0138:0060       Test8086
+ 0138:0061       Test8087
+ 0138:0062       FileMode
+ 0138:0072       SelfAddr
+ 0138:0076       BiosConfigTable
+ 0138:007A       Input
+ 0138:017A       Output
+ 0138:027A       SaveInt00
+ 0138:027E       SaveInt02
+ 0138:0282       SaveInt1B
+ 0138:0286       SaveInt21
+ 0138:028A       SaveInt23
+ 0138:028E       SaveInt24
+ 0138:0292       SaveInt34
+ 0138:0296       SaveInt35
+ 0138:029A       SaveInt36
+ 0138:029E       SaveInt37
+ 0138:02A2       SaveInt38
+ 0138:02A6       SaveInt39
+ 0138:02AA       SaveInt3A
+ 0138:02AE       SaveInt3B
+ 0138:02B2       SaveInt3C
+ 0138:02B6       SaveInt3D
+ 0138:02BA       SaveInt3E
+ 0138:02BE       SaveInt3F
+ 0138:02C2       SaveInt75
+
+Line numbers for CD_DiskToHTML(CD2HTM.PAS) segment CD_DiskToHTML
+
+    81 0000:0000    82 0000:0003    83 0000:0006    84 0000:0008
+    85 0000:0009    86 0000:000B    87 0000:000E    88 0000:0010
+    90 0000:0012   106 0000:0020   107 0000:0034   110 0000:005A
+
+Line numbers for TSystem(TSYSTEM.PAS) segment TSystem
+
+   258 0007:0000   259 0007:000A   260 0007:0010   265 0007:0019
+   266 0007:0028   267 0007:0059   272 0007:0068   273 0007:0077
+   274 0007:00A8   276 0007:00D1   277 0007:00E0   278 0007:0130
+   279 0007:015D   280 0007:018A   281 0007:01B6   282 0007:01D0
+   283 0007:01D9   284 0007:01EA   285 0007:0216   286 0007:0227
+   287 0007:022E   291 0007:025D   292 0007:0267   293 0007:026A
+   294 0007:026D   295 0007:0270   296 0007:0273   298 0007:027A
+   299 0007:0296   301 0007:029E   302 0007:02A1   303 0007:02A4
+   304 0007:02B3   307 0007:02B5   308 0007:02BF   309 0007:02C2
+
+Program entry point at 0000:0020

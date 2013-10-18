@@ -1,0 +1,224 @@
+
+ Start  Stop   Length Name               Class
+
+ 00000H 000BAH 000BBH PROGRAM            CODE
+ 000C0H 006E7H 00628H NewDos             CODE
+ 006F0H 0101DH 0092EH TSystem            CODE
+ 01020H 01B2AH 00B0BH System             CODE
+ 01B30H 01F05H 003D6H DATA               DATA
+ 01F10H 05F0FH 04000H STACK              STACK
+ 05F10H 05F10H 00000H HEAP               HEAP
+
+  Address         Publics by Value
+
+ 0000:002D       @
+ 000C:0000       @
+ 000C:0090       DosReadChar
+ 000C:00A5       DosReadAuxChar
+ 000C:00AB       DosWriteChar
+ 000C:00AF       DosWritePrnChar
+ 000C:00B3       DosWriteAuxChar
+ 000C:00C1       GetStdInStatus
+ 000C:00C9       DosBufferedInput
+ 000C:00D9       DosWriteString
+ 000C:00EA       DiskReset
+ 000C:00F0       SelectDrive
+ 000C:00FE       GetDefaultDrive
+ 000C:0104       SetDiskTransferArea
+ 000C:0114       GetDefDriveInfo
+ 000C:0133       GetDriveInfo
+ 000C:0156       GetDefDriveDPT
+ 000C:0162       SetInterruptVector
+ 000C:0176       GetSystemDate
+ 000C:018B       SetSystemDate
+ 000C:01A0       GetSystemTime
+ 000C:01B5       SetSystemTime
+ 000C:01CA       SetVerifyFlag
+ 000C:01D8       GetDiskTransferArea
+ 000C:01ED       StayTSR
+ 000C:0207       GetDriveDPT
+ 000C:021B       GetExtBreakCheck
+ 000C:0223       SetExtBreakCheck
+ 000C:022F       GetBootDrive
+ 000C:0248       GetInterruptVector
+ 000C:025A       GetFreeDiskSpace
+ 000C:027B       GetSwitchar
+ 000C:0284       SetSwitchar
+ 000C:0293       CreateDirectory
+ 000C:0297       RemoveDirectory
+ 000C:029B       ChangeDirectory
+ 000C:02AB       CreateFile
+ 000C:02C4       OpenFile
+ 000C:02DC       CloseFile
+ 000C:02E8       ReadFile
+ 000C:02EE       WriteFile
+ 000C:030D       DeleteFile
+ 000C:031D       SeekFile
+ 000C:0331       GetFileAttribute
+ 000C:0342       SetFileAttribute
+ 000C:0357       DuplicateHandle
+ 000C:0365       ForceDuplicateHandle
+ 000C:0377       GetCurrentDirectory
+ 000C:038B       AllocateMemory
+ 000C:0399       ReleaseMemory
+ 000C:03A9       ReallocateMemory
+ 000C:03BD       GetExitCode
+ 000C:03C5       SetPSP_Address
+ 000C:03D3       GetPSP_Address
+ 000C:03EE       ConvertBPBtoDPB
+ 000C:0402       GetVerifyFlag
+ 000C:0408       CreateChild_PSP
+ 000C:041A       RenameFile
+ 000C:042E       GetFileDate
+ 000C:043F       GetFileTime
+ 000C:0450       SetFileTimeDate
+ 000C:0467       GetAllocationStrategy
+ 000C:046E       SetAllocationStrategy
+ 000C:047D       GetUMB_LinkState
+ 000C:0484       SetUMB_LinkState
+ 000C:0493       CreateNewFile
+ 000C:0497       CreateTempFile
+ 000C:04B0       UnLockFile
+ 000C:04B5       LockFile
+ 000C:04D4       DisableDrive
+ 000C:04D9       EnableDrive
+ 000C:04E6       GetTrueName
+ 000C:04F8       GetCurrentPSP
+ 000C:0500       CapitalizeChar
+ 000C:0511       CapitalizeString
+ 000C:0526       CapitalizePChar
+ 000C:0534       SetHandlesCount
+ 000C:0543       CommitFile
+ 000C:0547       FflushFile
+ 000C:056C       GetFreeHMAddr
+ 000C:0576       HMAMemAvail
+ 000C:057E       AllocateHMA
+ 000C:05B4       GetEnvCount
+ 000C:05E1       EnvPChar
+ 006F:0000       DoNone
+ 006F:02B6       @
+ 006F:0330       FillDword
+ 006F:0343       FillWord
+ 006F:0362       FillByte
+ 006F:0388       Fill
+ 006F:03BA       MovePtr
+ 006F:03D8       SwapByte
+ 006F:03EB       SwapWord
+ 006F:03FE       SwapLong
+ 006F:0414       Swap
+ 006F:0448       SearchPtr
+ 006F:048F       ReadMemoryByte
+ 006F:049A       ReadMemoryWord
+ 006F:04A5       ReadMemoryDword
+ 006F:04B4       WriteMemoryByte
+ 006F:04C0       WriteMemoryWord
+ 006F:04CC       WriteMemoryDword
+ 006F:04DA       ReadPort
+ 006F:04E3       WritePort
+ 006F:04EF       ReadIndexPort
+ 006F:04FA       WriteIndexPort
+ 006F:05DE       AbsReadMemoryByte
+ 006F:05F6       AbsReadMemoryWord
+ 006F:060E       AbsReadMemoryDword
+ 006F:062A       AbsWriteMemoryByte
+ 006F:0644       AbsWriteMemoryWord
+ 006F:065E       AbsWriteMemoryDword
+ 006F:067A       CompareBuffersPtr
+ 006F:069F       Delay
+ 006F:06AE       CopyExtendedMemory
+ 006F:06FB       HardwareReboot
+ 006F:0711       WarmReboot
+ 006F:0722       ColdReboot
+ 01B3:0002       Cpu_Type
+ 01B3:0003       Cpu_Vendor
+ 01B3:0004       Cpu_Speed
+ 01B3:0006       Cpu_VendorStr
+ 01B3:0012       CpuIDValid
+ 01B3:0013       BiosType
+ 01B3:0014       ExtendedMemorySize
+ 01B3:0016       OvrCodeList
+ 01B3:0018       OvrHeapSize
+ 01B3:001A       OvrDebugPtr
+ 01B3:001E       OvrHeapOrg
+ 01B3:0020       OvrHeapPtr
+ 01B3:0022       OvrHeapEnd
+ 01B3:0024       OvrLoadList
+ 01B3:0026       OvrDosHandle
+ 01B3:0028       OvrEmsHandle
+ 01B3:002A       HeapOrg
+ 01B3:002E       HeapPtr
+ 01B3:0032       HeapEnd
+ 01B3:0036       FreeList
+ 01B3:003A       FreeZero
+ 01B3:003E       HeapError
+ 01B3:0042       ExitProc
+ 01B3:0046       ExitCode
+ 01B3:0048       ErrorAddr
+ 01B3:004C       PrefixSeg
+ 01B3:004E       StackLimit
+ 01B3:0050       InOutRes
+ 01B3:0052       RandSeed
+ 01B3:0056       SelectorInc
+ 01B3:0058       Seg0040
+ 01B3:005A       SegA000
+ 01B3:005C       SegB000
+ 01B3:005E       SegB800
+ 01B3:0060       Test8086
+ 01B3:0061       Test8087
+ 01B3:0062       FileMode
+ 01B3:0066       InStr
+ 01B3:0166       ReleaseSegm
+ 01B3:0168       Code
+ 01B3:016A       DosVersion
+ 01B3:016C       DosResult
+ 01B3:0178       SysVars
+ 01B3:017C       IndosFlagPtr
+ 01B3:0180       FileOpenMode
+ 01B3:0181       DosFlags
+ 01B3:0182       SelfAddr
+ 01B3:0186       BiosConfigTable
+ 01B3:018A       Input
+ 01B3:028A       Output
+ 01B3:038A       SaveInt00
+ 01B3:038E       SaveInt02
+ 01B3:0392       SaveInt1B
+ 01B3:0396       SaveInt21
+ 01B3:039A       SaveInt23
+ 01B3:039E       SaveInt24
+ 01B3:03A2       SaveInt34
+ 01B3:03A6       SaveInt35
+ 01B3:03AA       SaveInt36
+ 01B3:03AE       SaveInt37
+ 01B3:03B2       SaveInt38
+ 01B3:03B6       SaveInt39
+ 01B3:03BA       SaveInt3A
+ 01B3:03BE       SaveInt3B
+ 01B3:03C2       SaveInt3C
+ 01B3:03C6       SaveInt3D
+ 01B3:03CA       SaveInt3E
+ 01B3:03CE       SaveInt3F
+ 01B3:03D2       SaveInt75
+
+Line numbers for PROGRAM(TTEST.PAS) segment PROGRAM
+
+     8 0000:002D     9 0000:0046    10 0000:0061    11 0000:0098
+    12 0000:00AA    13 0000:00B3
+
+Line numbers for NewDos(NEWDOS.PAS) segment NewDos
+
+   227 000C:0000   228 000C:000A   229 000C:000D   230 000C:001A
+
+Line numbers for TSystem(TSYSTEM.PAS) segment TSystem
+
+   213 006F:0000   258 006F:0001   259 006F:000B   260 006F:0011
+   265 006F:001A   266 006F:0029   267 006F:005A   272 006F:0069
+   273 006F:0078   274 006F:00A9   276 006F:00D2   277 006F:00E1
+   278 006F:0131   279 006F:015E   280 006F:018B   281 006F:01B7
+   282 006F:01D1   283 006F:01DA   284 006F:01EB   285 006F:0217
+   286 006F:0228   287 006F:022F   291 006F:025E   292 006F:0268
+   293 006F:026B   294 006F:026E   295 006F:0271   296 006F:0274
+   298 006F:027B   299 006F:0297   301 006F:029F   302 006F:02A2
+   303 006F:02A5   304 006F:02B4   307 006F:02B6   308 006F:02C0
+   309 006F:02C3
+
+Program entry point at 0000:002D

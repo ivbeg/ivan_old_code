@@ -1,0 +1,81 @@
+
+ Start  Stop   Length Name               Class
+
+ 00000H 0002BH 0002CH PROGRAM            CODE
+ 00030H 00052H 00023H IvSystem           CODE
+ 00060H 005F1H 00592H System             CODE
+ 00600H 008A5H 002A6H DATA               DATA
+ 008B0H 048AFH 04000H STACK              STACK
+ 048B0H 048B0H 00000H HEAP               HEAP
+
+  Address         Publics by Value
+
+ 0000:0000       @
+ 0003:0000       @
+ 0060:0002       OvrCodeList
+ 0060:0004       OvrHeapSize
+ 0060:0006       OvrDebugPtr
+ 0060:000A       OvrHeapOrg
+ 0060:000C       OvrHeapPtr
+ 0060:000E       OvrHeapEnd
+ 0060:0010       OvrLoadList
+ 0060:0012       OvrDosHandle
+ 0060:0014       OvrEmsHandle
+ 0060:0016       HeapOrg
+ 0060:001A       HeapPtr
+ 0060:001E       HeapEnd
+ 0060:0022       FreeList
+ 0060:0026       FreeZero
+ 0060:002A       HeapError
+ 0060:002E       ExitProc
+ 0060:0032       ExitCode
+ 0060:0034       ErrorAddr
+ 0060:0038       PrefixSeg
+ 0060:003A       StackLimit
+ 0060:003C       InOutRes
+ 0060:003E       RandSeed
+ 0060:0042       SelectorInc
+ 0060:0044       Seg0040
+ 0060:0046       SegA000
+ 0060:0048       SegB000
+ 0060:004A       SegB800
+ 0060:004C       Test8086
+ 0060:004D       Test8087
+ 0060:004E       FileMode
+ 0060:0050       PspAddr
+ 0060:0054       Err
+ 0060:0056       Error
+ 0060:0057       EType
+ 0060:0058       sgbErrorDecode
+ 0060:005A       Input
+ 0060:015A       Output
+ 0060:025A       SaveInt00
+ 0060:025E       SaveInt02
+ 0060:0262       SaveInt1B
+ 0060:0266       SaveInt21
+ 0060:026A       SaveInt23
+ 0060:026E       SaveInt24
+ 0060:0272       SaveInt34
+ 0060:0276       SaveInt35
+ 0060:027A       SaveInt36
+ 0060:027E       SaveInt37
+ 0060:0282       SaveInt38
+ 0060:0286       SaveInt39
+ 0060:028A       SaveInt3A
+ 0060:028E       SaveInt3B
+ 0060:0292       SaveInt3C
+ 0060:0296       SaveInt3D
+ 0060:029A       SaveInt3E
+ 0060:029E       SaveInt3F
+ 0060:02A2       SaveInt75
+
+Line numbers for PROGRAM(TEST.PAS) segment PROGRAM
+
+    40 0000:0000    41 0000:0014    42 0000:001A    48 0000:0024
+
+Line numbers for IvSystem(IVSYSTEM.PAS) segment IvSystem
+
+   171 0003:0000   172 0003:000A   173 0003:000F   174 0003:0014
+   175 0003:0021
+
+Program entry point at 0000:0000

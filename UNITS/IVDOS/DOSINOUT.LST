@@ -1,0 +1,238 @@
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:23:0
+                                                             Page     1-1
+
+
+       1				INCLUDE MACRO.INC
+       2 = 0000                      C	False      EQU  0
+       3 = 0001                      C	True       EQU  1
+       4			     C	
+       5			     C	
+       6 = 002F                      C	Multiplex  EQU  2Fh
+       7			     C	
+       8			     C	BooleanAl  Macro Boolean
+       9			     C	           LOCAL AlOk
+      10			     C	            mov al,Boolean
+      11			     C	            cmp al,0
+      12			     C	            je  AlOk
+      13			     C	            mov al,1
+      14			     C	      ALok:
+      15			     C	           endm
+      16			     C	
+      17			     C	EmsCall Macro EmsFunction
+      18			     C	         mov  ah,EmsFunction
+      19			     C	         int  67h
+      20			     C	         mov  EmsError,ah
+      21			     C	        endm
+      22			     C	
+      23			     C	KbdCall Macro KbdFunction
+      24			     C	         mov   ah,KbdFunction
+      25			     C	         int   16h
+      26			     C	        endm
+      27			     C	
+      28			     C	StackFrameBP Macro
+      29			     C	              push bp
+      30			     C	              mov  bp,sp
+      31			     C	             endm
+      32			     C	
+      33			     C	ExitCode Macro Count
+      34			     C	          mov  sp,bp
+      35			     C	          pop  bp
+      36			     C	          ret  Count
+      37			     C	         endm
+      38			     C	
+      39			     C	Zero     Macro reg
+      40			     C	          xor  Reg,Reg
+      41			     C	         endm
+      42				
+      43 0000				DATA  SEGMENT WORD PUBLIC
+      44				      ASSUME  DS:DATA
+      45				
+      46				      EXTRN   Error   : BYTE
+      47				      EXTRN   DosIO   : NEAR
+      48				
+      49 0000				DATA  ENDS
+      50				
+      51 0000				CODE  SEGMENT BYTE PUBLIC
+      52				      ASSUME CS:CODE,DS:DATA
+      53				
+      54				      PUBLIC DosWriteStr,DosWriteChar,D
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:23:0
+                                                             Page     1-2
+
+
+					osReadChar
+      55				      PUBLIC DosWritePrnChar,DosWriteAu
+					xChar,DosReadAuxChar
+      56				      PUBLIC DosBuffInput
+      57				
+      58 0000				DosWriteStr PROC FAR
+      59 = (DWORD PTR [BP+6])		DosString   EQU  (DWORD PTR [BP+6])
+      60				             StackFrameBP
+      61 0000  55                    1	              push bp 
+      62 0001  8B EC                 1	              mov  bp,sp 
+      63 0003  1E			             push      ds
+      64 0004  C4 56 06			             les       dx,DosString
+      65 0007  42			             Inc       dx
+      66 0008  B4 09			             mov       ah,09h
+      67 000A  E8 0000 E		             Call      DosIo
+      68 000D  1F			             pop       ds
+      69				             ExitCode 4
+      70 000E  8B E5                 1	          mov  sp,bp 
+      71 0010  5D                    1	          pop  bp 
+      72 0011  CA 0004               1	          ret  4 
+      73 0014				DosWriteStr ENDP
+      74				
+      75				
+      76 0014				WriteChar PROC NEAR
+      77 = (BYTE PTR [BP+8])		CharCode        EQU  (BYTE PTR [BP+8])
+      78				                 StackFrameBP
+      79 0014  55                    1	              push bp 
+      80 0015  8B EC                 1	              mov  bp,sp 
+      81 0017  8A 56 08			                 mov       dl,CharCode
+      82 001A  E8 0000 E		                 Call      DosIo
+      83				                 ExitCode  0
+      84 001D  8B E5                 1	          mov  sp,bp 
+      85 001F  5D                    1	          pop  bp 
+      86 0020  C3                    1	          ret  0 
+      87 0021				WriteChar ENDP
+      88				
+      89				
+      90 0021				DosWriteChar PROC FAR
+      91 0021  B4 02			                 mov       ah,2
+      92 0023  E8 0014 R		                 Call      WriteChar
+      93 0026  CA 0002			                 ret       2
+      94 0029				DosWriteChar ENDP
+      95				
+      96				
+      97 0029				DosReadChar PROC FAR
+      98 = (BYTE PTR [BP+6])		EchoChar    EQU  (BYTE PTR [BP+6])
+      99				             StackFrameBP
+     100 0029  55                    1	              push bp 
+     101 002A  8B EC                 1	              mov  bp,sp 
+     102 002C  B4 00			             mov  ah,0
+     103 002E  80 7E 06 00		             cmp  EchoChar,0
+     104 0032  74 02			             je   AL0
+     105 0034  B4 07			             mov  ah,7
+     106 0036				         AL0:
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:23:0
+                                                             Page     1-3
+
+
+     107 0036  E8 0000 E		             Call DosIo
+     108				             ExitCode 2
+     109 0039  8B E5                 1	          mov  sp,bp 
+     110 003B  5D                    1	          pop  bp 
+     111 003C  CA 0002               1	          ret  2 
+     112 003F				DosReadChar ENDP
+     113				
+     114				
+     115 003F				DosWritePrnChar PROC FAR
+     116 003F  B4 05			                 mov       ah,5h
+     117 0041  E8 0014 R		                 Call      WriteChar
+     118 0044  CA 0002			                 ret       2
+     119 0047				DosWritePrnChar ENDP
+     120				
+     121				
+     122 0047				DosWriteAuxChar PROC FAR
+     123 0047  B4 04			                 mov       ah,4h
+     124 0049  E8 0014 R		                 Call      WriteChar
+     125 004C  CA 0002			                 ret       2
+     126 004F				DosWriteAuxChar ENDP
+     127				
+     128				
+     129 004F				DosReadAuxChar PROC FAR
+     130 004F  B4 03			                mov   ah,03h
+     131 0051  E8 0000 E		                Call  DosIO
+     132 0054  CB			                ret
+     133 0055				DosReadAuxChar ENDP
+     134				
+     135 0055				DosBuffInput PROC FAR
+     136 = (DWORD PTR [BP+6])		Buffer       EQU  (DWORD PTR [BP+6])
+     137				              StackFrameBP
+     138 0055  55                    1	              push bp 
+     139 0056  8B EC                 1	              mov  bp,sp 
+     140 0058  1E			              push      ds
+     141 0059  C5 56 06			              lds       dx,Buffer
+     142 005C  B4 0A			              mov       ah,0Ah
+     143 005E  E8 0000 E		              Call      DosIO
+     144 0061  1F			              pop       ds
+     145				              ExitCode 0
+     146 0062  8B E5                 1	          mov  sp,bp 
+     147 0064  5D                    1	          pop  bp 
+     148 0065  CB                    1	          ret  0 
+     149 0066				DosBuffInput ENDP
+     150				
+     151 0066				CODE  ENDS
+     152				
+     153				      END
+
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:23:0
+                                                             Symbols-1
+
+
+Macros:
+
+		N a m e			Lines
+
+BOOLEANAL  . . . . . . . . . . .  	   5
+EMSCALL  . . . . . . . . . . . .  	   3
+EXITCODE . . . . . . . . . . . .  	   3
+KBDCALL  . . . . . . . . . . . .  	   2
+STACKFRAMEBP . . . . . . . . . .  	   2
+ZERO . . . . . . . . . . . . . .  	   1
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CODE . . . . . . . . . . . . . .  	0066	BYTE	PUBLIC	
+DATA . . . . . . . . . . . . . .  	0000	WORD	PUBLIC	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+AL0  . . . . . . . . . . . . . .  	L NEAR	0036	CODE
+
+BUFFER . . . . . . . . . . . . .  	TEXT  (DWORD PTR [BP+6])		
+
+CHARCODE . . . . . . . . . . . .  	TEXT  (BYTE PTR [BP+8])		
+
+DOSBUFFINPUT . . . . . . . . . .  	F PROC	0055	CODE	Global	Length = 0011
+DOSIO  . . . . . . . . . . . . .  	L NEAR	0000	DATA	External
+DOSREADAUXCHAR . . . . . . . . .  	F PROC	004F	CODE	Global	Length = 0006
+DOSREADCHAR  . . . . . . . . . .  	F PROC	0029	CODE	Global	Length = 0016
+DOSSTRING  . . . . . . . . . . .  	TEXT  (DWORD PTR [BP+6])		
+DOSWRITEAUXCHAR  . . . . . . . .  	F PROC	0047	CODE	Global	Length = 0008
+DOSWRITECHAR . . . . . . . . . .  	F PROC	0021	CODE	Global	Length = 0008
+DOSWRITEPRNCHAR  . . . . . . . .  	F PROC	003F	CODE	Global	Length = 0008
+DOSWRITESTR  . . . . . . . . . .  	F PROC	0000	CODE	Global	Length = 0014
+
+ECHOCHAR . . . . . . . . . . . .  	TEXT  (BYTE PTR [BP+6])		
+ERROR  . . . . . . . . . . . . .  	V BYTE	0000	DATA	External
+
+FALSE  . . . . . . . . . . . . .  	NUMBER	0000	
+
+MULTIPLEX  . . . . . . . . . . .  	NUMBER	002F	
+
+TRUE . . . . . . . . . . . . . .  	NUMBER	0001	
+
+WRITECHAR  . . . . . . . . . . .  	N PROC	0014	CODE	Length = 000D
+
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  dosinout		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:23:0
+                                                             Symbols-2
+
+
+
+    133 Source  Lines
+    153 Total   Lines
+     31 Symbols
+
+  46794 + 295906 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors

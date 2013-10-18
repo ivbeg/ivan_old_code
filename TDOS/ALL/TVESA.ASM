@@ -1,0 +1,27 @@
+include ASMMACRO.INC
+
+
+
+DATA  SEGMENT WORD PUBLIC
+      ASSUME  CS:CODE,DS:DATA
+
+      EXTRN
+      EXTRN
+
+DATA  ENDS
+
+
+CODE  SEGMENT WORD PUBLIC
+      ASSUME  CS:CODE,DS:DATA
+
+      PUBLIC
+      PUBLIC
+      PUBLIC
+
+
+
+
+
+CODE  ENDS
+
+      END

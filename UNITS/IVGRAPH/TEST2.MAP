@@ -1,0 +1,257 @@
+
+ Start  Stop   Length Name               Class
+
+ 00000H 00065H 00066H PROGRAM            CODE
+ 00070H 000DAH 0006BH IvKbd              CODE
+ 000E0H 00749H 0066AH IvWindow           CODE
+ 00750H 0075BH 0000CH IVstring           CODE
+ 00760H 01239H 00ADAH IvGraph            CODE
+ 01240H 01429H 001EAH IvSystem           CODE
+ 01430H 01E53H 00A24H System             CODE
+ 01E60H 024D3H 00674H DATA               DATA
+ 024E0H 064DFH 04000H STACK              STACK
+ 064E0H 064E0H 00000H HEAP               HEAP
+
+  Address         Publics by Value
+
+ 0000:000C       @
+ 0007:0000       GetKey
+ 0007:0005       FlushKbdBuff
+ 0007:0012       KeyPresent
+ 0007:0028       SetRate_Delay
+ 0007:003D       WaitForKey
+ 0007:0051       WriteKey
+ 000E:004B       InstallWindow
+ 000E:00B0       SaveWindowBuff
+ 000E:017A       RestoreWindowBuff
+ 000E:0243       CloseWindow
+ 000E:0353       OpenWindow
+ 000E:0659       @
+ 0075:0000       @
+ 0076:0000       Pause
+ 0076:0024       EndL
+ 0076:0065       FastWrite
+ 0076:009F       TextColor
+ 0076:00BB       TextBackGround
+ 0076:00DB       Window
+ 0076:00FB       ClearWindow
+ 0076:014E       @
+ 0076:01B4       NoneDo
+ 0076:01B6       SetLogicPage
+ 0076:01DD       SetRealPage
+ 0076:0216       GetX
+ 0076:021A       GetY
+ 0076:0220       CursorForm
+ 0076:023A       CursorOff
+ 0076:0267       CursorOn
+ 0076:0279       GetCurrentPage
+ 0076:0283       GetPageOffset
+ 0076:029C       SetDoubleScan
+ 0076:02BA       IsCursorEm
+ 0076:02D8       IsWaitDisplay
+ 0076:02E9       IsVideoSysActive
+ 0076:02FA       IsSaveBuffer
+ 0076:030B       IsVGABoardActive
+ 0076:031C       VideoMemSize
+ 0076:0333       IsGreySumm
+ 0076:0344       IsDefPalLoad
+ 0076:0355       GetScanLines
+ 0076:0376       SaveVideoState
+ 0076:038A       RestoreVideoState
+ 0076:039E       GetStateBufferSize
+ 0076:03B1       GetDCC
+ 0076:03BB       SetDCC
+ 0076:0400       SetVideoPage
+ 0076:0424       SetVideoMode
+ 0076:043E       GetVideoMode
+ 0076:046E       CursorXY
+ 0076:047E       WriteCharTTY
+ 0076:04B5       TotalScanLines
+ 0076:04E6       SetBlink
+ 0076:0506       SetStartAddress
+ 0076:051E       IsDoubleScan
+ 0076:0554       IsBlink
+ 0076:0569       IsGraphMode
+ 0076:057E       SetScanLines
+ 0076:0590       GetVideoInfo
+ 0076:05A4       WaitRetrace
+ 0076:0630       DisableDefPalLoad
+ 0076:0638       DisableVideoAddr
+ 0076:0640       DisableGreySumm
+ 0076:0648       DisableCursorEm
+ 0076:0650       DisableVideoRefr
+ 0076:0658       SetCgaBorder
+ 0076:066A       SetCgaPalette
+ 0076:067C       GetOverScanColor
+ 0076:0684       SetOverScanColor
+ 0076:0694       SetDACPalette
+ 0076:06AB       GetDACPalette
+ 0076:06C2       GreySummDAC
+ 0076:06D6       bWriteString
+ 0076:071C       GetEgaReg
+ 0076:072F       SetEgaReg
+ 0076:07EC       InitIvGraph
+ 0076:0816       Scroll
+ 0076:08D3       WriteChar
+ 0076:08E5       WriteStr
+ 0076:0908       WriteStrXY
+ 0076:092E       ReadChar
+ 0076:0937       ReadAttr
+ 0076:0968       FillAttr
+ 0076:0989       FillAttrXY
+ 0076:09C1       WriteAttr
+ 0076:09D7       PlaneWrite
+ 0076:09FD       PlaneWriteXY
+ 0076:0A2B       ClrScr
+ 0076:0A60       LineX
+ 0076:0A8C       LineY
+ 0124:0000       DoNone
+ 0124:0001       @
+ 0124:0024       FastMove
+ 0124:0034       MovePtr
+ 0124:004E       SearchPtr
+ 0124:0099       FastFill
+ 0124:00B5       FillByte
+ 0124:00CB       FillWord
+ 0124:00EE       FillDWord
+ 0124:0105       Fill
+ 0124:013C       Swap
+ 0124:0176       SwapP
+ 0124:0191       SwapB
+ 0124:01AB       SwapW
+ 0124:01C4       BitofB
+ 0124:01D7       BitofW
+ 01E6:0002       Single
+ 01E6:000A       Double
+ 01E6:0012       Block
+ 01E6:001A       OvrCodeList
+ 01E6:001C       OvrHeapSize
+ 01E6:001E       OvrDebugPtr
+ 01E6:0022       OvrHeapOrg
+ 01E6:0024       OvrHeapPtr
+ 01E6:0026       OvrHeapEnd
+ 01E6:0028       OvrLoadList
+ 01E6:002A       OvrDosHandle
+ 01E6:002C       OvrEmsHandle
+ 01E6:002E       HeapOrg
+ 01E6:0032       HeapPtr
+ 01E6:0036       HeapEnd
+ 01E6:003A       FreeList
+ 01E6:003E       FreeZero
+ 01E6:0042       HeapError
+ 01E6:0046       ExitProc
+ 01E6:004A       ExitCode
+ 01E6:004C       ErrorAddr
+ 01E6:0050       PrefixSeg
+ 01E6:0052       StackLimit
+ 01E6:0054       InOutRes
+ 01E6:0056       RandSeed
+ 01E6:005A       SelectorInc
+ 01E6:005C       Seg0040
+ 01E6:005E       SegA000
+ 01E6:0060       SegB000
+ 01E6:0062       SegB800
+ 01E6:0064       Test8086
+ 01E6:0065       Test8087
+ 01E6:0066       FileMode
+ 01E6:0068       WinArr
+ 01E6:02FC       CurrWin
+ 01E6:02FD       SaveAttr
+ 01E6:02FE       UsePorts
+ 01E6:02FF       UseBios
+ 01E6:0300       Hide
+ 01E6:0301       SetCounter
+ 01E6:0302       Counter
+ 01E6:0303       TextChar
+ 01E6:0304       TextAttr
+ 01E6:0306       CurrentVideoSeg
+ 01E6:0308       PageOffset
+ 01E6:030A       WindMin
+ 01E6:030C       WindMax
+ 01E6:030E       WaitProc
+ 01E6:0312       PauseProc
+ 01E6:0316       ActiveScreenPtr
+ 01E6:031A       VirtualScreenActive
+ 01E6:041C       PspAddr
+ 01E6:0420       Err
+ 01E6:0422       Error
+ 01E6:0423       EType
+ 01E6:0424       sgbErrorDecode
+ 01E6:0426       Input
+ 01E6:0526       Output
+ 01E6:0626       SaveInt00
+ 01E6:062A       SaveInt02
+ 01E6:062E       SaveInt1B
+ 01E6:0632       SaveInt21
+ 01E6:0636       SaveInt23
+ 01E6:063A       SaveInt24
+ 01E6:063E       SaveInt34
+ 01E6:0642       SaveInt35
+ 01E6:0646       SaveInt36
+ 01E6:064A       SaveInt37
+ 01E6:064E       SaveInt38
+ 01E6:0652       SaveInt39
+ 01E6:0656       SaveInt3A
+ 01E6:065A       SaveInt3B
+ 01E6:065E       SaveInt3C
+ 01E6:0662       SaveInt3D
+ 01E6:0666       SaveInt3E
+ 01E6:066A       SaveInt3F
+ 01E6:066E       SaveInt75
+
+Line numbers for PROGRAM(TEST2.PAS) segment PROGRAM
+
+     4 0000:000C     5 0000:002F     6 0000:0050     7 0000:0059
+     8 0000:005E
+
+Line numbers for IvWindow(IVWINDOW.PAS) segment IvWindow
+
+    31 000E:0000    32 000E:000E    33 000E:0016    34 000E:001E
+    35 000E:002B    36 000E:0038    37 000E:0045    61 000E:004B
+    62 000E:0059    63 000E:0062    65 000E:007A    66 000E:0084
+    67 000E:0091    69 000E:00AC    74 000E:00B0    75 000E:00BE
+    76 000E:00C8    77 000E:00E2    79 000E:00FA    80 000E:011D
+    81 000E:0133    82 000E:0160    84 000E:0176    89 000E:017A
+    90 000E:0188    91 000E:0192    92 000E:01AC    94 000E:01C4
+    95 000E:01E7    96 000E:01FD    97 000E:0229    99 000E:023F
+   102 000E:0243   103 000E:0251   104 000E:025A   105 000E:025E
+   106 000E:0281   107 000E:0285   108 000E:0292   109 000E:02B1
+   110 000E:02B5   111 000E:02C8   112 000E:02D7   120 000E:02DB
+   121 000E:02E9   122 000E:02FC   123 000E:0311   124 000E:033F
+   125 000E:034D   127 000E:0353   128 000E:0384   129 000E:038E
+   130 000E:0392   131 000E:039F   133 000E:03B9   134 000E:03BF
+   135 000E:03C6   136 000E:03CD   137 000E:03D4   138 000E:03DB
+   139 000E:03E2   140 000E:03FA   141 000E:0423   142 000E:044F
+   143 000E:0457   144 000E:0477   145 000E:0490   146 000E:0494
+   147 000E:04AB   148 000E:04C2   149 000E:04C6   150 000E:0508
+   151 000E:054A   152 000E:058C   153 000E:05CF   154 000E:05EA
+   155 000E:0606   156 000E:0621   157 000E:063D   158 000E:0641
+   159 000E:0646   161 000E:0653   162 000E:0659   163 000E:0663
+   164 000E:0668
+
+Line numbers for IVstring(IVSTRING.PAS) segment IVstring
+
+   484 0075:0000   485 0075:000A
+
+Line numbers for IvGraph(IVGRAPH.PAS) segment IvGraph
+
+   246 0076:0000   247 0076:000A   248 0076:000E   249 0076:0017
+   250 0076:001F   251 0076:0022   259 0076:0024   260 0076:002E
+   261 0076:0031   262 0076:0038   264 0076:0054   265 0076:0058
+   266 0076:005D   268 0076:005F   269 0076:0063   284 0076:0065
+   285 0076:008B   286 0076:0099   295 0076:009F   296 0076:00A9
+   297 0076:00AC   298 0076:00AE   299 0076:00B3   300 0076:00B7
+   303 0076:00BB   304 0076:00C5   305 0076:00C8   306 0076:00CA
+   307 0076:00CC   308 0076:00CE   309 0076:00D3   310 0076:00D7
+   459 0076:00DB   460 0076:00E5   461 0076:00E8   462 0076:00EB
+   463 0076:00EE   464 0076:00F1   465 0076:00F4   466 0076:00F7
+   469 0076:00FB   470 0076:0105   471 0076:0123   472 0076:012F
+   474 0076:014E   475 0076:0158   476 0076:015C   477 0076:016A
+   478 0076:0177   479 0076:0184   480 0076:0197
+
+Line numbers for IvSystem(IVSYSTEM.PAS) segment IvSystem
+
+   170 0124:0000   175 0124:0001   176 0124:000B   177 0124:0010
+   178 0124:0015   179 0124:0022
+
+Program entry point at 0000:000C

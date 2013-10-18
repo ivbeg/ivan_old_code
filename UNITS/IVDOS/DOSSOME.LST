@@ -1,0 +1,406 @@
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:39:1
+                                                             Page     1-1
+
+
+       1				INCLUDE MACRO.INC
+       2 = 0000                      C	False      EQU  0
+       3 = 0001                      C	True       EQU  1
+       4			     C	
+       5			     C	
+       6 = 002F                      C	Multiplex  EQU  2Fh
+       7			     C	
+       8			     C	BooleanAl  Macro Boolean
+       9			     C	           LOCAL AlOk
+      10			     C	            mov al,Boolean
+      11			     C	            cmp al,0
+      12			     C	            je  AlOk
+      13			     C	            mov al,1
+      14			     C	      ALok:
+      15			     C	           endm
+      16			     C	
+      17			     C	EmsCall Macro EmsFunction
+      18			     C	         mov  ah,EmsFunction
+      19			     C	         int  67h
+      20			     C	         mov  EmsError,ah
+      21			     C	        endm
+      22			     C	
+      23			     C	KbdCall Macro KbdFunction
+      24			     C	         mov   ah,KbdFunction
+      25			     C	         int   16h
+      26			     C	        endm
+      27			     C	
+      28			     C	StackFrameBP Macro
+      29			     C	              push bp
+      30			     C	              mov  bp,sp
+      31			     C	             endm
+      32			     C	
+      33			     C	ExitCode Macro Count
+      34			     C	          mov  sp,bp
+      35			     C	          pop  bp
+      36			     C	          ret  Count
+      37			     C	         endm
+      38			     C	
+      39			     C	Zero     Macro reg
+      40			     C	          xor  Reg,Reg
+      41			     C	         endm
+      42				
+      43 0000				DATA  SEGMENT WORD PUBLIC
+      44				      ASSUME  CS:CODE,DS:DATA
+      45				
+      46				      EXTRN   Error     : BYTE
+      47				      EXTRN   DosVer    : WORD
+      48				      EXTRN   DosIO     : NEAR
+      49 0000				DATA  ENDS
+      50				
+      51 0000				CODE  SEGMENT BYTE PUBLIC
+      52				      ASSUME CS:CODE,DS:DATA
+      53				
+      54				      PUBLIC GetTime,SetTime,GetDate,Se
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:39:1
+                                                             Page     1-2
+
+
+					tDate
+      55				      PUBLIC GetSwitchChar,SetSwitchCha
+					r,GetDosVersion
+      56				      PUBLIC GetBreakFlag,SetBreakFlag,
+					GetVerifyFlag
+      57				      PUBLIC SetVerifyFlag,GetDtaAddr,S
+					etDtaAddr
+      58				      PUBLIC GetIntVector,SetIntVector,
+					CheckKbd
+      59				
+      60 0000				GetTime PROC FAR
+      61 = (DWORD PTR [BP+6])		Time    EQU  (DWORD PTR [BP+6])
+      62				         StackFrameBP
+      63 0000  55                    1	              push bp 
+      64 0001  8B EC                 1	              mov  bp,sp 
+      65 0003  1E			         Push      ds
+      66 0004  B4 2C			         mov       ah,2Ch
+      67 0006  E8 0000 E		         Call      DosIo
+      68 0009  C5 7E 06			         lds       di,Time
+      69 000C  26: 89 15		         mov       WORD PTR es:[di],dx
+      70 000F  26: 89 55 02		         mov       WORD PTR es:[di+2],d
+					x
+      71 0013  1F			         Pop       ds
+      72				         ExitCode  0
+      73 0014  8B E5                 1	          mov  sp,bp 
+      74 0016  5D                    1	          pop  bp 
+      75 0017  CB                    1	          ret  0 
+      76 0018				GetTime ENDP
+      77				
+      78				
+      79 0018				SetTime PROC FAR
+      80 = (DWORD PTR [BP+6])		Time    EQU  (DWORD PTR [BP+6])
+      81				         StackFrameBP
+      82 0018  55                    1	              push bp 
+      83 0019  8B EC                 1	              mov  bp,sp 
+      84 001B  1E			         Push      ds
+      85 001C  C5 7E 06			         lds       di,Time
+      86 001F  26: 8B 0D		         mov       cx,WORD PTR es:[di]
+      87 0022  26: 8B 55 02		         mov       dx,WORD PTR es:[di+2
+					]
+      88 0026  B4 2D			         mov       ah,2Dh
+      89 0028  E8 0000 E		         Call      DosIo
+      90 002B  1F			         Pop       ds
+      91				         ExitCode  4
+      92 002C  8B E5                 1	          mov  sp,bp 
+      93 002E  5D                    1	          pop  bp 
+      94 002F  CA 0004               1	          ret  4 
+      95 0032				SetTime ENDP
+      96				
+      97				
+      98 0032				GetDate PROC FAR
+      99 = (DWORD PTR [BP+6])		Date    EQU  (DWORD PTR [BP+6])
+     100				         StackFrameBP
+     101 0032  55                    1	              push bp 
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:39:1
+                                                             Page     1-3
+
+
+     102 0033  8B EC                 1	              mov  bp,sp 
+     103 0035  1E			         Push      ds
+     104 0036  B4 2A			         mov       ah,2Ah
+     105 0038  E8 0000 E		         Call      DosIO
+     106 003B  C5 7E 06			         lds       di,Date
+     107 003E  26: 89 15		         mov       WORD PTR es:[di],dx
+     108 0041  26: 89 55 02		         mov       WORD PTR es:[di+2],d
+					x
+     109 0045  1F			         Pop       ds
+     110				         ExitCode  0
+     111 0046  8B E5                 1	          mov  sp,bp 
+     112 0048  5D                    1	          pop  bp 
+     113 0049  CB                    1	          ret  0 
+     114 004A				GetDate ENDP
+     115				
+     116				
+     117 004A				SetDate PROC FAR
+     118 = (DWORD PTR [BP+6])		Date    EQU  (DWORD PTR [BP+6])
+     119				         StackFrameBP
+     120 004A  55                    1	              push bp 
+     121 004B  8B EC                 1	              mov  bp,sp 
+     122 004D  1E			         Push      ds
+     123 004E  C5 7E 06			         lds       di,Date
+     124 0051  26: 8B 0D		         mov       cx,WORD PTR es:[di]
+     125 0054  26: 8B 55 02		         mov       dx,WORD PTR es:[di+2
+					]
+     126 0058  B4 2B			         mov       ah,2Bh
+     127 005A  E8 0000 E		         Call      DosIo
+     128 005D  1F			         Pop       ds
+     129				         ExitCode  4
+     130 005E  8B E5                 1	          mov  sp,bp 
+     131 0060  5D                    1	          pop  bp 
+     132 0061  CA 0004               1	          ret  4 
+     133 0064				SetDate ENDP
+     134				
+     135				
+     136 0064				SetSwitchChar PROC FAR
+     137 = (BYTE PTR [BP+6])		CharCode      EQU  (BYTE PTR [BP+6])
+     138				               StackFrameBP
+     139 0064  55                    1	              push bp 
+     140 0065  8B EC                 1	              mov  bp,sp 
+     141 0067  B8 3701			               mov       ax,3701h
+     142 006A  8A 56 06			               mov       dl,CharCode
+     143 006D  E8 0000 E		               Call      DosIo
+     144				               ExitCode 2
+     145 0070  8B E5                 1	          mov  sp,bp 
+     146 0072  5D                    1	          pop  bp 
+     147 0073  CA 0002               1	          ret  2 
+     148 0076				SetSwitchChar ENDP
+     149				
+     150				
+     151 0076				GetSwitchChar PROC FAR
+     152 0076  B8 3700			               mov     ax,3700h
+     153 0079  E8 0000 E		               Call    DosIo
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:39:1
+                                                             Page     1-4
+
+
+     154 007C  8A C2			               mov     al,dl
+     155 007E  CB			               ret
+     156 007F				GetSwitchChar ENDP
+     157				
+     158				
+     159 007F				GetDosVersion PROC FAR
+     160 007F  B4 30			               mov     ah,30h
+     161 0081  E8 0000 E		               Call    DosIo
+     162 0084  86 C4			               xchg    al,ah
+     163 0086  A3 0000 E		               mov     DosVer,ax
+     164 0089  CB			               ret
+     165 008A				GetDosVersion ENDP
+     166				
+     167				
+     168 008A				GetVerifyFlag PROC FAR
+     169 008A  B4 54			               mov     ah,54h
+     170 008C  E8 0000 E		               Call    DosIo
+     171 008F  CB			               ret
+     172 0090				GetVerifyFlag ENDP
+     173				
+     174				
+     175 0090				SetVerifyFlag PROC FAR
+     176 = (BYTE PTR [BP+6])		Flag           EQU (BYTE PTR [BP+6])
+     177				               StackFrameBP
+     178 0090  55                    1	              push bp 
+     179 0091  8B EC                 1	              mov  bp,sp 
+     180 0093  8A 46 06			               mov     al,Flag
+     181 0096  B4 5E			               mov     ah,5Eh
+     182 0098  E8 0000 E		               Call    DosIo
+     183				               ExitCode 2
+     184 009B  8B E5                 1	          mov  sp,bp 
+     185 009D  5D                    1	          pop  bp 
+     186 009E  CA 0002               1	          ret  2 
+     187 00A1				SetVerifyFlag ENDP
+     188				
+     189				
+     190 00A1				SetDTAAddr PROC FAR
+     191 = (DWORD PTR [BP+6])		Flag       EQU  (DWORD PTR [BP+6])
+     192				            StackFrameBP
+     193 00A1  55                    1	              push bp 
+     194 00A2  8B EC                 1	              mov  bp,sp 
+     195 00A4  1E			            push    ds
+     196 00A5  C5 56 06			            lds     dx,Flag
+     197 00A8  B4 1A			            mov     ah,1Ah
+     198 00AA  E8 0000 E		            Call    DosIo
+     199 00AD  1F			            Pop     ds
+     200				            ExitCode 4
+     201 00AE  8B E5                 1	          mov  sp,bp 
+     202 00B0  5D                    1	          pop  bp 
+     203 00B1  CA 0004               1	          ret  4 
+     204 00B4				SetDTAAddr ENDP
+     205				
+     206				
+     207 00B4				GetDTAAddr PROC FAR
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:39:1
+                                                             Page     1-5
+
+
+     208 00B4  B4 2F			            mov     ah,2Fh
+     209 00B6  E8 0000 E		            Call    DosIo
+     210 00B9  8C C2			            mov     dx,es
+     211 00BB  8B C3			            mov     ax,bx
+     212 00BD  CB			            ret
+     213 00BE				GetDTAAddr ENDP
+     214				
+     215				
+     216 00BE				SetBreakFlag PROC FAR
+     217 = (BYTE PTR [BP+6])		Flag           EQU (BYTE PTR [BP+6])
+     218				               StackFrameBP
+     219 00BE  55                    1	              push bp 
+     220 00BF  8B EC                 1	              mov  bp,sp 
+     221 00C1  8A 56 06			               mov       dl,Flag
+     222 00C4  B8 3301			               mov       ax,3301h
+     223 00C7  E8 0000 E		               Call      DosIo
+     224				               ExitCode  2
+     225 00CA  8B E5                 1	          mov  sp,bp 
+     226 00CC  5D                    1	          pop  bp 
+     227 00CD  CA 0002               1	          ret  2 
+     228 00D0				SetBreakFlag ENDP
+     229				
+     230				
+     231 00D0				GetBreakFlag PROC FAR
+     232 00D0  B8 3300			               mov       ax,3300h
+     233 00D3  E8 0000 E		               Call      DosIo
+     234 00D6  8A C2			               mov       al,dl
+     235 00D8  CB			               ret
+     236 00D9				GetBreakFlag ENDP
+     237				
+     238				
+     239 00D9				GetIntVector PROC FAR
+     240 = (BYTE PTR [BP+6])		Inter        EQU  (BYTE PTR [BP+6])
+     241				              StackFrameBP
+     242 00D9  55                    1	              push bp 
+     243 00DA  8B EC                 1	              mov  bp,sp 
+     244 00DC  8A 46 06			              mov      al,Inter
+     245 00DF  B4 35			              mov      ah,35h
+     246 00E1  E8 0000 E		              Call     DosIo
+     247 00E4  8C C2			              mov      dx,es
+     248 00E6  8B C3			              mov      ax,bx
+     249				              ExitCode 2
+     250 00E8  8B E5                 1	          mov  sp,bp 
+     251 00EA  5D                    1	          pop  bp 
+     252 00EB  CA 0002               1	          ret  2 
+     253 00EE				GetIntVector ENDP
+     254				
+     255				
+     256 00EE				SetIntVector PROC FAR
+     257 = (BYTE  PTR [BP+10])		Inter        EQU  (BYTE  PTR [BP+10])
+     258 = (DWORD PTR [BP+6])		Pointer      EQU  (DWORD PTR [BP+6])
+     259				              StackFrameBP
+     260 00EE  55                    1	              push bp 
+     261 00EF  8B EC                 1	              mov  bp,sp 
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:39:1
+                                                             Page     1-6
+
+
+     262 00F1  1E			              push     ds
+     263 00F2  8A 46 0A			              mov      al,Inter
+     264 00F5  C5 56 06			              lds      dx,Pointer
+     265 00F8  B4 25			              mov      ah,25h
+     266 00FA  E8 0000 E		              Call     DosIo
+     267 00FD  1F			              pop      ds
+     268				              ExitCode 6
+     269 00FE  8B E5                 1	          mov  sp,bp 
+     270 0100  5D                    1	          pop  bp 
+     271 0101  CA 0006               1	          ret  6 
+     272 0104				SetIntVector ENDP
+     273				
+     274				
+     275 0104				CheckKbd PROC FAR
+     276 0104  B4 0B			          mov    ah,0Bh
+     277 0106  E8 0000 E		          Call   DosIo
+     278				          BooleanAl al
+     279 0109  8A C0                 1	            mov al,al 
+     280 010B  3C 00                 1	            cmp al,0 
+     281 010D  74 02                 1	            je  ??0000 
+     282 010F  B0 01                 1	            mov al,1 
+     283 0111                        1	      ??0000: 
+     284 0111  CB			          ret
+     285 0112				CheckKbd ENDP
+     286				
+     287				
+     288 0112				CODE  ENDS
+     289				
+     290				      END
+
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:39:1
+                                                             Symbols-1
+
+
+Macros:
+
+		N a m e			Lines
+
+BOOLEANAL  . . . . . . . . . . .  	   5
+EMSCALL  . . . . . . . . . . . .  	   3
+EXITCODE . . . . . . . . . . . .  	   3
+KBDCALL  . . . . . . . . . . . .  	   2
+STACKFRAMEBP . . . . . . . . . .  	   2
+ZERO . . . . . . . . . . . . . .  	   1
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CODE . . . . . . . . . . . . . .  	0112	BYTE	PUBLIC	
+DATA . . . . . . . . . . . . . .  	0000	WORD	PUBLIC	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+CHARCODE . . . . . . . . . . . .  	TEXT  (BYTE PTR [BP+6])		
+CHECKKBD . . . . . . . . . . . .  	F PROC	0104	CODE	Global	Length = 000E
+
+DATE . . . . . . . . . . . . . .  	TEXT  (DWORD PTR [BP+6])		
+DOSIO  . . . . . . . . . . . . .  	L NEAR	0000	DATA	External
+DOSVER . . . . . . . . . . . . .  	V WORD	0000	DATA	External
+
+ERROR  . . . . . . . . . . . . .  	V BYTE	0000	DATA	External
+
+FALSE  . . . . . . . . . . . . .  	NUMBER	0000	
+FLAG . . . . . . . . . . . . . .  	TEXT  (BYTE PTR [BP+6])		
+
+GETBREAKFLAG . . . . . . . . . .  	F PROC	00D0	CODE	Global	Length = 0009
+GETDATE  . . . . . . . . . . . .  	F PROC	0032	CODE	Global	Length = 0018
+GETDOSVERSION  . . . . . . . . .  	F PROC	007F	CODE	Global	Length = 000B
+GETDTAADDR . . . . . . . . . . .  	F PROC	00B4	CODE	Global	Length = 000A
+GETINTVECTOR . . . . . . . . . .  	F PROC	00D9	CODE	Global	Length = 0015
+GETSWITCHCHAR  . . . . . . . . .  	F PROC	0076	CODE	Global	Length = 0009
+GETTIME  . . . . . . . . . . . .  	F PROC	0000	CODE	Global	Length = 0018
+GETVERIFYFLAG  . . . . . . . . .  	F PROC	008A	CODE	Global	Length = 0006
+
+INTER  . . . . . . . . . . . . .  	TEXT  (BYTE  PTR [BP+10])		
+
+MULTIPLEX  . . . . . . . . . . .  	NUMBER	002F	
+
+POINTER  . . . . . . . . . . . .  	TEXT  (DWORD PTR [BP+6])		
+
+SETBREAKFLAG . . . . . . . . . .  	F PROC	00BE	CODE	Global	Length = 0012
+SETDATE  . . . . . . . . . . . .  	F PROC	004A	CODE	Global	Length = 001A
+SETDTAADDR . . . . . . . . . . .  	F PROC	00A1	CODE	Global	Length = 0013
+SETINTVECTOR . . . . . . . . . .  	F PROC	00EE	CODE	Global	Length = 0016
+SETSWITCHCHAR  . . . . . . . . .  	F PROC	0064	CODE	Global	Length = 0012
+Microsoft (R) Macro Assembler Version 5.10                  11/25/95 22:39:1
+                                                             Symbols-2
+
+
+SETTIME  . . . . . . . . . . . .  	F PROC	0018	CODE	Global	Length = 001A
+SETVERIFYFLAG  . . . . . . . . .  	F PROC	0090	CODE	Global	Length = 0011
+
+TIME . . . . . . . . . . . . . .  	TEXT  (DWORD PTR [BP+6])		
+TRUE . . . . . . . . . . . . . .  	NUMBER	0001	
+
+??0000 . . . . . . . . . . . . .  	L NEAR	0111	CODE
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  dossome		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+
+    235 Source  Lines
+    290 Total   Lines
+     42 Symbols
+
+  46730 + 291875 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors

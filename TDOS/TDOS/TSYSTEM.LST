@@ -1,0 +1,1418 @@
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 1
+tsystem.asm
+
+
+
+      1					 include   ASMMACRO.INC
+1     2					 ; ASMMACRO.INC	List of	macroses
+1     3					 ; Started  at	5.05.96
+1     4					 ; Macroses for	assembler oriented on TASM 3.2 and compatible
+1     5					 ; <name> - Capitalized	string (the name of record or constant)
+1     6					 ; <type> - Lowcase string of type of record or	constant
+1     7					 ;
+1     8					 ; Macro record	format:
+1     9					 ;     "macro_"<name>" Macro"<reg8/reg16/reg32/mem8/mem16/mem32>
+1    10					 ;	   <command>	 <operand>,...,<operand>
+1    11					 ;		      "EndM"
+1    12					 ;
+1    13					 ; Constants records format:
+1    14					 ;     <type>_..._<type>_<name>
+1    15					 ;
+1    16
+1    17
+1    18
+1    19					     ; Set DATA	segment	in GS
+1    20					 macro_SetDATA_GS Macro
+1    21					    PUSH      SEG DATA
+1    22					    POP	      GS
+1    23							  EndM
+1    24
+1    25					     ; Move Stack Pointer (SP) in reg16
+1    26					 macro_StackFrame Macro	reg16
+1    27					    MOV	      reg16, SP
+1    28							  EndM
+1    29
+1    30					     ; Saving DS in reg16
+1    31					 macro_SaveDS Macro reg16
+1    32					    MOV	      reg16, DS
+1    33						      EndM
+1    34
+1    35					     ; Restoring from reg16
+1    36					 macro_RestoreDS Macro reg16
+1    37					    MOV	       DS, reg16
+1    38							 EndM
+1    39
+1    40					     ; Saving BP and move BP in	SP
+1    41					 macro_StackFrameBP Macro
+1    42					    PUSH       BP
+1    43					    MOV	       BP, SP
+1    44							    EndM
+1    45
+1    46					     ; Return after "StackFrameBP"
+1    47					 macro_ExitCode	Macro Count
+1    48					    MOV	       SP, BP
+1    49					    POP	       BP
+1    50					    RET	       Count
+1    51							EndM
+1    52
+1    53					     ; Zero reg
+1    54					 macro_Zero Macro reg
+1    55					    XOR	       reg, reg
+1    56						    EndM
+1    57
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 2
+tsystem.asm
+
+
+
+1    58					     ; 486+ Cpu	Identification code
+1    59					 macro_CPUID Macro
+1    60					    DB	       0Fh, 0A2h
+1    61						     EndM
+1    62
+1    63					     ; Input/Outlput delay macros
+1    64					 macro_IODELAY Macro
+1    65					    JMP	       short $+2
+1    66					    JMP	       short $+2
+1    67						       EndM
+1    68
+1    69					     ; Boolean values
+1    70		  =0000			 boolean_False		 EQU  00h
+1    71		  =0001			 boolean_True		 EQU  01h
+1    72
+1    73					     ; CPU types
+1    74		  =0002			 cpu_type_80286		 EQU  02h
+1    75		  =0003			 cpu_type_80386		 EQU  03h
+1    76		  =0004			 cpu_type_80486		 EQU  04h
+1    77		  =0005			 cpu_type_Pentium	 EQU  05h
+1    78		  =0006			 cpu_type_PentiumHigh	 EQU  06h
+1    79
+1    80					     ; Interrupt 15h - Functions
+1    81		  =0086			 int15h_Wait		 EQU  086h
+1    82		  =0087			 int15h_CopyExtMemory	 EQU  087h
+1    83		  =0088			 int15h_GetExtMemorySize EQU  088h
+1    84		  =00C0			 int15h_GetConfigTable	 EQU  0C0h
+1    85
+1    86
+1    87					     ; Functions result	code
+1    88	00000000			 TFunctionResult Struc
+1    89	00000000  01*(0000)		    Function	   DW	  0000h
+1    90	00000002  01*(00)		    Interrupt	   DB	  00h
+1    91	00000003  01*(00000000)		    CalledAddr	   DD	  00000000h
+1    92	00000007  01*(0000)		    Result	   DW	  0000h
+1    93	00000009  01*(00000000)		    ErrorProc	   DD	  00000000h
+1    94	0000000D					 EndS
+1    95
+1    96
+1    97					     ; Format of Bios date record
+1    98	00000000			 TBiosDateFormat Struc
+1    99	00000000  01*(????)		    Day		   DW	  ?
+1   100	00000002  01*(??)		    Filler_1	   DB	  ?
+1   101	00000003  01*(????)		    Month	   DW	  ?
+1   102	00000005  01*(??)		    Filler_2	   DB	  ?
+1   103	00000006  01*(????)		    Year	   DW	  ?
+1   104	00000008					 EndS
+1   105
+1   106	00000000			 TCpuVendor    Struc
+1   107	00000000  01*(0C*(00))		    DB 12 DUP(0)
+1   108	0000000C				       Ends
+    109
+    110
+    111	    0000			 DATA  SEGMENT WORD PUBLIC
+    112					       ASSUME  CS:CODE,DS:DATA
+    113
+    114
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 3
+tsystem.asm
+
+
+
+    115					       EXTRN	CpuType		   : BYTE
+    116					       EXTRN	CpuSpeed	   : WORD
+    117					       EXTRN	BiosType	   : BYTE
+    118					       EXTRN	ExtendedMemorySize : WORD
+    119					       EXTRN	BiosConfigTable	   : DWORD
+    120					       EXTRN	CpuIDValid	   : BYTE
+    121					       EXTRN	CpuVendor	   : TCpuVendor
+    122
+    123
+    124
+    125	    0000			 DATA  ENDS
+    126
+    127
+    128	    0000			 CODE  SEGMENT BYTE PUBLIC
+    129					       ASSUME CS:CODE,DS:DATA
+    130
+    131							    .386
+    132
+    133					       PUBLIC  FillDword, FillWord, FillByte
+    134					       PUBLIC  Fill, MovePtr, SearchPtr
+    135					       PUBLIC  Swap, SwapByte, SwapWord, SwapLong
+    136					       PUBLIC  ReadPort, WritePort, ReadIndexPort, WriteIndexPort
+    137					       PUBLIC  ReadMemoryByte, WriteMemoryByte
+    138					       PUBLIC  ReadMemoryWord, WriteMemoryWord
+    139					       PUBLIC  ReadMemoryDword,	WriteMemoryDword
+    140					       PUBLIC  CompareBuffersPtr
+    141
+    142
+    143					       PUBLIC  AbsReadMemoryByte, AbsWriteMemoryByte
+    144					       PUBLIC  AbsReadMemoryWord, AbsWriteMemoryWord
+    145					       PUBLIC  AbsReadMemoryDword, AbsWriteMemoryDword
+    146
+    147
+    148					       PUBLIC  Delay, GetExtendedMemorySize
+    149					       PUBLIC  HardwareReboot, WarmReboot, ColdReboot
+    150
+    151
+    152					       PUBLIC  GetCPU_Type
+    153					       PUBLIC  GetBiosConfigTable
+    154					       PUBLIC  GetCPU_Speed
+    155
+    156					     ; CPU Identification variables
+    157	    0000  0000			 Old_int6_Seg	    DW	   0000h
+    158	    0002  0000			 Old_Int6_Off	    DW	   0000h
+    159	    0004  0000			 Old_IntD_Seg	    DW	   0000h
+    160	    0006  0000			 Old_IntD_Off	    DW	   0000h
+    161	    0008  0000			 BadOff		    DW	   0000h
+    162	    000A  00			 Int_Mask	    DB	   0000h
+    163
+    164	    000B  0001 2A60		 IntelSpd DW	  1, 10848	 ; 8088	 - loop	duration, factor adjust
+    165	    000F  0001 2A60			  DW	  1, 10848	 ; 80186  (5Mhz	=  ~8345 ticks)
+    166	    0013  0002 0CA2			  DW	  2, 3234	 ; 80286  (12Mhz = ~1035 ticks)
+    167	    0017  000A 3F48			  DW	 10, 16200	 ; 80386  (33Mhz = ~1917 ticks)
+    168	    001B  000A 40A6			  DW	 10, 16550	 ; 80486  (33Mhz = ~2006 ticks)
+    169	    001F  0014 860E			  DW	 20, 34318	 ; Pentium (60Mhz = ~2269 ticks)
+    170
+    171
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 4
+tsystem.asm
+
+
+
+    172					     ; Fill "Buffer" by	"Double	Words"
+    173	    0023			 FillDword  PROC   FAR
+    174		  = (DWORD PTR SS:[BX +	   Buffer     EQU    (DWORD PTR	SS:[BX+10])
+    175		  +10])
+    176		  = (WORD  PTR SS:[BX +	   Count      EQU    (WORD  PTR	SS:[BX+8])
+    177		  +8])
+    178		  = (DWORD PTR SS:[BX +	   Value      EQU    (DWORD PTR	SS:[BX+4])
+    179		  +4])
+    180					    macro_StackFrame BX			; Saving Base Stack Pointer in BX
+1   181	    0023  8B DC			    MOV	      BX, SP
+    182	    0025  36: C4 7F 0A		    LES	      DI, Buffer		; ES  =	 Segment(Dest),	DI = Offset(Dest)
+    183	    0029  36: 8B 4F 08		    MOV	      CX, Count			; CX  =	 Number	of DWords
+    184	    002D  FC			    CLD					; Clearing Direction
+    185	    002E  66| 36: 8B 47	04	    MOV	      EAX, Value		; EAX =	 DWord Value
+    186	    0033  F3> 66| AB		    REP	      STOSD			; Filling...
+    187	    0036  CA 000A		    RET	      10			; Clearing stack and return
+    188	    0039			 FillDword  ENDP
+    189
+    190
+    191					     ; Fill "Buffer" by	"Words"
+    192	    0039			 FillWord  PROC	  FAR
+    193		  = (DWORD PTR SS:[BX +	   Buffer     EQU    (DWORD PTR	SS:[BX+8])
+    194		  +8])
+    195		  = (WORD  PTR SS:[BX +	   Count      EQU    (WORD  PTR	SS:[BX+6])
+    196		  +6])
+    197		  = (WORD  PTR SS:[BX +	   Value      EQU    (WORD  PTR	SS:[BX+4])
+    198		  +4])
+    199					    macro_StackFrame BX
+1   200	    0039  8B DC			    MOV	      BX, SP
+    201	    003B  36: C4 7F 08		    LES	      DI, Buffer
+    202	    003F  36: 8B 4F 06		    MOV	      CX, Count
+    203	    0043  36: 8B 47 04		    MOV	      AX, Value
+    204	    0047  66| C1 E0 10		    SHL	      EAX, 10h
+    205	    004B  36: 8B 47 04		    MOV	      AX, Value
+    206	    004F  D1 E9			    SHR	      CX, 01h
+    207	    0051  FC			    CLD
+    208	    0052  F3> 66| AB		    REP	      STOSD
+    209	    0055  13 C9			    ADC	      CX, CX
+    210	    0057  F3> AB		    REP	      STOSW
+    211	    0059  CA 0008		    RET	      8
+    212	    005C			 FillWord  ENDP
+    213
+    214
+    215					     ; Fill "Buffer" by	"Bytes"
+    216	    005C			 FillByte  PROC	  FAR
+    217		  = (DWORD PTR SS:[BX +	   Buffer     EQU    (DWORD PTR	SS:[BX+8])
+    218		  +8])
+    219		  = (WORD  PTR SS:[BX +	   Count      EQU    (WORD  PTR	SS:[BX+6])
+    220		  +6])
+    221		  = (BYTE  PTR SS:[BX +	   Value      EQU    (BYTE  PTR	SS:[BX+4])
+    222		  +4])
+    223					    macro_StackFrame BX
+1   224	    005C  8B DC			    MOV	      BX, SP
+    225	    005E  36: C4 7F 08		    LES	      DI, Buffer
+    226	    0062  36: 8B 4F 06		    MOV	      CX, Count
+    227	    0066  36: 8A 47 04		    MOV	      AL, Value
+    228	    006A  8A E0			    MOV	      AH, AL
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 5
+tsystem.asm
+
+
+
+    229	    006C  50			    PUSH      AX
+    230	    006D  66| C1 E0 10		    SHL	      EAX, 10h
+    231	    0071  58			    POP	      AX
+    232	    0072  FC			    CLD
+    233	    0073  51			    PUSH      CX
+    234	    0074  C1 E9	02		    SHR	      CX, 02h
+    235	    0077  F3> 66| AB		    REP	      STOSD
+    236	    007A  59			    POP	      CX
+    237	    007B  83 E1	03		    AND	      CX, 03h
+    238	    007E  F3> AA		    REP	      STOSB
+    239	    0080  CA 0008		    RET	      08h
+    240	    0083			 FillByte  ENDP
+    241
+    242
+    243					     ; Fill "Dest" by "Source" with size "Size"	"Count"	times
+    244	    0083			 Fill  PROC   FAR
+    245		  = (DWORD PTR SS:[BX +	   Dest	      EQU    (DWORD PTR	SS:[BX+12])
+    246		  +12])
+    247		  = (DWORD PTR SS:[BX +	   Source     EQU    (DWORD PTR	SS:[BX+8])
+    248		  +8])
+    249		  = (WORD  PTR SS:[BX +	   Size	      EQU    (WORD  PTR	SS:[BX+6])
+    250		  +6])
+*Warning* tsystem.asm(128) Reserved word used as symbol: SIZE
+    251		  = (WORD  PTR SS:[BX +	   Count      EQU    (WORD  PTR	SS:[BX+4])
+    252		  +4])
+    253					    macro_StackFrame BX
+1   254	    0083  8B DC			    MOV	      BX, SP
+    255	    0085  1E			    PUSH      DS
+    256	    0086  36: C4 7F 0C		    LES	      DI, Dest
+    257	    008A  36: C5 77 08		    LDS	      SI, Source
+    258	    008E  36: 8B 4F 06		    MOV	      CX, Size
+    259	    0092  36: 8B 47 04		    MOV	      AX, Count
+    260	    0096  FC			    CLD
+    261	    0097  8B D9			    MOV	      BX, CX
+    262	    0099			 @@Fill_Loop:
+    263	    0099  8B CB			    MOV	      CX, BX
+    264	    009B  3D 0000		    CMP	      AX, 00h
+    265	    009E  74 16	90 90		    JE	      @@Fill_EndOfLoop
+    266	    00A2  C1 E9	02		    SHR	      CX, 02h
+    267	    00A5  F3> 66| A5		    REP	      MOVSD
+    268	    00A8  8B CB			    MOV	      CX, BX
+    269	    00AA  83 E1	03		    AND	      CX, 03h
+    270	    00AD  F3> A4		    REP	      MOVSB
+    271	    00AF  36: 2B 77 06		    SUB	      SI, Size
+    272	    00B3  48			    DEC	      AX
+    273	    00B4  EB E3			    JMP	      @@Fill_Loop
+    274	    00B6			 @@Fill_EndOfLoop:
+    275	    00B6  1F			    POP	      DS
+    276	    00B7  CA 000C		    RET	      12
+    277	    00BA			 Fill  ENDP
+    278
+    279
+    280
+    281					     ; Move "Size" bytes from "Source" to "Dest"
+    282	    00BA			 MovePtr  PROC	 FAR
+    283		  = (DWORD PTR SS:[BX +	   Source     EQU    (DWORD PTR	SS:[BX+10])
+    284		  +10])
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 6
+tsystem.asm
+
+
+
+    285		  = (DWORD PTR SS:[BX +	   Dest	      EQU    (DWORD PTR	SS:[BX+6])
+    286		  +6])
+    287		  = (WORD  PTR SS:[BX +	   Size	      EQU    (WORD  PTR	SS:[BX+4])
+    288		  +4])
+    289					    macro_StackFrame BX
+1   290	    00BA  8B DC			    MOV	      BX, SP
+    291	    00BC  1E			    PUSH      DS
+    292	    00BD  36: C5 77 0A		    LDS	      SI, Source
+    293	    00C1  36: 8B 4F 04		    MOV	      CX, Size
+    294	    00C5  36: C4 7F 06		    LES	      DI, Dest
+    295	    00C9  FC			    CLD
+    296	    00CA  51			    PUSH      CX
+    297	    00CB  C1 E9	02		    SHR	      CX, 02h
+    298	    00CE  F3> 66| A5		    REP	      MOVSD
+    299	    00D1  59			    POP	      CX
+    300	    00D2  83 E1	03		    AND	      CX, 03h
+    301	    00D5  F3> A4		    REP	      MOVSB
+    302	    00D7  1F			    POP	      DS
+    303	    00D8  CA 000A		    RET	      10
+    304	    00DB			 MovePtr  ENDP
+    305
+    306
+    307					     ; Swap two	byte variables
+    308	    00DB			 SwapByte  PROC	  FAR
+    309		  = (DWORD PTR SS:[BX +	   Source     EQU    (DWORD PTR	SS:[BX+8])
+    310		  +8])
+    311		  = (DWORD PTR SS:[BX +	   Dest	      EQU    (DWORD PTR	SS:[BX+4])
+    312		  +4])
+    313					    macro_StackFrame BX
+1   314	    00DB  8B DC			    MOV	      BX, SP
+    315	    00DD  1E			    PUSH	 DS
+    316	    00DE  36: C4 7F 08		    LES		 DI, Source
+    317	    00E2  36: C5 77 04		    LDS		 SI, Dest
+    318	    00E6  26: 8A 05		    MOV		 AL, BYTE PTR ES:[DI]
+    319	    00E9  86 04			    XCHG	 AL, BYTE PTR DS:[SI]
+    320	    00EB  AA			    STOSB
+    321	    00EC  1F			    POP		 DS
+    322	    00ED  CA 0008		    RET		 8
+    323	    00F0			 SwapByte  ENDP
+    324
+    325
+    326					     ; Swap two	word variables
+    327	    00F0			 SwapWord  PROC	  FAR
+    328		  = (DWORD PTR SS:[BX +	   Source     EQU    (DWORD PTR	SS:[BX+8])
+    329		  +8])
+    330		  = (DWORD PTR SS:[BX +	   Dest	      EQU    (DWORD PTR	SS:[BX+4])
+    331		  +4])
+    332					    macro_StackFrame BX
+1   333	    00F0  8B DC			    MOV	      BX, SP
+    334	    00F2  1E			    PUSH      DS
+    335	    00F3  36: C4 7F 08		    LES	      DI, Source
+    336	    00F7  36: C5 77 04		    LDS	      SI, Dest
+    337	    00FB  26: 8B 05		    MOV	      AX, WORD PTR ES:[DI]
+    338	    00FE  87 04			    XCHG      AX, WORD PTR DS:[SI]
+    339	    0100  AB			    STOSW
+    340	    0101  1F			    POP		 DS
+    341	    0102  CA 0008		    RET		 8
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 7
+tsystem.asm
+
+
+
+    342	    0105			 SwapWord  ENDP
+    343
+    344
+    345					     ; Swap two	double word variables
+    346	    0105			 SwapLong		  PROC	 FAR
+    347		  = (DWORD PTR SS:[BX +	   Source     EQU    (DWORD PTR	SS:[BX+8])
+    348		  +8])
+    349		  = (DWORD PTR SS:[BX +	   Dest	      EQU    (DWORD PTR	SS:[BX+4])
+    350		  +4])
+    351					    macro_StackFrame BX
+1   352	    0105  8B DC			    MOV	      BX, SP
+    353	    0107  1E			    PUSH      DS
+    354	    0108  36: C4 7F 08		    LES	      DI, Source
+    355	    010C  36: C5 77 04		    LDS	      SI, Dest
+    356	    0110  66| 26: 8B 05		    MOV	      EAX, DWORD PTR ES:[DI]
+    357	    0114  66| 87 04		    XCHG      EAX, DWORD PTR DS:[SI]
+    358	    0117  66| AB		    STOSD
+    359	    0119  1F			    POP	      DS
+    360	    011A  CA 0008		    RET	      8
+    361	    011D			 SwapLong		  ENDP
+    362
+    363
+    364					     ; Swap "Source" and "Dest"	on "Size" bytes
+    365	    011D			 Swap  PROC   FAR
+    366		  = (DWORD PTR SS:[BX +	   Source     EQU    (DWORD PTR	SS:[BX+10])
+    367		  +10])
+    368		  = (DWORD PTR SS:[BX +	   Dest	      EQU    (DWORD PTR	SS:[BX+6])
+    369		  +6])
+    370		  = (WORD  PTR SS:[BX +	   Size	      EQU    (WORD  PTR	SS:[BX+4])
+    371		  +4])
+    372					    macro_StackFrame BX
+1   373	    011D  8B DC			    MOV	      BX, SP
+    374	    011F  1E			    PUSH      DS
+    375	    0120  36: 8B 4F 04		    MOV	      CX, Size
+    376	    0124  E3 2A			    JCXZ      @@Swap_EndLoop
+    377	    0126  36: C4 7F 06		    LES	      DI, Dest
+    378	    012A  36: C4 77 0A		    LES	      SI, Source
+    379	    012E  FC			    CLD
+    380	    012F  D1 E9			    SHR	      CX, 01h
+    381	    0131  E3 16			    JCXZ      @@Swap_LocLoop
+    382	    0133  9C			    PUSHF
+    383	    0134			 @@Swap_Loop:
+    384	    0134  26: 8B 05		    MOV	      AX, WORD PTR ES:[DI]
+    385	    0137  87 04			    XCHG      AX, WORD PTR DS:[SI]
+    386	    0139  26: 89 05		    MOV	      WORD PTR ES:[DI],	AX
+    387	    013C  83 C6	02		    ADD	      SI, 02h
+    388	    013F  83 C7	02		    ADD	      DI, 02h
+    389	    0142  E2 F0			    LOOP      @@Swap_Loop
+    390	    0144  9D			    POPF
+    391	    0145  73 09	90 90		    JNC	      @@Swap_EndLoop
+    392	    0149			 @@Swap_LocLoop:
+    393	    0149  8A 04			    MOV	      AL, BYTE PTR DS:[SI]
+    394	    014B  26: 86 05		    XCHG      AL, BYTE PTR ES:[DI]
+    395	    014E  88 04			    MOV	      BYTE PTR DS:[SI],	AL
+    396	    0150			 @@Swap_EndLoop:
+    397	    0150  1F			    POP	      DS
+    398	    0151  CA 000A		    RET	      10
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 8
+tsystem.asm
+
+
+
+    399	    0154			 Swap  ENDP
+    400
+    401
+    402					    ; Searce in	"Buffer" with size "Count" "Buff" with size "BuffSize"
+    403	    0154			 SearchPtr		  PROC	 FAR
+    404		  = (DWORD PTR SS:[BX +	   Buffer     EQU    (DWORD PTR	SS:[BX+12])
+    405		  +12])
+    406		  = (WORD  PTR SS:[BX +	   Count      EQU    (WORD  PTR	SS:[BX+10])
+    407		  +10])
+    408		  = (DWORD PTR SS:[BX +	   Buff	      EQU    (DWORD PTR	SS:[BX+6])
+    409		  +6])
+    410		  = (WORD  PTR SS:[BX +	   BuffSize   EQU    (WORD  PTR	SS:[BX+4])
+    411		  +4])
+    412					    macro_StackFrame BX
+1   413	    0154  8B DC			    MOV	      BX, SP
+    414	    0156  1E			    PUSH      DS
+    415	    0157  36: C4 7F 0C		    LES	      DI, Buffer
+    416	    015B  8B DF			    MOV	      BX, DI
+    417	    015D  36: 8B 4F 0A		    MOV	      CX, Count
+    418	    0161  36: 8B 57 04		    MOV	      DX, BuffSize
+    419	    0165  85 D2			    TEST      DX, DX
+    420	    0167  74 2C	90 90		    JZ	      @@SearchPtr_NotFound
+    421	    016B  36: C5 77 06		    LDS	      SI, Buff
+    422	    016F  AC			    LODSB
+    423	    0170  4A			    DEC	      DX
+    424	    0171  2B CA			    SUB	      CX, DX
+    425	    0173			 @@Search_LocLoop:
+    426	    0173  F3> AE		    REP	      SCASB
+    427	    0175  75 1E	90 90		    JNE	      @@SearchPtr_NotFound
+    428	    0179  85 D2			    TEST      DX, DX
+    429	    017B  74 0E	90 90		    JZ	      @@SearchPtr_Loop
+    430	    017F  51			    PUSH      CX
+    431	    0180  57			    PUSH      DI
+    432	    0181  56			    PUSH      SI
+    433	    0182  8B CA			    MOV	      CX, DX
+    434	    0184  F3> A6		    REPE      CMPSB
+    435	    0186  5E			    POP	      SI
+    436	    0187  5F			    POP	      DI
+    437	    0188  59			    POP	      CX
+    438	    0189  75 E8			    JNE	      @@Search_LocLoop
+    439	    018B			 @@SearchPtr_Loop:
+    440	    018B  4F			    DEC	      DI
+    441	    018C  8B C7			    MOV	      AX, DI
+    442	    018E  2B C3			    SUB	      AX, BX
+    443	    0190  8C C2			    MOV	      DX, ES
+    444	    0192  EB 07	90		    JMP	      @@SearchPtr_End
+    445	    0195			 @@SearchPtr_NotFound:
+    446	    0195  B8 0000		    MOV	      AX, 0000h
+    447	    0198  BA 0000		    MOV	      DX, 0000h
+    448	    019B			 @@SearchPtr_End:
+    449	    019B  1F			    POP	      DS
+    450	    019C  CA 000C		    RET	      12
+    451	    019F			 SearchPtr		  ENDP
+    452
+    453
+    454					     ; Read byte from "Source"
+    455	    019F			 ReadMemoryByte	 PROC	FAR
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 9
+tsystem.asm
+
+
+
+    456		  = (DWORD PTR SS:[BX +	   Source     EQU    (DWORD PTR	SS:[BX+4])
+    457		  +4])
+    458					    macro_StackFrame BX
+1   459	    019F  8B DC			    MOV	      BX, SP
+    460	    01A1  36: C4 7F 04		    LES	      DI, Source
+    461	    01A5  26: 8A 05		    MOV	      AL, BYTE PTR ES:[DI]
+    462	    01A8  CA 0004		    RET	      4
+    463	    01AB			 ReadMemoryByte	 ENDP
+    464
+    465
+    466					     ; Read word from "Source"
+    467	    01AB			 ReadMemoryWord	 PROC	FAR
+    468		  = (DWORD PTR SS:[BX +	   Source     EQU    (DWORD PTR	SS:[BX+4])
+    469		  +4])
+    470					    macro_StackFrame BX
+1   471	    01AB  8B DC			    MOV	      BX, SP
+    472	    01AD  36: C4 7F 04		    LES		 DI, Source
+    473	    01B1  26: 8B 05		    MOV		 AX, WORD PTR ES:[DI]
+    474	    01B4  CA 0004		    RET		 4
+    475	    01B7			 ReadMemoryWord	 ENDP
+    476
+    477
+    478					     ; Read double word	from "Source"
+    479	    01B7			 ReadMemoryDWord	  PROC	 FAR
+    480		  = (DWORD PTR SS:[BX +	   Source     EQU    (DWORD PTR	SS:[BX+4])
+    481		  +4])
+    482					    macro_StackFrame BX
+1   483	    01B7  8B DC			    MOV	      BX, SP
+    484	    01B9  36: C4 7F 04		    LES		 DI, Source
+    485	    01BD  26: 8B 05		    MOV		 AX, WORD PTR ES:[DI]
+    486	    01C0  26: 8B 55 02		    MOV		 DX, WORD PTR ES:[DI+2]
+    487	    01C4  CA 0004		    RET		 4
+    488	    01C7			 ReadMemoryDWord	  ENDP
+    489
+    490
+    491					     ; Write byte in "Source"
+    492	    01C7			 WriteMemoryByte	  PROC	 FAR
+    493		  = (DWORD PTR SS:[BX +	   Source     EQU    (DWORD PTR	SS:[BX+6])
+    494		  +6])
+    495		  = (BYTE  PTR SS:[BX +	   Value      EQU    (BYTE  PTR	SS:[BX+4])
+    496		  +4])
+    497					    macro_StackFrame BX
+1   498	    01C7  8B DC			    MOV	      BX, SP
+    499	    01C9  36: 8A 47 04		    MOV		 AL, Value
+    500	    01CD  36: C4 7F 06		    LES		 DI, Source
+    501	    01D1  AA			    STOSB
+    502	    01D2  CA 0006		    RET		 6
+    503	    01D5			 WriteMemoryByte	  ENDP
+    504
+    505
+    506					     ; Write word in "Source"
+    507	    01D5			 WriteMemoryWord	  PROC	 FAR
+    508		  = (DWORD PTR SS:[BX +	   Source     EQU    (DWORD PTR	SS:[BX+6])
+    509		  +6])
+    510		  = (WORD  PTR SS:[BX +	   Value      EQU    (WORD  PTR	SS:[BX+4])
+    511		  +4])
+    512					    macro_StackFrame BX
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 10
+tsystem.asm
+
+
+
+1   513	    01D5  8B DC			    MOV	      BX, SP
+    514	    01D7  36: 8B 47 04		    MOV		 AX, Value
+    515	    01DB  36: C4 7F 06		    LES		 DI, Source
+    516	    01DF  AB			    STOSW
+    517	    01E0  CA 0006		    RET		 6
+    518	    01E3			 WriteMemoryWord	  ENDP
+    519
+    520
+    521					     ; Write double word in "Source"
+    522	    01E3			 WriteMemoryDWord	   PROC	 FAR
+    523		  = (DWORD PTR SS:[BX +	   Source     EQU    (DWORD PTR	SS:[BX+8])
+    524		  +8])
+    525		  = (DWORD PTR SS:[BX +	   Value      EQU    (DWORD PTR	SS:[BX+4])
+    526		  +4])
+    527					    macro_StackFrame BX
+1   528	    01E3  8B DC			    MOV	      BX, SP
+    529	    01E5  66| 36: 8B 47	04	    MOV		 EAX, Value
+    530	    01EA  36: C4 7F 08		    LES		 DI, Source
+    531	    01EE  66| AB		    STOSD
+    532	    01F0  CA 0008		    RET		 8
+    533	    01F3			 WriteMemoryDWord	   ENDP
+    534
+    535
+    536					     ; Read byte from port "Port"
+    537	    01F3			 ReadPort		   PROC	 FAR
+    538		  = (WORD  PTR SS:[BX +	   Port		EQU    (WORD  PTR SS:[BX+4])
+    539		  +4])
+    540					    macro_StackFrame BX
+1   541	    01F3  8B DC			    MOV	      BX, SP
+    542	    01F5  36: 8B 57 04		    MOV		 DX, Port
+    543	    01F9  EC			    IN		 AL, DX
+    544	    01FA  CA 0002		    RET		 2
+    545	    01FD			 ReadPort		   ENDP
+    546
+    547
+    548					     ; Write byte in port "Port"
+    549	    01FD			 WritePort  PROC   FAR
+    550		  = (WORD  PTR SS:[BX +	   Port		EQU    (WORD  PTR SS:[BX+6])
+    551		  +6])
+    552		  = (BYTE  PTR SS:[BX +	   Value	EQU    (BYTE  PTR SS:[BX+4])
+    553		  +4])
+    554					    macro_StackFrame BX
+1   555	    01FD  8B DC			    MOV	      BX, SP
+    556	    01FF  36: 8B 57 06		    MOV		 DX, Port
+    557	    0203  36: 8A 47 04		    MOV		 AL, Value
+    558	    0207  EE			    OUT		 DX, AL
+    559	    0208  CA 0004		    RET		 4
+    560	    020B			 WritePort  ENDP
+    561
+    562
+    563					     ; Write index byte	in port	"Port" and read	byte from "Port"+1
+    564	    020B			 ReadIndexPort	PROC   FAR
+    565		  = (WORD  PTR SS:[BX +	   Port		EQU    (WORD  PTR SS:[BX+6])
+    566		  +6])
+    567		  = (BYTE  PTR SS:[BX +	   Index	EQU    (BYTE  PTR SS:[BX+4])
+    568		  +4])
+    569					    macro_StackFrame BX
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 11
+tsystem.asm
+
+
+
+1   570	    020B  8B DC			    MOV	      BX, SP
+    571	    020D  36: 8B 57 06		    MOV		 DX, Port
+    572	    0211  EE			    OUT		 DX, AL
+    573	    0212  42			    INC		 DX
+    574	    0213  EC			    IN		 AL, DX
+    575	    0214  CA 0004		    RET		 4
+    576	    0217			 ReadIndexPort	ENDP
+    577
+    578
+    579					     ; Write index byte	in port	"Port" and write "Value" in "Port"+1
+    580	    0217			 WriteIndexPort	 PROC	FAR
+    581		  = (WORD  PTR SS:[BX +	   Port		EQU    (WORD  PTR SS:[BX+8])
+    582		  +8])
+    583		  = (BYTE  PTR SS:[BX +	   Index	EQU    (BYTE  PTR SS:[BX+6])
+    584		  +6])
+    585		  = (BYTE  PTR SS:[BX +	   Value	EQU    (BYTE  PTR SS:[BX+4])
+    586		  +4])
+    587					    macro_StackFrame BX
+1   588	    0217  8B DC			    MOV	      BX, SP
+    589	    0219  36: 8B 57 08		    MOV		 DX, Port
+    590	    021D  36: 8A 67 06		    MOV		 AH, Index
+    591	    0221  36: 8A 47 04		    MOV		 AL, Value
+    592	    0225  EF			    OUT		 DX, AX
+    593	    0226  CA 0006		    RET		 6
+    594	    0229			 WriteIndexPort	 ENDP
+    595
+    596
+    597					     ; Move size of extended memory in "ExtendedMemorySize"
+    598	    0229			 GetExtendedMemorySize	PROC   NEAR
+    599	    0229  FA			    CLI			       ; Interrupts disabled
+    600	    022A  B0 18			    MOV	      AL, 18h	       ; AL = 18h (CMOS	Reg.)
+    601	    022C  E6 70			    OUT	      70h, AL	       ; AL now	in CMOS
+    602	    022E  E4 71			    IN	      AL, 71h	       ; Reading CMOS Reg. AL
+    603	    0230  8A E0			    MOV	      AH, AL	       ; Saving	it in AH
+    604	    0232  B0 17			    MOV	      AL, 17h	       ; AL = 17h (CMOS	Reg.)
+    605	    0234  E6 70			    OUT	      70h, AL	       ; AL now	in CMOS
+    606	    0236  E4 71			    IN	      AL, 71h	       ; Reading CMOS Reg. AL
+    607	    0238  FB			    STI			       ; Interrupts enabled
+    608	    0239  A3 0000e		    MOV	      [ExtendedMemorySize], AX
+    609	    023C  C3			    RET
+    610	    023D			 GetExtendedMemorySize	ENDP
+    611
+    612
+    613					     ; Move address of BIOS Config table in "BiosConfigTable"
+    614	    023D			 GetBiosConfigTable  PROC   NEAR
+    615	    023D  B4 C0			    MOV	      AH, int15h_GetConfigTable
+    616	    023F  CD 15			    INT	      15h
+    617	    0241  89 1E	0000e		    MOV	      WORD PTR [BiosConfigTable], BX
+    618	    0245  8C 06	0002e		    MOV	      WORD PTR [BiosConfigTable+2], ES
+    619	    0249  C3			    RET
+    620	    024A			 GetBiosConfigTable  ENDP
+    621
+    622
+    623					     ; Read byte "Value" from "AbsAddr"
+    624	    024A			 AbsReadMemoryByte  PROC   FAR
+    625		  = (DWORD PTR SS:[BX +	   AbsAddr    EQU    (DWORD PTR	SS:[BX+4])
+    626		  +4])
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 12
+tsystem.asm
+
+
+
+    627					    macro_StackFrame BX
+1   628	    024A  8B DC			    MOV	      BX, SP
+    629	    024C  1E			    PUSH      DS
+    630	    024D  36: 8B 47 04		    MOV	      AX, WORD PTR [AbsAddr]
+    631	    0251  36: 8B 77 06		    MOV	      SI, WORD PTR [AbsAddr+2]
+    632	    0255  56			    PUSH      SI
+    633	    0256  50			    PUSH      AX
+    634	    0257  66| 5E		    POP	      ESI
+    635	    0259  33 C0			    XOR	      AX, AX
+    636	    025B  8E D8			    MOV	      DS, AX
+    637	    025D  67| 8A 06		    MOV	      AL, BYTE PTR DS:[ESI]
+    638	    0260  1F			    POP	      DS
+    639	    0261  CA 0004		    RET	      4
+    640	    0264			 AbsReadMemoryByte  ENDP
+    641
+    642
+    643					     ; Read word "Value" from "AbsAddr"
+    644	    0264			 AbsReadMemoryWord  PROC   FAR
+    645		  = (DWORD PTR SS:[BX +	   AbsAddr    EQU    (DWORD PTR	SS:[BX+4])
+    646		  +4])
+    647					    macro_StackFrame BX
+1   648	    0264  8B DC			    MOV	      BX, SP
+    649	    0266  1E			    PUSH      DS
+    650	    0267  36: 8B 47 04		    MOV	      AX, WORD PTR [AbsAddr]
+    651	    026B  36: 8B 77 06		    MOV	      SI, WORD PTR [AbsAddr+2]
+    652	    026F  56			    PUSH      SI
+    653	    0270  50			    PUSH      AX
+    654	    0271  66| 5E		    POP	      ESI
+    655	    0273  33 C0			    XOR	      AX, AX
+    656	    0275  8E D8			    MOV	      DS, AX
+    657	    0277  67| 8B 06		    MOV	      AX, WORD PTR DS:[ESI]
+    658	    027A  1F			    POP	      DS
+    659	    027B  CA 0004		    RET	      4
+    660	    027E			 AbsReadMemoryWord  ENDP
+    661
+    662
+    663					     ; Read double word	"Value"	from "AbsAddr"
+    664	    027E			 AbsReadMemoryDWord  PROC   FAR
+    665		  = (DWORD PTR SS:[BX +	   AbsAddr    EQU    (DWORD PTR	SS:[BX+4])
+    666		  +4])
+    667					    macro_StackFrame BX
+1   668	    027E  8B DC			    MOV	      BX, SP
+    669	    0280  1E			    PUSH      DS
+    670	    0281  36: 8B 47 04		    MOV	      AX, WORD PTR [AbsAddr]
+    671	    0285  36: 8B 77 06		    MOV	      SI, WORD PTR [AbsAddr+2]
+    672	    0289  56			    PUSH      SI
+    673	    028A  50			    PUSH      AX
+    674	    028B  66| 5E		    POP	      ESI
+    675	    028D  33 C0			    XOR	      AX, AX
+    676	    028F  8E D8			    MOV	      DS, AX
+    677	    0291  67| 8B 06		    MOV	      AX, WORD PTR DS:[ESI]
+    678	    0294  67| 8B 56 02		    MOV	      DX, WORD PTR DS:[ESI+2]
+    679	    0298  1F			    POP	      DS
+    680	    0299  CA 0004		    RET	      4
+    681	    029C			 AbsReadMemoryDWord  ENDP
+    682
+    683
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 13
+tsystem.asm
+
+
+
+    684					     ; Write byte "Value" in "AbsAddr"
+    685	    029C			 AbsWriteMemoryByte  PROC   FAR
+    686		  = (DWORD PTR SS:[BX +	   AbsAddr    EQU    (DWORD PTR	SS:[BX+6])
+    687		  +6])
+    688		  = (BYTE  PTR SS:[BX +	   Value      EQU    (BYTE  PTR	SS:[BX+4])
+    689		  +4])
+    690					    macro_StackFrame BX
+1   691	    029C  8B DC			    MOV	      BX, SP
+    692	    029E  1E			    PUSH      DS
+    693	    029F  36: 8B 47 06		    MOV	      AX, WORD PTR [AbsAddr]
+    694	    02A3  36: 8B 77 08		    MOV	      SI, WORD PTR [AbsAddr+2]
+    695	    02A7  56			    PUSH      SI
+    696	    02A8  50			    PUSH      AX
+    697	    02A9  66| 5E		    POP	      ESI
+    698	    02AB  33 C0			    XOR	      AX, AX
+    699	    02AD  8E D8			    MOV	      DS, AX
+    700	    02AF  36: 8A 47 04		    MOV	      AL, Value
+    701	    02B3  88 04			    MOV	      BYTE PTR DS:[SI],	AL
+    702	    02B5  1F			    POP	      DS
+    703	    02B6  CA 0006		    RET	      6
+    704	    02B9			 AbsWriteMemoryByte  ENDP
+    705
+    706
+    707					     ; Write word "Value" in "AbsAddr"
+    708	    02B9			 AbsWriteMemoryWord  PROC   FAR
+    709		  = (DWORD PTR SS:[BX +	   AbsAddr    EQU    (DWORD PTR	SS:[BX+6])
+    710		  +6])
+    711		  = (WORD  PTR SS:[BX +	   Value      EQU    (WORD  PTR	SS:[BX+4])
+    712		  +4])
+    713					    macro_StackFrame BX
+1   714	    02B9  8B DC			    MOV	      BX, SP
+    715	    02BB  1E			    PUSH      DS
+    716	    02BC  36: 8B 47 06		    MOV	      AX, WORD PTR [AbsAddr]
+    717	    02C0  36: 8B 77 08		    MOV	      SI, WORD PTR [AbsAddr+2]
+    718	    02C4  56			    PUSH      SI
+    719	    02C5  50			    PUSH      AX
+    720	    02C6  66| 5E		    POP	      ESI
+    721	    02C8  33 C0			    XOR	      AX, AX
+    722	    02CA  8E D8			    MOV	      DS, AX
+    723	    02CC  36: 8B 47 04		    MOV	      AX, Value
+    724	    02D0  89 04			    MOV	      WORD PTR DS:[SI],	AX
+    725	    02D2  1F			    POP	      DS
+    726	    02D3  CA 0006		    RET	      6
+    727	    02D6			 AbsWriteMemoryWord  ENDP
+    728
+    729
+    730					     ; Write double word "Value" in "AbsAddr"
+    731	    02D6			 AbsWriteMemoryDWord  PROC   FAR
+    732		  = (DWORD PTR SS:[BX +	   AbsAddr    EQU    (DWORD PTR	SS:[BX+8])
+    733		  +8])
+    734		  = (DWORD PTR SS:[BX +	   Value      EQU    (DWORD PTR	SS:[BX+4])
+    735		  +4])
+    736					    macro_StackFrame BX
+1   737	    02D6  8B DC			    MOV	      BX, SP
+    738	    02D8  1E			    PUSH      DS
+    739	    02D9  36: 8B 47 08		    MOV	      AX, WORD PTR [AbsAddr]
+    740	    02DD  36: 8B 77 0A		    MOV	      SI, WORD PTR [AbsAddr+2]
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 14
+tsystem.asm
+
+
+
+    741	    02E1  56			    PUSH      SI
+    742	    02E2  50			    PUSH      AX
+    743	    02E3  66| 5E		    POP	      ESI
+    744	    02E5  33 C0			    XOR	      AX, AX
+    745	    02E7  8E D8			    MOV	      DS, AX
+    746	    02E9  66| 36: 8B 47	04	    MOV	      EAX, Value
+    747	    02EE  66| 89 04		    MOV	      DWORD PTR	DS:[SI], EAX
+    748	    02F1  1F			    POP	      DS
+    749	    02F2  CA 0008		    RET	      8
+    750	    02F5			 AbsWriteMemoryDWord  ENDP
+    751
+    752					     ; Compare "Source"	and "Dest" on "Size" bytes
+    753	    02F5			 CompareBuffersPtr  PROC   FAR
+    754		  = (DWORD PTR SS:[BX +	   Source     EQU    (DWORD PTR	SS:[BX+10])
+    755		  +10])
+    756		  = (DWORD PTR SS:[BX +	   Dest	      EQU    (DWORD PTR	SS:[BX+6])
+    757		  +6])
+    758		  = (WORD  PTR SS:[BX +	   Size	      EQU    (WORD  PTR	SS:[BX+4])
+    759		  +4])
+    760					    macro_StackFrame BX		      ;	Set up stack frame
+1   761	    02F5  8B DC			    MOV	      BX, SP
+    762	    02F7  8C DA			    MOV	      DX, DS		  ; Save DS
+    763	    02F9  36: 8B 4F 04		    MOV	      CX, Size		  ; Bytes counter
+    764	    02FD  E3 19			    JCXZ      @@CompBuff_End	  ; If zero,done
+    765	    02FF  36: C5 77 0A		    LDS	      SI, Source	  ; Load pointers
+    766	    0303  36: C4 7F 06		    LES	      DI, Dest
+    767	    0307  FC			    CLD				  ; Go forward
+    768	    0308  8B DE			    MOV	      BX, SI		  ; Save a start offset
+    769	    030A  B8 FFFF		    MOV	      AX, 0FFFFh	  ; Assume that	fails
+    770	    030D  F3> A6		    REPE      CMPSB		  ; Repeat while equal
+    771	    030F  74 07	90 90		    JE	      @@CompBuff_End	  ; AX = result
+    772	    0313  4E			    DEC	      SI		  ; Adjust back
+    773	    0314  2B F3			    SUB	      SI, BX		  ; Find the offset
+    774	    0316  8B C6			    MOV	      AX, SI		  ; AX = result
+    775	    0318			 @@CompBuff_End:
+    776	    0318  8E DA			    MOV	      DS, DX		  ; Restore DS
+    777	    031A  CA 000A		    RET	      10		  ; Clearing stack and return.
+    778	    031D			 CompareBuffersPtr  ENDP
+    779
+    780
+    781					     ; CPU independence	delay
+    782	    031D			 Delay	PROC   FAR
+    783		  = (DWORD PTR SS:[BX +	   Count      EQU    (DWORD PTR	SS:[BX+4])
+    784		  +4])
+    785					    macro_StackFrame BX
+1   786	    031D  8B DC			    MOV	      BX, SP
+    787	    031F  36: 8B 57 04		    MOV	      DX, WORD PTR [Count]
+    788	    0323  36: 8B 4F 06		    MOV	      CX, WORD PTR [Count+2]
+    789	    0327  B4 86			    MOV	      AH, int15h_Wait
+    790	    0329  CD 15			    INT	      15h
+    791	    032B  CA 0004		    RET		 4
+    792	    032E			 Delay	ENDP
+    793
+    794
+    795					     ; Hardware	reboot by reading port 64h
+    796					     ; Reset method is done by using of	the keyboard controller	interface
+    797					     ; Keyboard	controller does	it by CPU reset	pin pulsing
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 15
+tsystem.asm
+
+
+
+    798					     ; This procedure returns never
+    799					     ; Use this	procedure for any OS on	own risky
+    800	    032E			 HardwareReboot	 PROC	FAR
+    801	    032E			 @@InitTimeOut:
+    802	    032E  B9 0000		    MOV	      CX, 0000h
+    803	    0331  FA			    CLI
+    804	    0332			 @@WaitOutReady:
+    805	    0332  49			    DEC	      CX
+    806	    0333  E3 F9			    JCXZ      @@InitTimeOut
+    807	    0335  E4 64			    IN	      AL, 64H
+    808	    0337  FB			    STI
+    809	    0338  A8 02			    TEST      AL, 00000010b
+    810	    033A  75 F6			    JNZ	      @@WaitOutReady
+    811	    033C  FA			    CLI
+    812	    033D  B0 FE			    MOV	      AL, 0FEh
+    813	    033F  E6 64			    OUT	      64h, AL
+    814	    0341			 @@Jump_Halt:
+    815	    0341  F4			    HLT
+    816	    0342  EB FD			    JMP	      @@Jump_Halt
+    817	    0344			 HardwareReboot	 ENDP
+    818
+    819
+    820					     ; Standard	warm reboot
+    821	    0344			 WarmReboot  PROC   FAR
+    822	    0344  B8 0040		    MOV	      AX, 0040h
+    823	    0347  8E D8			    MOV	      DS, AX
+    824	    0349  C7 06	0072 1234	    MOV	      WORD PTR DS:[0072h], 1234h
+    825	    034F  6A FF			    PUSH      0FFFFh
+    826	    0351  6A 00			    PUSH      00000h
+    827	    0353  CB			    RETF
+    828	    0354			 WarmReboot  ENDP
+    829
+    830
+    831					     ; Standard	cold reboot
+    832	    0354			 ColdReboot  PROC   FAR
+    833	    0354  B8 0040		    MOV	      AX, 0040h
+    834	    0357  8E D8			    MOV	      DS, AX
+    835	    0359  C7 06	0072 0000	    MOV	      WORD PTR DS:[0072h], 0000h
+    836	    035F  6A FF			    PUSH      0FFFFh
+    837	    0361  6A 00			    PUSH      00000h
+    838	    0363  CB			    RETF
+    839	    0364			 ColdReboot  ENDP
+    840
+    841
+    842					    ; Move in "CpuType"	type of	CPU
+    843	    0364			 GetCPU_Type		   PROC	  NEAR
+    844	    0364  FA				       CLI
+    845	    0365  9C				       PUSHF
+    846	    0366  9C				       PUSHF
+    847	    0367  58				       POP	    AX
+    848	    0368  25 0FFF			       AND	    AX,	0FFFh
+    849	    036B  0D 5000			       OR	    AX,	5000h
+    850	    036E  50				       PUSH	    AX
+    851	    036F  9D				       POPF
+    852	    0370  9C				       PUSHF
+    853	    0371  58				       POP	    AX
+    854	    0372  9D				       POPF
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 16
+tsystem.asm
+
+
+
+    855	    0373  FB				       STI
+    856	    0374  25 F000			       AND	    AX,	0F000h
+    857	    0377  3D F000			       CMP	    AX,	0F000h
+    858	    037A  75 07	90 90			       JNE	    @@Check_286
+    859	    037E  B0 01				       MOV	    AL,	1
+    860	    0380  E9 00A8			       JMP	    @@GetCPU_Type_End
+    861	    0383			 @@Check_286:
+    862	    0383  0B C0				       OR	    AX,	AX
+    863	    0385  75 07	90 90			       JNE	    @@Check_386
+    864	    0389  B0 02				       MOV	    AL,	2
+    865	    038B  E9 009D			       JMP	    @@GetCPU_Type_End
+    866	    038E			 @@Check_386:
+    867	    038E  66| 9C			       PUSHFD
+    868	    0390  66| 9C			       PUSHFD
+    869	    0392  66| 58			       POP	    EAX
+    870	    0394  66| 8B D8			       MOV	    EBX, EAX
+    871	    0397  FA				       CLI
+    872	    0398  66| 35 00040000		       XOR	    EAX, 40000h
+    873	    039E  66| 50			       PUSH	    EAX
+    874	    03A0  66| 9D			       POPFD
+    875	    03A2  66| 9C			       PUSHFD
+    876	    03A4  66| 58			       POP	    EAX
+    877	    03A6  66| 9D			       POPFD
+    878	    03A8  FB				       STI
+    879	    03A9  66| 25 00040000		       AND	    EAX, 40000h
+    880	    03AF  66| 81 E3 00040000		       AND	    EBX, 40000h
+    881	    03B6  66| 3B C3			       CMP	    EAX, EBX
+    882	    03B9  75 07	90 90			       JNE	    @@Check_486
+    883	    03BD  B0 03				       MOV	    AL,	cpu_type_80386
+    884	    03BF  EB 6A	90			       JMP	    @@GetCPU_Type_End
+    885	    03C2			 @@Check_486:
+    886	    03C2  FA				       CLI
+    887	    03C3  66| 9C			       PUSHFD
+    888	    03C5  66| 9C			       PUSHFD
+    889	    03C7  66| 58			       POP	    EAX
+    890	    03C9  66| 35 00200000		       XOR	    EAX, 200000h
+    891	    03CF  66| 50			       PUSH	    EAX
+    892	    03D1  66| 9D			       POPFD
+    893	    03D3  66| 9C			       PUSHFD
+    894	    03D5  66| 58			       POP	    EAX
+    895	    03D7  66| 9D			       POPFD
+    896	    03D9  FB				       STI
+    897	    03DA  66| 25 00200000		       AND	    EAX, 200000h
+    898	    03E0  66| 81 E3 00200000		       AND	    EBX, 200000h
+    899	    03E7  66| 3B C3			       CMP	    EAX, EBX
+    900	    03EA  75 07	90 90			       JNE	    @@Check_Pentium
+    901	    03EE  B0 04				       MOV	    AL,	cpu_type_80486
+    902	    03F0  EB 39	90			       JMP	    @@GetCPU_Type_End
+    903	    03F3			 @@Check_Pentium:
+    904	    03F3  C6 06	0000e 01		       MOV	    [CpuIDValid], 1
+    905	    03F8  66| B8 00000001		       MOV	    EAX, 1
+    906						       macro_CPUID
+1   907	    03FE  0F A2			    DB	       0Fh, 0A2h
+    908	    0400  66| 25 00000F00		       AND	    EAX, 0F00h
+    909	    0406  66| C1 E8 08			       SHR	    EAX, 8
+    910	    040A  50				       PUSH	    AX
+    911	    040B  BF 0000e			       MOV	    DI,	offset CpuVendor
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 17
+tsystem.asm
+
+
+
+    912	    040E  8C D8				       MOV	    AX,	DS
+    913	    0410  8E C0				       MOV	    ES,	AX
+    914	    0412  66| B8 00000000		       MOV	    EAX, 0
+    915						       macro_CPUID
+1   916	    0418  0F A2			    DB	       0Fh, 0A2h
+    917	    041A  FC				       CLD
+    918	    041B  66| 8B C3			       MOV	    EAX, EBX
+    919	    041E  66| AB			       STOSD
+    920	    0420  66| 8B C2			       MOV	    EAX, EDX
+    921	    0423  66| AB			       STOSD
+    922	    0425  66| 8B C1			       MOV	    EAX, ECX
+    923	    0428  66| AB			       STOSD
+    924	    042A  58				       POP	    AX
+    925	    042B			 @@GetCPU_Type_End:
+    926	    042B  A2 0000e			       MOV	    [CpuType], AL
+    927	    042E  C3				       RET
+    928	    042F			 GetCPU_Type		   ENDP
+    929
+    930
+    931	    042F			 Hook_Int6		   PROC	  NEAR
+    932	    042F  50				       PUSH	    AX
+    933	    0430  51				       PUSH	    CX
+    934	    0431  06				       PUSH	    ES
+    935	    0432  33 C0				       XOR	    AX,	AX
+    936	    0434  8E C0				       MOV	    ES,	AX
+    937	    0436  FA				       CLI
+    938	    0437  26: A1 0018			       MOV	    AX,	ES:[6*4]
+    939	    043B  26: 8B 0E 001A		       MOV	    CX,	ES:[6*4+2]
+    940	    0440  26: C7 06 0018 047Fr		       MOV	    WORD PTR ES:[6*4], OFFSET bad_op_handler
+    941	    0447  26: C7 06 001A 0000s		       MOV	    WORD PTR ES:[6*4+2],SEG bad_op_handler
+    942	    044E  FB				       STI
+    943	    044F  2E: 89 0E 0000r		       MOV	    [old_int6_seg], CX
+    944	    0454  2E: A3 0002r			       MOV	    [old_int6_off], AX
+    945	    0458  07				       POP	    ES
+    946	    0459  59				       POP	    CX
+    947	    045A  58				       POP	    AX
+    948	    045B  C3				       RET
+    949	    045C			 Hook_Int6		   ENDP
+    950
+    951	    045C			 Restore_Int6		   PROC	  NEAR
+    952	    045C  50				       PUSH	    AX
+    953	    045D  51				       PUSH	    CX
+    954	    045E  52				       PUSH	    DX
+    955	    045F  2E: 8B 0E 0000r		       MOV	    CX,	[old_int6_seg]
+    956	    0464  2E: 8B 16 0002r		       MOV	    DX,	[old_int6_off]
+    957	    0469  06				       PUSH	    ES
+    958	    046A  33 C0				       XOR	    AX,	AX
+    959	    046C  8E C0				       MOV	    ES,	AX
+    960	    046E  FA				       CLI
+    961	    046F  26: 89 16 0018		       MOV	    WORD PTR ES:[6*4], DX
+    962	    0474  26: 89 0E 001A		       MOV	    WORD PTR ES:[6*4+2], CX
+    963	    0479  FB				       STI
+    964	    047A  07				       POP	    ES
+    965	    047B  5A				       POP	    DX
+    966	    047C  59				       POP	    CX
+    967	    047D  58				       POP	    AX
+    968	    047E  C3				       RET
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 18
+tsystem.asm
+
+
+
+    969	    047F			 Restore_Int6		   ENDP
+    970
+    971	    047F			 bad_op_handler		   PROC	  FAR
+    972	    047F  50				       PUSH	    AX
+    973	    0480  55				       PUSH	    BP
+    974	    0481  2E: A1 0008r			       MOV	    AX,	CS:[badoff]
+    975	    0485  8B EC				       MOV	    BP,	SP
+    976	    0487  89 46	04			       MOV	    SS:[BP+4], AX
+    977	    048A  5D				       POP	    BP
+    978	    048B  58				       POP	    AX
+    979	    048C  CF				       IRET
+    980	    048D			 bad_op_handler		   ENDP
+    981
+    982
+    983	    048D			 Hook_IntD		   PROC	  NEAR
+    984	    048D  50				       PUSH	    AX
+    985	    048E  51				       PUSH	    CX
+    986	    048F  06				       PUSH	    ES
+    987	    0490  33 C0				       XOR	    AX,	AX
+    988	    0492  8E C0				       MOV	    ES,	AX
+    989	    0494  FA				       CLI
+    990	    0495  E4 21				       IN	    AL,	21h
+    991	    0497  2E: A2 000Ar			       MOV	    [Int_Mask],	AL
+    992						       macro_IODELAY
+1   993	    049B  EB 00			    JMP	       short $+2
+1   994	    049D  EB 00			    JMP	       short $+2
+    995	    049F  0C 20				       OR	    AL,	20h
+    996	    04A1  E6 21				       OUT	    21h, AL
+    997	    04A3  26: A1 0034			       MOV	    AX,	WORD PTR ES:[0Dh*4]
+    998	    04A7  26: 8B 0E 0036		       MOV	    CX,	WORD PTR ES:[0Dh*4+2]
+    999	    04AC  26: C7 06 0034 047Fr		       MOV	    WORD PTR ES:[0Dh*4], OFFSET	 bad_op_handler
+   1000	    04B3  26: C7 06 0034 0000s		       MOV	    WORD PTR ES:[0Dh*4], SEG bad_op_handler
+   1001	    04BA  FB				       STI
+   1002	    04BB  2E: 89 0E 0004r		       MOV	    [old_intD_seg], CX
+   1003	    04C0  2E: A3 0006r			       MOV	    [old_intD_off], AX
+   1004	    04C4  07				       POP	    ES
+   1005	    04C5  59				       POP	    CX
+   1006	    04C6  58				       POP	    AX
+   1007	    04C7  C3				       RET
+   1008	    04C8			 Hook_IntD		   ENDP
+   1009
+   1010	    04C8			 Restore_IntD		   PROC	  NEAR
+   1011	    04C8  50				       PUSH	    AX
+   1012	    04C9  51				       PUSH	    CX
+   1013	    04CA  52				       PUSH	    DX
+   1014	    04CB  2E: 8B 0E 0004r		       MOV	    CX,	[old_intD_seg]
+   1015	    04D0  2E: 8B 16 0006r		       MOV	    DX,	[old_intD_off]
+   1016	    04D5  06				       PUSH	    ES
+   1017	    04D6  33 C0				       XOR	    AX,	AX
+   1018	    04D8  8E C0				       MOV	    ES,	AX
+   1019	    04DA  FA				       CLI
+   1020	    04DB  26: 89 16 0034		       MOV	    ES:[0Dh*4],	DX
+   1021	    04E0  26: 89 0E 0036		       MOV	    ES:[0Dh*4+2], CX
+   1022	    04E5  E4 21				       IN	    AL,	21h
+   1023	    04E7  2E: 8A 26 000Ar		       MOV	    AH,	[Int_Mask]
+   1024						       macro_IODELAY
+1  1025	    04EC  EB 00			    JMP	       short $+2
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 19
+tsystem.asm
+
+
+
+1  1026	    04EE  EB 00			    JMP	       short $+2
+   1027	    04F0  80 CC	DF			       OR	    AH,	0DFh
+   1028	    04F3  22 C4				       AND	    AL,	AH
+   1029	    04F5  E6 21				       OUT	    21h, AL
+   1030	    04F7  FB				       STI
+   1031	    04F8  07				       POP	    ES
+   1032	    04F9  5A				       POP	    DX
+   1033	    04FA  59				       POP	    CX
+   1034	    04FB  58				       POP	    AX
+   1035	    04FC  C3				       RET
+   1036	    04FD			 Restore_IntD		   ENDP
+   1037
+   1038
+   1039
+   1040
+   1041					     ; Get CPU speed
+   1042	    04FD			 GetCPU_Speed		   PROC	  NEAR
+   1043	    04FD  52				       PUSH	    DX
+   1044	    04FE  56				       PUSH	    SI
+   1045	    04FF  A0 0000e			       MOV	    AL,	[CpuType]
+   1046	    0502  32 E4				       XOR	    AH,	AH
+   1047	    0504  D1 E0				       SHL	    AX,	1
+   1048	    0506  D1 E0				       SHL	    AX,	1
+   1049	    0508  BE 000Br			       MOV	    SI,	OFFSET IntelSpd
+   1050	    050B  03 F0				       ADD	    SI,	AX
+   1051	    050D  B0 B0				       MOV	    AL,	0B0h
+   1052	    050F  E6 43				       OUT	    43h, AL
+   1053						       macro_IoDelay
+1  1054	    0511  EB 00			    JMP	       short $+2
+1  1055	    0513  EB 00			    JMP	       short $+2
+   1056	    0515  B0 FF				       MOV	    AL,	0FFh
+   1057	    0517  E6 42				       OUT	    42h, AL
+   1058						       macro_IoDelay
+1  1059	    0519  EB 00			    JMP	       short $+2
+1  1060	    051B  EB 00			    JMP	       short $+2
+   1061	    051D  E6 42				       OUT	    42h, AL
+   1062						       macro_IoDelay
+1  1063	    051F  EB 00			    JMP	       short $+2
+1  1064	    0521  EB 00			    JMP	       short $+2
+   1065	    0523  FA				       CLI
+   1066	    0524  B0 80				       MOV	    AL,	80h
+   1067	    0526  E6 70				       OUT	    70h, AL
+   1068						       macro_IoDelay
+1  1069	    0528  EB 00			    JMP	       short $+2
+1  1070	    052A  EB 00			    JMP	       short $+2
+   1071	    052C  E4 61				       IN	    AL,	61h
+   1072						       macro_IoDelay
+1  1073	    052E  EB 00			    JMP	       short $+2
+1  1074	    0530  EB 00			    JMP	       short $+2
+   1075	    0532  0C 01				       OR	    AL,	1
+   1076	    0534  E6 61				       OUT	    61h, AL
+   1077	    0536  33 D2				       XOR	    DX,	DX
+   1078	    0538  BB 0001			       MOV	    BX,	1
+   1079	    053B  2E: 8B 04			       MOV	    AX,	CS:[SI]
+   1080	    053E			 @@Cpus_Loop_1:
+   1081	    053E  B9 0010			       MOV	    CX,	10h
+   1082	    0541			 @@Cpus_Loop_2:
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 20
+tsystem.asm
+
+
+
+   1083	    0541  F7 F3				       DIV	    BX
+   1084	    0543  F7 F3				       DIV	    BX
+   1085	    0545  F7 F3				       DIV	    BX
+   1086	    0547  F7 F3				       DIV	    BX
+   1087	    0549  F7 F3				       DIV	    BX
+   1088	    054B  F7 F3				       DIV	    BX
+   1089	    054D  F7 F3				       DIV	    BX
+   1090	    054F  F7 F3				       DIV	    BX
+   1091	    0551  F7 F3				       DIV	    BX
+   1092	    0553  F7 F3				       DIV	    BX
+   1093	    0555  F7 F3				       DIV	    BX
+   1094	    0557  F7 F3				       DIV	    BX
+   1095	    0559  F7 F3				       DIV	    BX
+   1096	    055B  F7 F3				       DIV	    BX
+   1097	    055D  E2 E2				       LOOP	    @@Cpus_Loop_2
+   1098	    055F  48				       DEC	    AX
+   1099	    0560  75 DC				       JNZ	    @@Cpus_Loop_1
+   1100
+   1101	    0562  E4 61				       IN	    AL,	61h
+   1102						       macro_IoDelay
+1  1103	    0564  EB 00			    JMP	       short $+2
+1  1104	    0566  EB 00			    JMP	       short $+2
+   1105	    0568  24 FE				       AND	    AL,	0FEh
+   1106	    056A  E6 61				       OUT	    61h, AL
+   1107	    056C  32 C0				       XOR	    AL,	AL
+   1108	    056E  E6 70				       OUT	    70h, AL
+   1109	    0570  FB				       STI
+   1110
+   1111	    0571  B0 80				       MOV	    AL,	80h
+   1112	    0573  E6 43				       OUT	    43h, AL
+   1113						       macro_IoDelay
+1  1114	    0575  EB 00			    JMP	       short $+2
+1  1115	    0577  EB 00			    JMP	       short $+2
+   1116	    0579  E4 42				       IN	    AL,	42h
+   1117						       macro_IoDelay
+1  1118	    057B  EB 00			    JMP	       short $+2
+1  1119	    057D  EB 00			    JMP	       short $+2
+   1120	    057F  8A D0				       MOV	    DL,	AL
+   1121	    0581  E4 42				       IN	    AL,	42h
+   1122	    0583  8A F0				       MOV	    DH,	AL
+   1123	    0585  B8 FFFF			       MOV	    AX,	0FFFFh
+   1124	    0588  2B C2				       SUB	    AX,	DX
+   1125	    058A  8B C8				       MOV	    CX,	AX
+   1126	    058C  8B D8				       MOV	    BX,	AX
+   1127	    058E  8B C1				       MOV	    AX,	CX
+   1128	    0590  2E: 83 7C 02 00		       CMP	    WORD PTR CS:[SI+2],	0
+   1129	    0595  74 12	90 90			       JE	    @@Cpus_skp2
+   1130
+   1131	    0599  2E: 8B 44 02			       MOV	    AX,	CS:[SI+2]
+   1132	    059D  33 D2				       XOR	    DX,	DX
+   1133	    059F  D1 E0				       SHL	    AX,	1
+   1134	    05A1  D1 D2				       RCL	    DX,	1
+   1135	    05A3  D1 E0				       SHL	    AX,	1
+   1136	    05A5  D1 D2				       RCL	    DX,	1
+   1137	    05A7  F7 F1				       DIV	    CX
+   1138	    05A9			 @@Cpus_skp2:
+   1139	    05A9  5E				       POP	    SI
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 21
+tsystem.asm
+
+
+
+   1140	    05AA  5A				       POP	    DX
+   1141	    05AB  A3 0000e			       MOV	    [CpuSpeed],	AX
+   1142	    05AE  C3				       RET
+   1143	    05AF			 GetCPU_Speed		   ENDP
+   1144
+   1145
+   1146
+   1147	    05AF			 CODE  ENDS
+   1148
+   1149					       END
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 22
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "01/25/98"
+??FILENAME			  Text	 "tsystem "
+??TIME				  Text	 "12:35:50"
+??VERSION			  Number 040A
+@@CHECK_286			  Near	 CODE:0383
+@@CHECK_386			  Near	 CODE:038E
+@@CHECK_486			  Near	 CODE:03C2
+@@CHECK_PENTIUM			  Near	 CODE:03F3
+@@COMPBUFF_END			  Near	 CODE:0318
+@@CPUS_LOOP_1			  Near	 CODE:053E
+@@CPUS_LOOP_2			  Near	 CODE:0541
+@@CPUS_SKP2			  Near	 CODE:05A9
+@@FILL_ENDOFLOOP		  Near	 CODE:00B6
+@@FILL_LOOP			  Near	 CODE:0099
+@@GETCPU_TYPE_END		  Near	 CODE:042B
+@@INITTIMEOUT			  Near	 CODE:032E
+@@JUMP_HALT			  Near	 CODE:0341
+@@SEARCHPTR_END			  Near	 CODE:019B
+@@SEARCHPTR_LOOP		  Near	 CODE:018B
+@@SEARCHPTR_NOTFOUND		  Near	 CODE:0195
+@@SEARCH_LOCLOOP		  Near	 CODE:0173
+@@SWAP_ENDLOOP			  Near	 CODE:0150
+@@SWAP_LOCLOOP			  Near	 CODE:0149
+@@SWAP_LOOP			  Near	 CODE:0134
+@@WAITOUTREADY			  Near	 CODE:0332
+@CPU				  Text	 0F0FH
+@CURSEG				  Text	 CODE
+@FILENAME			  Text	 TSYSTEM
+@WORDSIZE			  Text	 4
+ABSADDR				  Text	 (DWORD	PTR SS:[BX+8])
+ABSREADMEMORYBYTE		  Far	 CODE:024A
+ABSREADMEMORYDWORD		  Far	 CODE:027E
+ABSREADMEMORYWORD		  Far	 CODE:0264
+ABSWRITEMEMORYBYTE		  Far	 CODE:029C
+ABSWRITEMEMORYDWORD		  Far	 CODE:02D6
+ABSWRITEMEMORYWORD		  Far	 CODE:02B9
+BADOFF				  Word	 CODE:0008
+BAD_OP_HANDLER			  Far	 CODE:047F
+BIOSCONFIGTABLE			  Dword	 DATA:---- Extern
+BIOSTYPE			  Byte	 DATA:---- Extern
+BOOLEAN_FALSE			  Number 0000
+BOOLEAN_TRUE			  Number 0001
+BUFF				  Text	 (DWORD	PTR SS:[BX+6])
+BUFFER				  Text	 (DWORD	PTR SS:[BX+12])
+BUFFSIZE			  Text	 (WORD	PTR SS:[BX+4])
+COLDREBOOT			  Far	 CODE:0354
+COMPAREBUFFERSPTR		  Far	 CODE:02F5
+COUNT				  Text	 (DWORD	PTR SS:[BX+4])
+CPUIDVALID			  Byte	 DATA:---- Extern
+CPUSPEED			  Word	 DATA:---- Extern
+CPUTYPE				  Byte	 DATA:---- Extern
+CPUVENDOR			  Struct DATA:---- Extern TCPUVENDOR
+CPU_TYPE_80286			  Number 0002
+CPU_TYPE_80386			  Number 0003
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 23
+Symbol Table
+
+
+
+CPU_TYPE_80486			  Number 0004
+CPU_TYPE_PENTIUM		  Number 0005
+CPU_TYPE_PENTIUMHIGH		  Number 0006
+DELAY				  Far	 CODE:031D
+DEST				  Text	 (DWORD	PTR SS:[BX+6])
+EXTENDEDMEMORYSIZE		  Word	 DATA:---- Extern
+FILL				  Far	 CODE:0083
+FILLBYTE			  Far	 CODE:005C
+FILLDWORD			  Far	 CODE:0023
+FILLWORD			  Far	 CODE:0039
+GETBIOSCONFIGTABLE		  Near	 CODE:023D
+GETCPU_SPEED			  Near	 CODE:04FD
+GETCPU_TYPE			  Near	 CODE:0364
+GETEXTENDEDMEMORYSIZE		  Near	 CODE:0229
+HARDWAREREBOOT			  Far	 CODE:032E
+HOOK_INT6			  Near	 CODE:042F
+HOOK_INTD			  Near	 CODE:048D
+INDEX				  Text	 (BYTE	PTR SS:[BX+6])
+INT15H_COPYEXTMEMORY		  Number 0087
+INT15H_GETCONFIGTABLE		  Number 00C0
+INT15H_GETEXTMEMORYSIZE		  Number 0088
+INT15H_WAIT			  Number 0086
+INTELSPD			  Word	 CODE:000B
+INT_MASK			  Byte	 CODE:000A
+MOVEPTR				  Far	 CODE:00BA
+OLD_INT6_OFF			  Word	 CODE:0002
+OLD_INT6_SEG			  Word	 CODE:0000
+OLD_INTD_OFF			  Word	 CODE:0006
+OLD_INTD_SEG			  Word	 CODE:0004
+PORT				  Text	 (WORD	PTR SS:[BX+8])
+READINDEXPORT			  Far	 CODE:020B
+READMEMORYBYTE			  Far	 CODE:019F
+READMEMORYDWORD			  Far	 CODE:01B7
+READMEMORYWORD			  Far	 CODE:01AB
+READPORT			  Far	 CODE:01F3
+RESTORE_INT6			  Near	 CODE:045C
+RESTORE_INTD			  Near	 CODE:04C8
+SEARCHPTR			  Far	 CODE:0154
+SIZE				  Text	 (WORD	PTR SS:[BX+4])
+SOURCE				  Text	 (DWORD	PTR SS:[BX+10])
+SWAP				  Far	 CODE:011D
+SWAPBYTE			  Far	 CODE:00DB
+SWAPLONG			  Far	 CODE:0105
+SWAPWORD			  Far	 CODE:00F0
+VALUE				  Text	 (DWORD	PTR SS:[BX+4])
+WARMREBOOT			  Far	 CODE:0344
+WRITEINDEXPORT			  Far	 CODE:0217
+WRITEMEMORYBYTE			  Far	 CODE:01C7
+WRITEMEMORYDWORD		  Far	 CODE:01E3
+WRITEMEMORYWORD			  Far	 CODE:01D5
+WRITEPORT			  Far	 CODE:01FD
+
+Macro Name
+
+MACRO_CPUID
+MACRO_EXITCODE
+MACRO_IODELAY
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 24
+Symbol Table
+
+
+
+MACRO_RESTOREDS
+MACRO_SAVEDS
+MACRO_SETDATA_GS
+MACRO_STACKFRAME
+MACRO_STACKFRAMEBP
+MACRO_ZERO
+
+Structure Name			  Type	Offset
+
+TBIOSDATEFORMAT
+ DAY				  Word	 0000
+ FILLER_1			  Byte	 0002
+ MONTH				  Word	 0003
+ FILLER_2			  Byte	 0005
+ YEAR				  Word	 0006
+TCPUVENDOR
+TFUNCTIONRESULT
+ FUNCTION			  Word	 0000
+ INTERRUPT			  Byte	 0002
+ CALLEDADDR			  Dword	 0003
+ RESULT				  Word	 0007
+ ERRORPROC			  Dword	 0009
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+CODE				  16  05AF Byte	  Public
+DATA				  16  0000 Word	  Public
+Turbo Assembler	 Version 4.1	    01/25/98 12:35:50	    Page 25
+Error Summary
+
+
+
+*Warning* tsystem.asm(128) Reserved word used as symbol: SIZE
+

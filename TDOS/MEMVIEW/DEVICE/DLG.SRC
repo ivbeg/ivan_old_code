@@ -1,0 +1,51 @@
+type
+  TListBoxRec = record    {<-- omit if TListBoxRec is defined elsewhere}
+    PS : PStringCollection;
+    Selection : Integer;
+    end;
+
+var
+  DataRec : record
+    Field9 : TListBoxRec;
+  end;
+
+function MakeDialog : PDialog;
+var
+  Dlg : PDialog;
+  R : TRect;
+  Control : PView;
+
+begin
+R.Assign(0, 0, 71, 17);
+New(Dlg, Init(R, 'Memory Viewer'));
+Dlg^.Palette := dpBlueDialog;
+
+R.Assign(56, 2, 66, 4);
+Control := New(PButton, Init(R, 'O~K~', cmOK, bfDefault));
+Dlg^.Insert(Control);
+
+R.Assign(2, 5, 46, 15);
+Control := New(PListBox, Init(R, 1, Nil));
+Control^.Options := Control^.Options or ofFramed;
+Dlg^.Insert(Control);
+
+  R.Assign(17, 1, 30, 2);
+  Dlg^.Insert(New(PLabel, Init(R, '~B~locks table', Control)));
+
+R.Assign(2, 3, 46, 4);
+Control := New(PStaticText, Init(R, ' Address   Name     Size         Typ'+
+     'e    '));
+Control^.Options := Control^.Options or ofFramed;
+Dlg^.Insert(Control);
+
+R.Assign(54, 5, 69, 7);
+Control := New(PButton, Init(R, '~D~escription', cmGetDescription, bfDefault));
+Dlg^.Insert(Control);
+
+R.Assign(54, 8, 69, 10);
+Control := New(PButton, Init(R, '~A~bout', cmAbout, bfDefault));
+Dlg^.Insert(Control);
+
+Dlg^.SelectNext(False);
+MakeDialog := Dlg;
+end;
